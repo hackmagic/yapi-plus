@@ -2,9 +2,8 @@ import React, { PureComponent as Component } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Route, BrowserRouter as Router } from 'react-router-dom';
+import { Routes, Route, BrowserRouter as Router } from 'react-router-dom';
 import { Home, Group, Project, Follows, AddProject, Login } from './containers/index';
-import { Alert } from 'antd';
 import User from './containers/User/User.js';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
@@ -13,6 +12,7 @@ import MyPopConfirm from './components/MyPopConfirm/MyPopConfirm';
 import { checkLoginState } from './reducer/modules/user';
 import { requireAuthentication } from './components/AuthenticatedComponent';
 import Notify from './components/Notify/Notify';
+import { Alert } from 'naive-ui';
 
 const plugin = require('client/plugin.js');
 
@@ -116,21 +116,26 @@ export default class App extends Component {
               {alertContent()}
               {this.props.loginState !== 1 ? <Header /> : null}
               <div className="router-container">
-                {Object.keys(AppRoute).map(key => {
-                  let item = AppRoute[key];
-                  return key === 'login' ? (
-                    <Route key={key} path={item.path} component={item.component} />
-                  ) : key === 'home' ? (
-                    <Route key={key} exact path={item.path} component={item.component} />
-                  ) : (
-                    <Route
-                      key={key}
-                      path={item.path}
-                      component={requireAuthentication(item.component)}
-                    />
-                  );
-                })}
+                <Routes>
+                  {Object.keys(AppRoute).map(key => {
+                    let item = AppRoute[key];
+                    return key === 'login' ? (
+                      <Route key={key} path={item.path} element={<item.component />} />
+                    ) : key === 'home' ? (
+                      <Route key={key} path={item.path} element={<item.component />} />
+                    ) : (
+                      <Route
+                        key={key}
+                        path={item.path}
+                        element={requireAuthentication(item.component)}
+                      />
+                    );
+                  })}
+                </Routes>
               </div>
+            </div>
+            <Footer />
+          </div>
               {/* <div className="router-container">
                 <Route exact path="/" component={Home} />
                 <Route path="/group" component={requireAuthentication(Group)} />

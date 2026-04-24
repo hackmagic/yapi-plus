@@ -40,6 +40,15 @@ function delInst(m) {
 }
 
 
+function getModel(modelName) {
+  const modelPath = path.join(__dirname, 'models', modelName + '.js');
+  if (fs.existsSync(modelPath)) {
+    const model = require(modelPath);
+    return getInst(model);
+  }
+  return null;
+}
+
 let r = {
   fs: fs,
   path: path,
@@ -50,7 +59,8 @@ let r = {
   WEBCONFIG: WEBCONFIG,
   getInst: getInst,
   delInst: delInst,
-  getInsts: insts
+  getInsts: insts,
+  getModel: getModel
 };
 if (mail) r.mail = mail;
 module.exports = r;

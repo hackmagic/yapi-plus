@@ -4,6 +4,7 @@ const groupController = require('./controllers/group.js');
 const userController = require('./controllers/user.js');
 const interfaceColController = require('./controllers/interfaceCol.js');
 const testController = require('./controllers/test.js');
+const aiController = require('./controllers/ai.js');
 
 const yapi = require('./yapi.js');
 const projectController = require('./controllers/project.js');
@@ -50,6 +51,10 @@ let INTERFACE_CONFIG = {
   open: {
     prefix: '/open/',
     controller: openController
+  },
+  ai: {
+    prefix: '/ai/',
+    controller: aiController
   }
 };
 
@@ -576,6 +581,43 @@ let routerConfig = {
     {
       action: 'importData',
       path: 'import_data',
+      method: 'post'
+    }
+  ],
+  ai: [
+    {
+      action: 'getAiAgents',
+      path: 'agents',
+      method: 'get'
+    },
+    {
+      action: 'addAiAgent',
+      path: 'agent',
+      method: 'post'
+    },
+    {
+      action: 'updateAiAgent',
+      path: 'agent',
+      method: 'put'
+    },
+    {
+      action: 'deleteAiAgent',
+      path: 'agent',
+      method: 'delete'
+    },
+    {
+      action: 'chatWithAiAgent',
+      path: 'chat',
+      method: 'post'
+    },
+    {
+      action: 'generateApiDoc',
+      path: 'generate/doc',
+      method: 'post'
+    },
+    {
+      action: 'generateTestCase',
+      path: 'generate/testcase',
       method: 'post'
     }
   ]

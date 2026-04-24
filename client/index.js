@@ -1,23 +1,21 @@
 import './styles/common.scss';
 import './styles/theme.less';
-import { LocaleProvider } from 'antd';
 import './plugin';
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 import App from './Application';
 import { Provider } from 'react-redux';
 import createStore from './reducer/create';
-
-// 由于 antd 组件的默认文案是英文，所以需要修改为中文
-import zhCN from 'antd/lib/locale-provider/zh_CN';
+import { ConfigProvider } from 'naive-ui';
+import zhCN from 'naive-ui/lib/locale/zh-CN';
 
 const store = createStore();
 
-ReactDOM.render(
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
   <Provider store={store}>
-    <LocaleProvider locale={zhCN}>
+    <ConfigProvider locale={zhCN}>
       <App />
-    </LocaleProvider>
-  </Provider>,
-  document.getElementById('yapi')
+    </ConfigProvider>
+  </Provider>
 );
