@@ -95,6 +95,7 @@ npm run start
 - **Mongoose**：MongoDB ORM
 
 ### AI 集成
+- **DeepSeek**：DeepSeek API (推荐, https://api-docs.deepseek.com/zh-cn/)
 - **OpenAI**：GPT 系列模型
 - **Claude**：Anthropic 的 Claude 模型
 - **Gemini**：Google 的 Gemini 模型
@@ -108,9 +109,10 @@ npm run start
 2. **创建 AI 助手**：填写以下信息
    - **名称**：AI 助手的名称
    - **描述**：AI 助手的描述
-   - **类型**：选择 AI 模型类型（OpenAI、Claude、Gemini、Custom）
+   - **类型**：选择 AI 模型类型（DeepSeek/OpenAI/Claude/Gemini/Custom）
    - **API Key**：输入对应 AI 服务的 API Key
-   - **模型**：选择具体的模型（如 gpt-3.5-turbo、claude-3-opus 等）
+   - **模型**：选择具体的模型（如 deepseek-chat、gpt-4 等）
+   - **Base URL**：自定义 API 地址（可选）
    - **温度**：设置生成文本的随机性（0-1，默认 0.7）
    - **最大令牌数**：设置生成文本的最大长度（默认 1000）
 
@@ -185,12 +187,13 @@ AI 相关配置可以在创建 AI 助手时设置，包括 AI 模型类型、API
 
 #### 配置示例
 
-| 模型类型 | API Key | 模型 | 温度 | 最大令牌数 |
-|---------|---------|------|------|------------|
-| OpenAI | sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx | gpt-3.5-turbo | 0.7 | 1000 |
-| Claude | sk-ant-api03-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx | claude-3-opus-20240229 | 0.7 | 1000 |
-| Gemini | AIzaSyxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx | gemini-1.0-pro | 0.7 | 1000 |
-| Custom | 自定义 API Key | 自定义模型 | 0.7 | 1000 |
+| 模型类型 | API Key | 模型 | 温度 | 最大令牌数 | Base URL |
+|---------|---------|------|------|------------|----------|
+| DeepSeek | sk-xxxxxxxxxxxxxxxx | deepseek-v4-flash | 0.7 | 1000 | https://api.deepseek.com |
+| OpenAI | sk-xxxxxxxxxxxxxxxx | gpt-4 | 0.7 | 1000 | https://api.openai.com |
+| Claude | sk-ant-xxxxxxxxxxxxxxxx | claude-3-opus | 0.7 | 1000 | https://api.anthropic.com |
+| Gemini | AIzaSyxxxxxxxxxxxxxxxx | gemini-pro | 0.7 | 1000 | https://generativelanguage.googleapis.com |
+| Custom | 自定义 API Key | 自定义模型 | 0.7 | 1000 | 自定义地址 |
 
 ## 开发指南
 

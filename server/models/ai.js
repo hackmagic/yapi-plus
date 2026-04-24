@@ -11,15 +11,15 @@ const aiSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['openai', 'claude', 'gemini', 'custom'],
-    default: 'openai'
+    enum: ['deepseek', 'openai', 'claude', 'gemini', 'custom'],
+    default: 'deepseek'
   },
   apiKey: {
     type: String
   },
   model: {
     type: String,
-    default: 'gpt-3.5-turbo'
+    default: 'deepseek-v4-flash'
   },
   temperature: {
     type: Number,
@@ -28,6 +28,10 @@ const aiSchema = new mongoose.Schema({
   maxTokens: {
     type: Number,
     default: 1000
+  },
+  baseURL: {
+    type: String,
+    default: 'https://api.deepseek.com'
   },
   createdAt: {
     type: Date,

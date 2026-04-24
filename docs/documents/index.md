@@ -67,14 +67,28 @@ YAPI Plus 支持 AI 助手功能，可以帮助你：
 
 YAPI Plus 提供了强大的 AI 助手功能，帮助开发者更高效地管理 API。
 
+### 支持的 AI 模型
+
+YAPI Plus 支持多种 AI 模型：
+
+- **DeepSeek** - DeepSeek API (推荐, https://api-docs.deepseek.com/zh-cn/)
+- **OpenAI** - GPT 系列模型
+- **Claude** - Anthropic 的 Claude 模型
+- **Gemini** - Google 的 Gemini 模型
+- **Custom** - 自定义模型
+
 ### 创建 AI 助手
 
 1. 进入系统管理页面，找到 AI 助手管理
 2. 点击创建 AI 助手，填写以下信息：
    - 名称：AI 助手的名称
-   - 类型：选择 AI 模型（OpenAI/Claude/Gemini/Custom）
+   - 类型：选择 AI 模型（DeepSeek/OpenAI/Claude/Gemini/Custom）
    - API Key：输入对应 AI 服务的 API Key
    - 模型：选择具体模型
+     - DeepSeek: `deepseek-v4-flash`, `deepseek-v4-pro`, `deepseek-chat`, `deepseek-reasoner`
+     - OpenAI: `gpt-4`, `gpt-3.5-turbo`
+     - Claude: `claude-3-opus`, `claude-3-sonnet`
+     - Gemini: `gemini-pro`, `gemini-pro-vision`
    - 温度：设置生成文本的随机性（0-1）
    - 最大令牌数：设置最大生成长度
 
