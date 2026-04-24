@@ -1,4 +1,4 @@
-# YApi
+# YAPI Plus
 ![logo](documents/images/logo_header@2x.png)
 
 

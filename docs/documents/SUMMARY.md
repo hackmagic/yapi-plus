@@ -1,8 +1,8 @@
-# YApi
+# YAPI Plus
 
 ### 快速上手
 
-* [认识YApi](index.md)
+* [认识YAPI Plus](index.md)
 * [创建第一个API](quickstart.md)
 
 ### 进阶篇
@@ -38,10 +38,16 @@
   * [Postman 数据导入](data.md#Postman 数据导入)
   * [HAR 数据导入](data.md#HAR 数据导入)
   * [Swagger 数据导入](data.md#Swagger 数据导入)
-  * [JSON 数据导入](data.md#YApi接口JSON数据导入)
+  * [JSON 数据导入](data.md#YAPI Plus接口JSON数据导入)
   * [通过命令行导入接口数据](data.md#通过命令行导入接口数据)
 * [数据导出](export-data.md)
 
+
+### 新特性（YAPI Plus）
+
+* [AI 助手](index.md#ai-助手) - 使用 AI 生成 API 文档和测试用例
+* [Vite Plus 构建](index.md#vite-plus) - 更快的开发构建体验
+* [Naive UI](index.md#naive-ui) - 现代化 UI 界面
 
 ### 自定义
 * [插件](plugin-index.md)
