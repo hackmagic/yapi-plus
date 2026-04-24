@@ -1,6 +1,6 @@
 import React, { PureComponent as Component } from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input, Button } from 'antd';
+import { NForm, NInput, NButton } from 'naive-ui';
 const FormItem = Form.Item;
 function hasErrors(fieldsError) {
   return Object.keys(fieldsError).some(field => fieldsError[field]);

@@ -1,8 +1,7 @@
 import './Footer.scss';
 import React, { PureComponent as Component } from 'react';
 import PropTypes from 'prop-types';
-import { Row, Col } from 'antd';
-import { Icon } from 'antd';
+import { NR, NCol, NIcon } from 'naive-ui';
 
 const version = process.env.version;
 class Footer extends Component {

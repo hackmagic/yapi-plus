@@ -1,6 +1,6 @@
 import React, { PureComponent as Component } from 'react';
 import PropTypes from 'prop-types';
-import { Button } from 'antd';
+import { NButton } from 'naive-ui';
 import { connect } from 'react-redux';
 import { changeStudyTip, finishStudy } from '../../reducer/modules/user.js';
 

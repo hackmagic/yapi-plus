@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Row, Input } from 'antd';
+import { NR, NInput } from 'naive-ui';
 import constants from '../../constants/variable.js';
 const wordList = constants.MOCK_SOURCE;
 const Search = Input.Search;

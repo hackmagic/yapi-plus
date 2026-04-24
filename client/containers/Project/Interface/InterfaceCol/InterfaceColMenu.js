@@ -12,7 +12,14 @@ import {
 import { fetchProjectList } from '../../../../reducer/modules/project';
 import axios from 'axios';
 import ImportInterface from './ImportInterface';
-import { Input, Icon, Button, Modal, message, Tooltip, Tree, Form } from 'antd';
+import { NInput, NIcon, NButton, NModal, NTooltip, NTree, NForm, NMessage } from 'naive-ui';
+
+const TreeNode = NTree.TreeNode;
+
+const message = {
+  success: (content, duration) => NMessage.success(content, { duration: duration || 2 }),
+  error: (content, duration) => NMessage.error(content, { duration: duration || 2 })
+};
 import { arrayChangeIndex } from '../../../../common.js';
 import _ from 'underscore'
 

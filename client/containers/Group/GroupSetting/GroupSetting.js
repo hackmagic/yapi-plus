@@ -1,7 +1,12 @@
 import React, { PureComponent as Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Input, Button, message, Icon, Card, Alert, Modal, Switch, Row, Col, Tooltip } from 'antd';
+import { NInput, NButton, NIcon, NCard, NAlert, NModal, NSwitch, NR, NCol, NTooltip, NMessage } from 'naive-ui';
+
+const message = {
+  success: (content, duration) => NMessage.success(content, { duration: duration || 2 }),
+  error: (content, duration) => NMessage.error(content, { duration: duration || 2 })
+};
 import { fetchNewsData } from '../../../reducer/modules/news.js';
 import {
   changeGroupMsg,

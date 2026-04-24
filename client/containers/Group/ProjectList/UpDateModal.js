@@ -1,7 +1,12 @@
 import React, { PureComponent as Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Modal, Form, Input, Icon, Tooltip, Select, message, Button, Row, Col } from 'antd';
+import { NModal, NForm, NInput, NIcon, NTooltip, NSelect, NButton, NR, NCol, NMessage } from 'naive-ui';
+
+const message = {
+  success: (content, duration) => NMessage.success(content, { duration: duration || 2 }),
+  error: (content, duration) => NMessage.error(content, { duration: duration || 2 })
+};
 import {
   updateProject,
   fetchProjectList,

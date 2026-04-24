@@ -7,9 +7,9 @@ import GroupSetting from './GroupSetting/GroupSetting.js';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Route, Switch, Redirect } from 'react-router-dom';
-import { Tabs, Layout, Spin } from 'antd';
-const { Content, Sider } = Layout;
-const TabPane = Tabs.TabPane;
+import { NTabs, NLayout, NSpin } from 'naive-ui';
+const { Content, Sider } = NLayout;
+const TabPane = NTabs.TabPane;
 import { fetchNewsData } from '../../reducer/modules/news.js';
 import {
   setCurrGroup

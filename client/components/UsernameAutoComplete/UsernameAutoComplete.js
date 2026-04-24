@@ -1,6 +1,6 @@
 import React, { PureComponent as Component } from 'react';
 import PropTypes from 'prop-types';
-import { Select } from 'antd';
+import { NSelect } from 'naive-ui';
 import axios from 'axios';
 
 const Option = Select.Option;

@@ -1,6 +1,13 @@
 import React, { PureComponent as Component } from 'react';
 import { connect } from 'react-redux';
-import { Modal, Collapse, Row, Col, Input, message, Button, Icon } from 'antd';
+import { NModal, NCollapse, NR, NCol, NInput, NButton, NIcon, NMessage } from 'naive-ui';
+
+const Panel = NCollapse.Panel;
+
+const message = {
+  success: (content, duration) => NMessage.success(content, { duration: duration || 2 }),
+  error: (content, duration) => NMessage.error(content, { duration: duration || 2 })
+};
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { withRouter } from 'react-router';

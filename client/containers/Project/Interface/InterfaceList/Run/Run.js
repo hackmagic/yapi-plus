@@ -3,7 +3,12 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import axios from 'axios';
-import { message } from 'antd';
+import { NMessage } from 'naive-ui';
+
+const message = {
+  success: (content, duration) => NMessage.success(content, { duration: duration || 2 }),
+  error: (content, duration) => NMessage.error(content, { duration: duration || 2 })
+};
 import { Postman } from '../../../../../components';
 import AddColModal from './AddColModal';
 

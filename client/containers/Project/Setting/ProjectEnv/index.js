@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './index.scss';
-import { Icon, Layout, Tooltip, message, Row, Popconfirm } from 'antd';
-const { Content, Sider } = Layout;
+import { NIcon, NLayout, NTooltip, NR, NPopconfirm, NMessage } from 'naive-ui';
+const { Content, Sider } = NLayout;
+
+const message = {
+  success: (content, duration) => NMessage.success(content, { duration: duration || 2 }),
+  error: (content, duration) => NMessage.error(content, { duration: duration || 2 })
+};
 import ProjectEnvContent from './ProjectEnvContent.js';
 import { connect } from 'react-redux';
 import { updateEnv, getProject, getEnv } from '../../../../reducer/modules/project';

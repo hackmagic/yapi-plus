@@ -1,7 +1,12 @@
 import React, { PureComponent as Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Table, Select, Button, Modal, Row, Col, message, Popconfirm } from 'antd';
+import { NTable, NSelect, NButton, NModal, NR, NCol, NPopconfirm, NMessage } from 'naive-ui';
+
+const message = {
+  success: (content, duration) => NMessage.success(content, { duration: duration || 2 }),
+  error: (content, duration) => NMessage.error(content, { duration: duration || 2 })
+};
 import { Link } from 'react-router-dom';
 import './MemberList.scss';
 import { autobind } from 'core-decorators';

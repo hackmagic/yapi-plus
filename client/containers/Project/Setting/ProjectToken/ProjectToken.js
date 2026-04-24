@@ -3,9 +3,14 @@ import PropTypes from 'prop-types';
 import './ProjectToken.scss';
 import { getToken, updateToken } from '../../../../reducer/modules/project';
 import { connect } from 'react-redux';
-import { Icon, Tooltip, message, Modal } from 'antd';
-import copy from 'copy-to-clipboard';
-const confirm = Modal.confirm;
+import { NIcon, NTooltip, NModal, NMessage } from 'naive-ui';
+
+const message = {
+  success: (content, duration) => NMessage.success(content, { duration: duration || 2 }),
+  error: (content, duration) => NMessage.error(content, { duration: duration || 2 })
+};
+
+const confirm = NModal.confirm;
 
 @connect(
   state => {

@@ -1,18 +1,23 @@
 import React, { PureComponent as Component } from 'react';
 import {
-  Table,
-  Card,
-  Badge,
-  Select,
-  Button,
-  Modal,
-  Row,
-  Col,
-  message,
-  Popconfirm,
-  Switch,
-  Tooltip
-} from 'antd';
+  NTable,
+  NCard,
+  NBadge,
+  NSelect,
+  NButton,
+  NModal,
+  NR,
+  NCol,
+  NPopconfirm,
+  NSwitch,
+  NTooltip,
+  NMessage
+} from 'naive-ui';
+
+const message = {
+  success: (content, duration) => NMessage.success(content, { duration: duration || 2 }),
+  error: (content, duration) => NMessage.error(content, { duration: duration || 2 })
+};
 import PropTypes from 'prop-types';
 import { fetchGroupMsg } from '../../../../reducer/modules/group';
 import { connect } from 'react-redux';

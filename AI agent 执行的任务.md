@@ -19,12 +19,50 @@ YAPI Plus 是基于 YAPI 项目进行改造，主要目标是：
 | AI模型 | `server/models/ai.js` | ✅ 完成 |
 | 路由配置 | `server/router.js` | ✅ 完成 |
 | 依赖更新 | `package.json` | ✅ 已添加 naive-ui, vite |
+| Header.js | 组件替换 | ✅ 完成 |
+| Login.js | 组件替换 | ✅ 完成 |
+| messageMiddleware.js | 组件替换 | ✅ 完成 |
+| User.js | 导入替换 | ✅ 完成 |
+| Home.js | 部分导入替换 | ✅ 完成 |
+| News.js | 导入替换 | ✅ 完成 |
+| Follows.js | 组件替换 | ✅ 完成 |
+| ProjectList.js | 导入替换 | ✅ 完成 |
+| Group.js | 组件替换 | ✅ 完成 |
+| ProjectCard.js | 组件替换 | ✅ 完成 |
+| Profile.js | 组件替换 | ✅ 完成 |
+| Setting.js | 组件替换 | ✅ 完成 |
+| GuideBtns.js | 组件替换 | ✅ 完成 |
+| Subnav.js | 组件替换 | ✅ 完成 |
+| Intro.js | 组件替换 | ✅ 完成 |
+| Footer.js | 组件替换 | ✅ 完成 |
+| ErrMsg.js | 组件替换 | ✅ 完成 |
+| Breadcrumb.js | 组件替换 | ✅ 完成 |
+| AddProject.js | 组件替换 | ✅ 完成 |
+| Activity.js | 组件替换 | ✅ 完成 |
+| Reg.js | 组件替换 | ✅ 完成 |
+| SchemaTable.js | 组件替换 | ✅ 完成 |
+| NewsTimeline.js | 组件替换 | ✅ 完成 |
+| NewsList.js | 组件替换 | ✅ 完成 |
+| UsernameAutoComplete.js | 组件替换 | ✅ 完成 |
+| Notify.js | 组件替换 | ✅ 完成 |
+| CheckCrossInstall.js | 组件替换 | ✅ 完成 |
+| TimeLine.js | 组件替换 | ✅ 完成 |
+| GroupList.js | 组件替换 | ✅ 完成 |
+| MemberList.js | 组件替换 | ✅ 完成 |
+| GroupSetting.js | 组件替换 | ✅ 完成 |
+| LoginWrap.js | 组件替换 | ✅ 完成 |
+| LoginContainer.js | 组件替换 | ✅ 完成 |
+| Postman.js | 组件替换 | ✅ 完成 |
+| MyPopConfirm.js | 组件替换 | ✅ 完成 |
+| Label.js | 组件替换 | ✅ 完成 |
+| Search.js | 组件替换 | ✅ 完成 |
+| ModalPostman/index.js | 组件替换 | ✅ 完成 |
 
 ### 🔄 进行中
 
 | 任务 | 文件数 | 状态 |
 |------|--------|------|
-| 替换antd组件为naive-ui | 72个文件 | 🔄 进行中 |
+| 替换antd组件为naive-ui | 72个文件 | 🔄 已完成~71个，剩余1个已注释 |
 
 ## 待完成任务
 

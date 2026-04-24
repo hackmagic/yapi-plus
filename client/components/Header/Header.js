@@ -3,24 +3,24 @@ import React, { PureComponent as Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Layout, message } from 'antd';
+import { NLayout, NIcon, NMenu, NDropdown, NTooltip, NPopover, NTag, NMessage } from 'naive-ui';
+const { Header: AntHeader } = NLayout;
 import { checkLoginState, logoutActions, loginTypeAction } from '../../reducer/modules/user';
 import { changeMenuItem } from '../../reducer/modules/menu';
 import { withRouter } from 'react-router';
 import Srch from './Search/Search';
-const { Header: AntHeader } = Layout;
 import LogoSVG from '../LogoSVG/index.js';
 import Breadcrumb from '../Breadcrumb/Breadcrumb.js';
 import GuideBtns from '../GuideBtns/GuideBtns.js';
-import {
-  Menu,
-  Dropdown,
-  Tooltip,
-  Popover,
-  Tag,
-  Icon
-} from 'naive-ui';
 const plugin = require('client/plugin.js');
+
+const message = {
+  info: (content, duration) => NMessage.info(content, { duration: duration || 2 }),
+  success: (content, duration) => NMessage.success(content, { duration: duration || 2 }),
+  error: (content, duration) => NMessage.error(content, { duration: duration || 2 }),
+  warning: (content, duration) => NMessage.warning(content, { duration: duration || 2 }),
+  loading: (content, duration) => NMessage.loading(content, { duration: duration || 2 })
+};
 
 let HeaderMenu = {
   user: {

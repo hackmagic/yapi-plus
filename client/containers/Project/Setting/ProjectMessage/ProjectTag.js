@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Icon, Row, Col, Input } from 'antd';
+import { NIcon, NR, NCol, NInput } from 'naive-ui';
 import './ProjectTag.scss';
 
 

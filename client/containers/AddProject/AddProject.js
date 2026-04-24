@@ -1,7 +1,12 @@
 import React, { PureComponent as Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Button, Form, Input, Icon, Tooltip, Select, message, Row, Col, Radio } from 'antd';
+import { NButton, NForm, NInput, NTooltip, NSelect, NR, NRadio, NMessage } from 'naive-ui';
+
+const message = {
+  success: (content, duration) => NMessage.success(content, { duration: duration || 2 }),
+  error: (content, duration) => NMessage.error(content, { duration: duration || 2 })
+};
 import { addProject } from '../../reducer/modules/project.js';
 import { fetchGroupList } from '../../reducer/modules/group.js';
 import { autobind } from 'core-decorators';

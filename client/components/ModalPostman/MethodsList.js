@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Row, Icon, Input, Select, Tooltip } from 'antd';
+import { NR, NIcon, NInput, NSelect, NTooltip } from 'naive-ui';
 import _ from 'underscore';
 const Option = Select.Option;
 

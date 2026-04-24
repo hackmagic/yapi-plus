@@ -1,6 +1,6 @@
 import React, { PureComponent as Component } from 'react';
 import PropTypes from 'prop-types';
-import { Icon } from 'antd';
+import { NIcon } from 'naive-ui';
 import './ErrMsg.scss';
 import { withRouter } from 'react-router';
 

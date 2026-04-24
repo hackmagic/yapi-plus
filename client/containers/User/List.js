@@ -5,7 +5,12 @@ import { setBreadcrumb } from '../../reducer/modules/user';
 //import PropTypes from 'prop-types'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Table, Popconfirm, message, Input } from 'antd';
+import { NTable, NPopconfirm, NInput, NMessage } from 'naive-ui';
+
+const message = {
+  success: (content, duration) => NMessage.success(content, { duration: duration || 2 }),
+  error: (content, duration) => NMessage.error(content, { duration: duration || 2 })
+};
 import axios from 'axios';
 
 const Search = Input.Search;

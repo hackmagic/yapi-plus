@@ -1,11 +1,19 @@
 import React, { PureComponent as Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Form, Button, Input, Icon, message, Radio } from 'antd';
+import { NForm, NButton, NInput, NIcon, NRadio, NMessage } from 'naive-ui';
 import { loginActions, loginLdapActions } from '../../reducer/modules/user';
 import { withRouter } from 'react-router';
-const FormItem = Form.Item;
-const RadioGroup = Radio.Group;
+const FormItem = NForm.Item;
+const RadioGroup = NRadio.Group;
+
+const message = {
+  success: (content, duration) => NMessage.success(content, { duration: duration || 2 }),
+  error: (content, duration) => NMessage.error(content, { duration: duration || 2 }),
+  info: (content, duration) => NMessage.info(content, { duration: duration || 2 })
+};
+
+const UserIcon = () => NIcon.createFromIconfontCN('//at.alicdn.com/t/font_2803351_1hv2zxv7m7q.js');
 
 import './Login.scss';
 
@@ -92,22 +100,21 @@ class Login extends Component {
             pattern: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{1,})+$/
           };
     return (
-      <Form onSubmit={this.handleSubmit}>
+      <NForm onSubmit={this.handleSubmit}>
         {/* 登录类型 (普通登录／LDAP登录) */}
         {isLDAP && (
           <FormItem>
             <RadioGroup defaultValue="ldap" onChange={this.handleFormLayoutChange}>
-              <Radio value="ldap">LDAP</Radio>
-              <Radio value="normal">普通登录</Radio>
+              <NRadio value="ldap">LDAP</NRadio>
+              <NRadio value="normal">普通登录</NRadio>
             </RadioGroup>
           </FormItem>
         )}
         {/* 用户名 (Email) */}
         <FormItem style={formItemStyle}>
           {getFieldDecorator('email', { rules: [emailRule] })(
-            <Input
+            <NInput
               style={changeHeight}
-              prefix={<Icon type="user" style={{ fontSize: 13 }} />}
               placeholder="Email"
             />
           )}
@@ -118,9 +125,8 @@ class Login extends Component {
           {getFieldDecorator('password', {
             rules: [{ required: true, message: '请输入密码!' }]
           })(
-            <Input
+            <NInput
               style={changeHeight}
-              prefix={<Icon type="lock" style={{ fontSize: 13 }} />}
               type="password"
               placeholder="Password"
             />
@@ -129,21 +135,21 @@ class Login extends Component {
 
         {/* 登录按钮 */}
         <FormItem style={formItemStyle}>
-          <Button
+          <NButton
             style={changeHeight}
             type="primary"
             htmlType="submit"
             className="login-form-button"
           >
             登录
-          </Button>
+          </NButton>
         </FormItem>
 
         {/* <div className="qsso-breakline">
           <span className="qsso-breakword">或</span>
         </div>
-        <Button style={changeHeight} id="qsso-login" type="primary" className="login-form-button" size="large" ghost>QSSO登录</Button> */}
-      </Form>
+        <NButton style={changeHeight} id="qsso-login" type="primary" className="login-form-button" size="large" ghost>QSSO登录</NButton> */}
+      </NForm>
     );
   }
 }

@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Form, Switch, Button, Icon, Tooltip, message } from 'antd';
+import { NForm, NSwitch, NButton, NIcon, NTooltip, NMessage } from 'naive-ui';
+
+const message = {
+  success: (content, duration) => NMessage.success(content, { duration: duration || 2 }),
+  error: (content, duration) => NMessage.error(content, { duration: duration || 2 })
+};
 import AceEditor from '../../../../components/AceEditor/AceEditor';
 const FormItem = Form.Item;
 import { updateProjectMock, getProject } from '../../../../reducer/modules/project';

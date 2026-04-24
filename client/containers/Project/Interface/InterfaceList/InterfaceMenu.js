@@ -11,7 +11,12 @@ import {
   initInterface
 } from '../../../../reducer/modules/interface.js';
 import { getProject } from '../../../../reducer/modules/project.js';
-import { Input, Icon, Button, Modal, message, Tree, Tooltip } from 'antd';
+import { NInput, NIcon, NButton, NModal, NTree, NTooltip, NMessage } from 'naive-ui';
+
+const message = {
+  success: (content, duration) => NMessage.success(content, { duration: duration || 2 }),
+  error: (content, duration) => NMessage.error(content, { duration: duration || 2 })
+};
 import AddInterfaceForm from './AddInterfaceForm';
 import AddInterfaceCatForm from './AddInterfaceCatForm';
 import axios from 'axios';

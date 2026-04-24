@@ -1,7 +1,12 @@
 import React, { PureComponent as Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Form, Button, Input, Icon, message } from 'antd';
+import { NForm, NButton, NInput, message } from 'naive-ui';
+
+const message = {
+  success: (content, duration) => NMessage.success(content, { duration: duration || 2 }),
+  error: (content, duration) => NMessage.error(content, { duration: duration || 2 })
+};
 import { regActions } from '../../reducer/modules/user';
 import { withRouter } from 'react-router';
 const FormItem = Form.Item;

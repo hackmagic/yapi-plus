@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert } from 'antd';
+import { NAlert } from 'naive-ui';
 import PropTypes from 'prop-types';
 
 exports.initCrossRequest = function (fn) {

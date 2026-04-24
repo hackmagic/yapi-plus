@@ -1,7 +1,12 @@
 import React, { PureComponent as Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Icon, Modal, Input, message,Spin,  Row, Menu, Col, Popover, Tooltip } from 'antd';
+import { NIcon, NModal, NInput, NSpin, NR, NMenu, NCol, NPopover, NTooltip, NMessage } from 'naive-ui';
+
+const message = {
+  success: (content, duration) => NMessage.success(content, { duration: duration || 2 }),
+  error: (content, duration) => NMessage.error(content, { duration: duration || 2 })
+};
 import { autobind } from 'core-decorators';
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';

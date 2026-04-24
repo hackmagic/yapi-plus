@@ -1,6 +1,6 @@
 import React, { PureComponent as Component } from 'react'
 import PropTypes from 'prop-types'
-import { Form, Input, Select, Button } from 'antd';
+import { NForm, NInput, NSelect, NButton } from 'naive-ui';
 
 import constants from '../../../../constants/variable.js'
 import { handleApiPath, nameLengthLimit } from '../../../../common.js'

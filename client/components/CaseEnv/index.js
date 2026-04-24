@@ -2,9 +2,8 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Select, Row, Col, Collapse, Icon, Tooltip } from 'antd';
-const Option = Select.Option;
-const Panel = Collapse.Panel;
+import { NSelect, NR, NCol, NCollapse, NIcon, NTooltip } from 'naive-ui';
+const Panel = NCollapse.Panel;
 import './index.scss';
 
 export default class CaseEnv extends React.Component {

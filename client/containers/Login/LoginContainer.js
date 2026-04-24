@@ -1,6 +1,6 @@
 import React, { PureComponent as Component } from 'react';
 import Login from './LoginWrap';
-import { Row, Col, Card } from 'antd';
+import { NR, NCol, NCard } from 'naive-ui';
 import LogoSVG from '../../components/LogoSVG/index.js';
 
 class LoginContainer extends Component {

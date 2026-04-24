@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Icon, Input, Tooltip } from 'antd';
+import { NIcon, NInput, NTooltip } from 'naive-ui';
 import PropTypes from 'prop-types';
 import './Label.scss';
 

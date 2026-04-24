@@ -1,21 +1,26 @@
 import React, { PureComponent as Component } from 'react';
 import {
-  Form,
-  Input,
-  Switch,
-  Select,
-  Icon,
-  Tooltip,
-  Button,
-  Row,
-  Col,
-  message,
-  Card,
-  Radio,
-  Alert,
-  Modal,
-  Popover
-} from 'antd';
+  NForm,
+  NInput,
+  NSwitch,
+  NSelect,
+  NIcon,
+  NTooltip,
+  NButton,
+  NR,
+  NCol,
+  NMessage,
+  NCard,
+  NRadio,
+  NAlert,
+  NModal,
+  NPopover
+} from 'naive-ui';
+
+const message = {
+  success: (content, duration) => NMessage.success(content, { duration: duration || 2 }),
+  error: (content, duration) => NMessage.error(content, { duration: duration || 2 })
+};
 import PropTypes from 'prop-types';
 import {
   updateProject,

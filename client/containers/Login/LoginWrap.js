@@ -1,11 +1,11 @@
 import React, { PureComponent as Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Tabs } from 'antd';
+import { NTabs } from 'naive-ui';
 import LoginForm from './Login';
 import RegForm from './Reg';
 import './Login.scss';
-const TabPane = Tabs.TabPane;
+const TabPane = NTabs.TabPane;
 
 @connect(state => ({
   loginWrapActiveKey: state.user.loginWrapActiveKey,

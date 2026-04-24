@@ -2,7 +2,12 @@ import React, { PureComponent as Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import { Table, Button, Modal, message, Tooltip, Select, Icon } from 'antd';
+import { NTable, NButton, NModal, NTooltip, NSelect, NIcon, NMessage } from 'naive-ui';
+
+const message = {
+  success: (content, duration) => NMessage.success(content, { duration: duration || 2 }),
+  error: (content, duration) => NMessage.error(content, { duration: duration || 2 })
+};
 import AddInterfaceForm from './AddInterfaceForm';
 import {
   fetchInterfaceListMenu,

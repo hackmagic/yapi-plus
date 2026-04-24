@@ -9,7 +9,12 @@ import {
 } from '../../../../reducer/modules/interface.js';
 import { getProject } from '../../../../reducer/modules/project.js';
 import axios from 'axios';
-import { message, Modal } from 'antd';
+import { NMessage, NModal } from 'naive-ui';
+
+const message = {
+  success: (content, duration) => NMessage.success(content, { duration: duration || 2 }),
+  error: (content, duration) => NMessage.error(content, { duration: duration || 2 })
+};
 import './Edit.scss';
 import { withRouter, Link } from 'react-router-dom';
 import ProjectTag from '../../Setting/ProjectMessage/ProjectTag.js';

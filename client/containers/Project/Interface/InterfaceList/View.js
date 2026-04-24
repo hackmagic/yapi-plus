@@ -2,7 +2,12 @@ import './View.scss';
 import React, { PureComponent as Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Table, Icon, Row, Col, Tooltip, message } from 'antd';
+import { NTable, NIcon, NR, NCol, NTooltip, NMessage } from 'naive-ui';
+
+const message = {
+  success: (content, duration) => NMessage.success(content, { duration: duration || 2 }),
+  error: (content, duration) => NMessage.error(content, { duration: duration || 2 })
+};
 import { Link } from 'react-router-dom';
 import AceEditor from 'client/components/AceEditor/AceEditor';
 import { formatTime, safeArray } from '../../../../common.js';

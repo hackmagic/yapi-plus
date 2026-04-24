@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Alert, message } from 'antd';
+import { NAlert, NMessage } from 'naive-ui';
 
 export default class Notify extends Component {
   constructor(props) {

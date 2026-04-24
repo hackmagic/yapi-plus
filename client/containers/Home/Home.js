@@ -2,7 +2,7 @@ import './Home.scss';
 import React, { PureComponent as Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Row, Col, Button, Icon, Card } from 'antd';
+import { NR, NCol, NButton, NIcon, NCard } from 'naive-ui';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
 import LogoSVG from '../../components/LogoSVG/index.js';
@@ -20,8 +20,8 @@ const HomeGuest = () => (
     </div>
     <div className="main-one">
       <div className="container">
-        <Row>
-          <Col span={24}>
+        <NR>
+          <NCol span={24}>
             <div className="home-header">
               <a href="#" className="item">
                 YAPI

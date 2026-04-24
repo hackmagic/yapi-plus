@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Row, Col, Tabs } from 'antd';
-const TabPane = Tabs.TabPane;
+import { NR, NCol, NTabs } from 'naive-ui';
+const TabPane = NTabs.TabPane;
 function jsonFormat(json) {
   // console.log('json',json)
   if (json && typeof json === 'object') {

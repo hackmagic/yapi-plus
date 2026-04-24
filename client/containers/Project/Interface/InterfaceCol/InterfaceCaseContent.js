@@ -4,7 +4,12 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { message, Tooltip, Input } from 'antd';
+import { NMessage, NTooltip, NInput } from 'naive-ui';
+
+const message = {
+  success: (content, duration) => NMessage.success(content, { duration: duration || 2 }),
+  error: (content, duration) => NMessage.error(content, { duration: duration || 2 })
+};
 import { getEnv } from '../../../../reducer/modules/project';
 import {
   fetchInterfaceColList,

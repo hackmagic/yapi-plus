@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Tree } from 'antd';
+import { NTree } from 'naive-ui';
 import { connect } from 'react-redux';
 import { fetchVariableParamsList } from '../../reducer/modules/interfaceCol.js';
 

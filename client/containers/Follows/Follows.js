@@ -2,7 +2,7 @@ import React, { PureComponent as Component } from 'react';
 import './Follows.scss';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Row, Col } from 'antd';
+import { NR, NCol } from 'naive-ui';
 import { getFollowList } from '../../reducer/modules/follow';
 import { setBreadcrumb } from '../../reducer/modules/user';
 import ProjectCard from '../../components/ProjectCard/ProjectCard.js';
@@ -62,23 +62,19 @@ class Follows extends Component {
     return (
       <div>
         <div className="g-row" style={{ paddingLeft: '32px', paddingRight: '32px' }}>
-          <Row gutter={16} className="follow-box pannel-without-tab">
+          <NR gutter={16} className="follow-box pannel-without-tab">
             {data.length ? (
               data.map((item, index) => {
                 return (
-                  <Col xs={6} md={4} xl={3} key={index}>
+                  <NCol xs={6} md={4} xl={3} key={index}>
                     <ProjectCard
                       projectData={item}
                       inFollowPage={true}
                       callbackResult={this.receiveRes}
                     />
-                  </Col>
-                );
-              })
-            ) : (
-              <ErrMsg type="noFollow" />
+</NCol>
             )}
-          </Row>
+          </NR>
         </div>
       </div>
     );

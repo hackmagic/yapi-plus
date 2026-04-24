@@ -1,7 +1,7 @@
 import React, { PureComponent as Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Row, Col, Button, Tooltip } from 'antd';
+import { NR, NCol, NButton, NTooltip } from 'naive-ui';
 import { Link } from 'react-router-dom';
 import {
   addProject,

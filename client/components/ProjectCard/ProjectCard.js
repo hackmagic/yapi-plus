@@ -1,6 +1,15 @@
 import './ProjectCard.scss';
 import React, { PureComponent as Component } from 'react';
-import { Card, Icon, Tooltip, Modal, Alert, Input, message } from 'antd';
+import { NCard, NIcon, NTooltip, NModal, Alert, NInput, NMessage } from 'naive-ui';
+
+const message = {
+  success: (content, duration) => NMessage.success(content, { duration: duration || 2 }),
+  error: (content, duration) => NMessage.error(content, { duration: duration || 2 }),
+  warning: (content, duration) => NMessage.warning(content, { duration: duration || 2 }),
+  info: (content, duration) => NMessage.info(content, { duration: duration || 2 })
+};
+
+const confirm = NModal.confirm;
 import { connect } from 'react-redux';
 import { delFollow, addFollow } from '../../reducer/modules/follow';
 import PropTypes from 'prop-types';

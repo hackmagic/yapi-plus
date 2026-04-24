@@ -1,5 +1,5 @@
 import React, { PureComponent as Component } from 'react';
-import { Timeline, Spin, Row, Col, Tag, Avatar, Button, Modal, AutoComplete } from 'antd';
+import { NTimeline, NSpin, NR, NCol, NTag, NAvatar, NButton, NModal, NAutoComplete } from 'naive-ui';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { formatTime } from '../../common.js';

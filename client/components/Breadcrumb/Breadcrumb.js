@@ -1,6 +1,6 @@
 import './Breadcrumb.scss';
 import { withRouter } from 'react-router-dom';
-import { Breadcrumb } from 'antd';
+import { NBreadcrumb } from 'naive-ui';
 import PropTypes from 'prop-types';
 import React, { PureComponent as Component } from 'react';
 import { connect } from 'react-redux';

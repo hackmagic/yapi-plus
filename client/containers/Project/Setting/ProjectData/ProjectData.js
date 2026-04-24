@@ -1,18 +1,23 @@
 import React, { PureComponent as Component } from 'react';
 import {
-  Upload,
-  Icon,
-  message,
-  Select,
-  Tooltip,
-  Button,
-  Spin,
-  Switch,
-  Modal,
-  Radio,
-  Input,
-  Checkbox
-} from 'antd';
+  NUpload,
+  NIcon,
+  NMessage,
+  NSelect,
+  NTooltip,
+  NButton,
+  NSpin,
+  NSwitch,
+  NModal,
+  NRadio,
+  NInput,
+  NCheckbox
+} from 'naive-ui';
+
+const message = {
+  success: (content, duration) => NMessage.success(content, { duration: duration || 2 }),
+  error: (content, duration) => NMessage.error(content, { duration: duration || 2 })
+};
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import './ProjectData.scss';

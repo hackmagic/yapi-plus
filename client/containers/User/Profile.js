@@ -1,5 +1,12 @@
 import React, { PureComponent as Component } from 'react';
-import { Row, Col, Input, Button, Select, message, Upload, Tooltip } from 'antd';
+import { NR, NCol, NInput, NButton, NSelect, NUpload, NTooltip, NMessage } from 'naive-ui';
+
+const message = {
+  success: (content, duration) => NMessage.success(content, { duration: duration || 2 }),
+  error: (content, duration) => NMessage.error(content, { duration: duration || 2 }),
+  warning: (content, duration) => NMessage.warning(content, { duration: duration || 2 }),
+  info: (content, duration) => NMessage.info(content, { duration: duration || 2 })
+};
 import axios from 'axios';
 import { formatTime } from '../../common.js';
 import PropTypes from 'prop-types';

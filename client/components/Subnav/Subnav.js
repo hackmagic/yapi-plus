@@ -2,7 +2,7 @@ import './Subnav.scss';
 import React, { PureComponent as Component } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Menu } from 'antd';
+import { NMenu } from 'naive-ui';
 
 class Subnav extends Component {
   constructor(props) {

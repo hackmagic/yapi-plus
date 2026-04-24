@@ -4,7 +4,7 @@ import NewsTimeline from './NewsTimeline/NewsTimeline';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Breadcrumb from '../../components/Breadcrumb/Breadcrumb';
-import { Button } from 'antd';
+import { NButton } from 'naive-ui';
 import { getMockUrl } from '../../reducer/modules/news.js';
 import Subnav from '../../components/Subnav/Subnav.js';
 

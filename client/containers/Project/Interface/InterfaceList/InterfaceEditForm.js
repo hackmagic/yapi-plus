@@ -6,7 +6,14 @@ import constants from '../../../../constants/variable.js';
 import { handlePath, nameLengthLimit } from '../../../../common.js';
 import { changeEditStatus } from '../../../../reducer/modules/interface.js';
 import json5 from 'json5';
-import { message, Affix, Tabs, Modal } from 'antd';
+import { NMessage, NAffix, NTabs, NModal, NForm, NSelect, NInput, NTooltip, NButton, NR, NCol, NRadio, NIcon, NAutoComplete, NSwitch } from 'naive-ui';
+
+const TabPane = NTabs.TabPane;
+
+const message = {
+  success: (content, duration) => NMessage.success(content, { duration: duration || 2 }),
+  error: (content, duration) => NMessage.error(content, { duration: duration || 2 })
+};
 import EasyDragSort from '../../../../components/EasyDragSort/EasyDragSort.js';
 import mockEditor from 'client/components/AceEditor/mockEditor';
 import AceEditor from 'client/components/AceEditor/AceEditor';
@@ -69,7 +76,7 @@ import {
   Icon,
   AutoComplete,
   Switch
-} from 'antd';
+} from 'naive-ui';
 
 const Json5Example = `
   {

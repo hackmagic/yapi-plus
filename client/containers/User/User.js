@@ -5,7 +5,7 @@ import { Route } from 'react-router-dom';
 import List from './List.js';
 import PropTypes from 'prop-types';
 import Profile from './Profile.js';
-import { Row } from 'antd';
+import { NR } from 'naive-ui';
 @connect(
   state => {
     return {

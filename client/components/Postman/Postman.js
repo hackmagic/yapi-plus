@@ -1,21 +1,21 @@
 import React, { PureComponent as Component } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Button,
-  Input,
-  Checkbox,
-  Modal,
-  Select,
-  Spin,
-  Icon,
-  Collapse,
-  Tooltip,
-  Tabs,
-  Switch,
-  Row,
-  Col,
-  Alert
-} from 'antd';
+  NButton,
+  NInput,
+  NCheckbox,
+  NModal,
+  NSelect,
+  NSpin,
+  NIcon,
+  NCollapse,
+  NTooltip,
+  NTabs,
+  NSwitch,
+  NR,
+  NCol,
+  NAlert
+} from 'naive-ui';
 import constants from '../../constants/variable.js';
 import AceEditor from 'client/components/AceEditor/AceEditor';
 import _ from 'underscore';

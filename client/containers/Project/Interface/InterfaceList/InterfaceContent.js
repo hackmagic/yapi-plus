@@ -1,7 +1,7 @@
 import React, { PureComponent as Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Tabs, Modal, Button } from 'antd';
+import { NTabs, NModal, NButton } from 'naive-ui';
 import Edit from './Edit.js';
 import View from './View.js';
 import { Prompt } from 'react-router';

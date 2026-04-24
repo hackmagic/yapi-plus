@@ -1,9 +1,9 @@
 import React, { PureComponent as Component } from 'react';
 import PropTypes from 'prop-types';
-import { Tabs, Layout } from 'antd';
+import { NTabs, NLayout } from 'naive-ui';
 import { Route, Switch, matchPath } from 'react-router-dom';
 import { connect } from 'react-redux';
-const { Content, Sider } = Layout;
+const { Content, Sider } = NLayout;
 
 import './interface.scss';
 

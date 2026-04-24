@@ -1,5 +1,5 @@
 import React, { PureComponent as Component } from 'react';
-import { Tabs } from 'antd';
+import { NTabs } from 'naive-ui';
 import PropTypes from 'prop-types';
 import ProjectMessage from './ProjectMessage/ProjectMessage.js';
 import ProjectEnv from './ProjectEnv/index.js';
@@ -7,7 +7,7 @@ import ProjectRequest from './ProjectRequest/ProjectRequest';
 import ProjectToken from './ProjectToken/ProjectToken';
 import ProjectMock from './ProjectMock/index.js';
 import { connect } from 'react-redux';
-const TabPane = Tabs.TabPane;
+const TabPane = NTabs.TabPane;
 const plugin = require('client/plugin.js');
 
 const routers = {}

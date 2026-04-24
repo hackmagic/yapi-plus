@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table } from 'antd';
+import { NTable } from 'naive-ui';
 import json5 from 'json5';
 import PropTypes from 'prop-types';
 import { schemaTransformToTable } from '../../../common/schema-transformTo-table.js';

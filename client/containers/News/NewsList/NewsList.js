@@ -1,7 +1,7 @@
 import React, { PureComponent as Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Menu } from 'antd';
+import { NMenu } from 'naive-ui';
 import { fetchNewsData } from '../../../reducer/modules/news.js';
 
 const logList = [
