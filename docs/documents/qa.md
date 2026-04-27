@@ -32,14 +32,23 @@
 
 ## Q5 部署不成功怎么办？
 
-1. 确保 node 版本=> 7.6,请运行 node -v 查看版本号
-2. 确保 mongodb 版本 => 2.6，请运行 mongo --version 查看版本号
+1. 确保 node 版本=> 18.0.0,请运行 node -v 查看版本号
+2. 确保 mongodb 版本 => 3.6，请运行 mongo --version 查看版本号
 3. 确保安装了 npm, 运行 npm -v 查看版本号
 4. 确保安装了 git,运行 git --version 查看版本号
 
 确认版本号没问题，请删除原有的安装文件和数据库，重新安装。
 如果还是无法安装，请不要选择最新的版本，可选择上一个版本或上上一个版本等，最新版本出问题的概率会比较大。
 
-## Q6 部署YAPI Plus遇到mongodb认证问题？
+## Q6 初始管理员账号和密码是什么？
+
+首次安装后，系统会自动创建管理员账号：
+
+- **邮箱**：`admin@admin.com`（或在 config.json 中配置的 adminAccount）
+- **密码**：`ymfe.org`
+
+> ⚠️ **重要提示**：首次登录后请立即修改密码！
+
+## Q7 部署YAPI Plus遇到 mongodb 认证问题？
 
 * <a href="http://blog.csdn.net/ll657418802/article/details/50846313?locationNum=7" _blank="target">mongodb3.03以上开启认证,解决程序认证连接报错以及第三方客户端无法认证问题</a>
