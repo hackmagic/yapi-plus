@@ -64,7 +64,7 @@ function main() {
     }
   }
 
-  var files = ['package.json', 'package-lock.json', 'plugin.json', 'config_example.json', '.npmrc', 'README.md', 'LICENSE'];
+  var files = ['package.json', 'plugin.json', 'config_example.json', '.npmrc', 'README.md', 'LICENSE'];
   for (var j = 0; j < files.length; j++) {
     var src = path.join(ROOT, files[j]);
     if (fs.existsSync(src)) {
