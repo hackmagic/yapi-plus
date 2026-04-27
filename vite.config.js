@@ -2,9 +2,27 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
 
-// https://vitejs.dev/config/
+const jsxInJsPlugin = {
+  name: 'jsx-in-js',
+  enforce: 'post',
+  transform(code, id) {
+    if (id.endsWith('.js') && !id.includes('node_modules')) {
+      if (code.includes('</') || code.includes('/>')) {
+        return import('esbuild').then(esbuild =>
+          esbuild.transform(code, {
+            loader: 'jsx',
+            jsx: 'automatic',
+            jsxImportSource: 'react',
+            sourcemap: true
+          })
+        )
+      }
+    }
+  }
+}
+
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), jsxInJsPlugin],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './client'),

@@ -7,12 +7,14 @@
     "dev-copy-icon": "cp -r static/iconfont ./",
     "dev-server": " nodemon server/app.js dev -L",
     "install-server": " node server/install.js",
-    "dev-client": "npm run dev-copy-icon && vp dev",
+    "dev-client": "npm run dev-copy-icon && npx vite",
     "dev": "npm run dev-server & npm run dev-client",
     "start": " node server/app.js",
     "test": "ava",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
-    "build-client": "NODE_ENV=production vp build",
+    "build-client": "node node_modules/vite/bin/vite.js build",
+    "package": "node scripts/package.js",
+    "release": "node -e \"var v='v'+require('./package.json').version; require('child_process').execSync('git tag '+v+' && git push origin '+v,{stdio:'inherit'})\"",
     "npm-publish": "node ./npm-publish.js",
     "docs": "ydoc build"
   },
@@ -26,7 +28,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:YMFE/yapi.git"
+    "url": "git@github.com:hackmagic/yapi-plus.git"
   },
   "author": "",
   "license": "Apache-2.0",
@@ -95,6 +97,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.0.0",
+    "less": "^4.2.0",
     "ava": "^0.22.0",
     "conventional-changelog-cli": "^2.1.1",
     "eslint": "^8.34.0",

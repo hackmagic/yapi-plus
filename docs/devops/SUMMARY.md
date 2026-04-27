@@ -6,6 +6,7 @@
 
 ---
 
+* [打包与发布](release.md)
 * [mongodb集群](index.md#mongodb集群)
 * [配置邮箱](index.md#配置邮箱)
 * [配置LDAP登录](index.md#配置LDAP登录)

@@ -7,7 +7,7 @@ import App from './Application';
 import { Provider } from 'react-redux';
 import createStore from './reducer/create';
 import { ConfigProvider } from 'naive-ui';
-import zhCN from 'naive-ui/lib/locale/zh-CN';
+import { zhCN } from 'naive-ui/lib/locales';
 
 const store = createStore();
 
