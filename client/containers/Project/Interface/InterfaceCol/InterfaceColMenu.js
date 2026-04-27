@@ -23,9 +23,6 @@ const message = {
 import { arrayChangeIndex } from '../../../../common.js';
 import _ from 'underscore'
 
-const TreeNode = Tree.TreeNode;
-const FormItem = Form.Item;
-const confirm = Modal.confirm;
 const headHeight = 240; // menu顶部到网页顶部部分的高度
 
 import './InterfaceColMenu.scss';

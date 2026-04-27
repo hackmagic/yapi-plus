@@ -1,0 +1,118 @@
+<template>
+  <n-layout-header class="header">
+    <div class="header-content">
+      <div class="header-left">
+        <router-link to="/" class="logo">
+          <LogoSVG />
+          <span class="logo-text">YAPI Plus</span>
+        </router-link>
+      </div>
+      
+      <div class="header-center">
+        <n-menu
+          v-model:value="activeMenu"
+          :options="menuOptions"
+          mode="horizontal"
+        />
+      </div>
+      
+      <div class="header-right">
+        <n-space>
+          <Search />
+          <template v-if="userStore.loginState">
+            <n-dropdown :options="userMenuOptions" @select="handleUserMenu">
+              <n-button text>
+                <n-avatar :size="28" :style="{ backgroundColor: '#2080f0' }">
+                  {{ userStore.username?.charAt(0)?.toUpperCase() }}
+                </n-avatar>
+              </n-button>
+            </n-dropdown>
+          </template>
+          <template v-else>
+            <n-button @click="$router.push('/login')">登录</n-button>
+          </template>
+        </n-space>
+      </div>
+    </div>
+  </n-layout-header>
+</template>
+
+<script setup>
+import { ref, h, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { useUserStore } from '../../store/user'
+import LogoSVG from '../../components/LogoSVG/index.js'
+import Search from './Search/Search.vue'
+
+const router = useRouter()
+const userStore = useUserStore()
+const activeMenu = ref('home')
+
+const menuOptions = computed(() => [
+  { label: '首页', key: 'home', onClick: () => router.push('/') },
+  { label: '我的项目', key: 'group', onClick: () => router.push('/group') },
+  { label: '我的关注', key: 'follow', onClick: () => router.push('/follow') },
+])
+
+const userMenuOptions = [
+  { label: '个人中心', key: 'profile', icon: () => h('span', {}, '👤') },
+  { label: '退出登录', key: 'logout', icon: () => h('span', {}, '🚪') },
+]
+
+const handleUserMenu = (key) => {
+  if (key === 'profile') {
+    router.push('/user')
+  } else if (key === 'logout') {
+    userStore.logout()
+    router.push('/login')
+  }
+}
+</script>
+
+<style scoped>
+.header {
+  height: 60px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #fff;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  padding: 0 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header-left {
+  flex: 0 0 auto;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.logo-text {
+  font-size: 20px;
+  font-weight: bold;
+  color: #2080f0;
+}
+
+.header-center {
+  flex: 1;
+  margin: 0 24px;
+}
+
+.header-right {
+  flex: 0 0 auto;
+}
+</style>

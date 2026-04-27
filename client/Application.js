@@ -136,19 +136,6 @@ export default class App extends Component {
             </div>
             <Footer />
           </div>
-              {/* <div className="router-container">
-                <Route exact path="/" component={Home} />
-                <Route path="/group" component={requireAuthentication(Group)} />
-                <Route path="/project/:id" component={requireAuthentication(Project)} />
-                <Route path="/user" component={requireAuthentication(User)} />
-                <Route path="/follow" component={requireAuthentication(Follows)} />
-                <Route path="/add-project" component={requireAuthentication(AddProject)} />
-                <Route path="/login" component={Login} />
-                {/* <Route path="/statistic" component={statisticsPage} /> */}
-              {/* </div> */}
-            </div>
-            <Footer />
-          </div>
         </Router>
       );
     }

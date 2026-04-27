@@ -1,28 +1,11 @@
 import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import vue from '@vitejs/plugin-vue'
+import vueJsx from '@vitejs/plugin-vue-jsx'
 import path from 'path'
 
-const jsxInJsPlugin = {
-  name: 'jsx-in-js',
-  enforce: 'post',
-  transform(code, id) {
-    if (id.endsWith('.js') && !id.includes('node_modules')) {
-      if (code.includes('</') || code.includes('/>')) {
-        return import('esbuild').then(esbuild =>
-          esbuild.transform(code, {
-            loader: 'jsx',
-            jsx: 'automatic',
-            jsxImportSource: 'react',
-            sourcemap: true
-          })
-        )
-      }
-    }
-  }
-}
-
 export default defineConfig({
-  plugins: [react(), jsxInJsPlugin],
+  plugins: [vue(), vueJsx()],
+  optimizeDeps: {},
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './client'),

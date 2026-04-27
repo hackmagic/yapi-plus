@@ -35,10 +35,10 @@ const HomeGuest = () => (
                 使用文档
               </a>
             </div>
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={9} xs={24}>
+          </NCol>
+        </NR>
+        <NR>
+          <NCol lg={9} xs={24}>
             <div className="home-des">
               <div className="logo">
                 <LogoSVG length="72px" />
@@ -57,13 +57,13 @@ const HomeGuest = () => (
                 {ThirdLogin != null ? <ThirdLogin /> : null}
               </div>
             </div>
-          </Col>
-          <Col lg={15} xs={0} className="col-img">
+          </NCol>
+          <NCol lg={15} xs={0} className="col-img">
             <div className="img-container">
               
             </div>
-          </Col>
-        </Row>
+          </NCol>
+        </NR>
       </div>
     </div>
     <div className="feat-part section-feature">

@@ -13,9 +13,6 @@ import axios from 'axios';
 import { withRouter } from 'react-router';
 import { fetchInterfaceColList } from '../../../../../reducer/modules/interfaceCol';
 
-const { TextArea } = Input;
-const Panel = Collapse.Panel;
-
 @connect(
   state => ({
     interfaceColList: state.interfaceCol.interfaceColList

@@ -23,7 +23,6 @@ import Editor from 'common/tui-editor/dist/tui-editor-Editor-all.min.js';
 const jSchema = require('json-schema-editor-visual');
 const ResBodySchema = jSchema({ lang: 'zh_CN', mock: MOCK_SOURCE });
 const ReqBodySchema = jSchema({ lang: 'zh_CN', mock: MOCK_SOURCE });
-const TabPane = Tabs.TabPane;
 
 
 require('common/tui-editor/dist/tui-editor.min.css'); // editor ui

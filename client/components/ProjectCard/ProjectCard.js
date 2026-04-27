@@ -19,7 +19,6 @@ import constants from '../../constants/variable.js';
 import produce from 'immer';
 import { getProject, checkProjectName, copyProjectMsg } from '../../reducer/modules/project';
 import { trim } from '../../common.js';
-const confirm = Modal.confirm;
 
 @connect(
   state => {

@@ -72,7 +72,11 @@ class Follows extends Component {
                       inFollowPage={true}
                       callbackResult={this.receiveRes}
                     />
-</NCol>
+                  </NCol>
+                );
+              })
+            ) : (
+              <ErrMsg text="暂无关注的项目" />
             )}
           </NR>
         </div>
