@@ -30,7 +30,7 @@
           <n-form-item label="跨域设置">
             <n-switch v-model:value="formData.cors.enable">
               <template #checked>允许</template>
-              <template #checked>不允许</template>
+              <template #unchecked>不允许</template>
             </n-switch>
           </n-form-item>
 

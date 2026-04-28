@@ -120,7 +120,7 @@ const logContent = computed(() => {
 
 const columns = [
   {
-    title: '用例名��',
+    title: '用例名称',
     key: 'name'
   },
   {

@@ -121,7 +121,7 @@ const handleSave = async () => {
     
     const res = await axios.post(url, {
       ...formData,
-      project_id: route.params.projectId
+      project_id: route.params.id
     })
     
     if (res.data.errcode === 0) {

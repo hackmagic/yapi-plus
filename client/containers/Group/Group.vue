@@ -14,7 +14,7 @@
         </n-tabs>
 
         <div class="tab-content">
-          <router-view v-if="currentComponent" />
+          <router-view v-if="!showContent" />
           <div v-else class="content-home">
             <n-card :title="groupInfo?.group_name" :bordered="false">
               <n-space vertical>
@@ -50,7 +50,7 @@ const groupId = computed(() => route.params.id)
 const groupInfo = ref(null)
 const activeTab = ref('home')
 
-const currentComponent = computed(() => null)
+const showContent = computed(() => activeTab.value === 'home')
 
 const loadGroup = async () => {
   try {

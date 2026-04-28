@@ -36,7 +36,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useMessage } from 'naive-ui'
-import ProjectCard from '../../components/ProjectCard/ProjectCard.vue'
+import ProjectCard from '../../../components/ProjectCard/ProjectCard.vue'
 import axios from 'axios'
 
 const props = defineProps({

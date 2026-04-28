@@ -2,7 +2,7 @@
   <div class="group-log-page">
     <n-card title="操作日志" :bordered="false">
       <n-spin :show="loading">
-        <n-empty v-if="logList.length ===  && !loading" description="暂无日志" />
+        <n-empty v-if="logList.length === 0 && !loading" description="暂无日志" />
         <n-timeline v-else>
           <n-timeline-item
             v-for="log in logList"

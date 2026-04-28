@@ -41,7 +41,7 @@
 import { ref, h, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../../store/user'
-import LogoSVG from '../../components/LogoSVG/index.js'
+import LogoSVG from '../../components/LogoSVG/LogoSVG.vue'
 import Search from './Search/Search.vue'
 
 const router = useRouter()

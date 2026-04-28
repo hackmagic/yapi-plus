@@ -28,9 +28,13 @@ export default defineConfig({
     assetsDir: 'assets',
     rollupOptions: {
       output: {
-        manualChunks: {
-          lib: ['axios', 'moment', 'mockjs'],
-          ui: ['naive-ui']
+        manualChunks(id) {
+          if (id.includes('node_modules/axios') || id.includes('node_modules/moment') || id.includes('node_modules/mockjs')) {
+            return 'lib'
+          }
+          if (id.includes('node_modules/naive-ui')) {
+            return 'ui'
+          }
         }
       }
     }

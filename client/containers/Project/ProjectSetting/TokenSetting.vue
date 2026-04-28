@@ -42,8 +42,9 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useMessage, useClipboard } from 'naive-ui'
+import { useMessage } from 'naive-ui'
 import axios from 'axios'
+import copy from 'copy-to-clipboard'
 
 const props = defineProps({
   projectId: {
@@ -52,7 +53,6 @@ const props = defineProps({
   }
 })
 
-const { copy, copied } = useClipboard()
 const message = useMessage()
 const generating = ref(false)
 const tokenList = ref([])
@@ -83,9 +83,7 @@ const handleGenerate = async () => {
 
 const handleCopy = (token) => {
   copy(token)
-  if (copied) {
-    message.success('已复制到剪贴板')
-  }
+  message.success('已复制到剪贴板')
 }
 
 const handleDelete = async (token) => {

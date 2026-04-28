@@ -13,14 +13,14 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
-import { useUserStore } from '../../store/user'
+import { ref } from 'vue'
+import { useRoute } from 'vue-router'
 
-const userStore = useUserStore()
+const route = useRoute()
 
-const breadcrumbList = computed(() => {
-  return userStore.breadcrumb
-})
+const breadcrumbList = ref([
+  { name: '首页', path: '/' }
+])
 </script>
 
 <style scoped>

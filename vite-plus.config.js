@@ -16,10 +16,16 @@ export default {
     // 启用 Rolldown 进行更快的生产构建
     rollupOptions: {
       output: {
-        manualChunks: {
-          'vue-vendor': ['vue', 'vue-router', 'pinia'],
-          'naive-ui': ['naive-ui'],
-          'utils': ['axios', 'json5'],
+        manualChunks(id) {
+          if (id.includes('node_modules/vue') || id.includes('node_modules/pinia') || id.includes('node_modules/vue-router')) {
+            return 'vue-vendor'
+          }
+          if (id.includes('node_modules/naive-ui')) {
+            return 'naive-ui'
+          }
+          if (id.includes('node_modules/axios') || id.includes('node_modules/json5')) {
+            return 'utils'
+          }
         }
       }
     }
