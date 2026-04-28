@@ -8,6 +8,9 @@
         <n-tab-pane name="member" tab="成员管理">
           <MemberSetting :project-id="projectId" />
         </n-tab-pane>
+        <n-tab-pane name="env" tab="环境设置">
+          <EnvSetting :project-id="projectId" />
+        </n-tab-pane>
         <n-tab-pane name="token" tab="Token管理">
           <TokenSetting :project-id="projectId" />
         </n-tab-pane>
@@ -24,6 +27,7 @@ import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import BaseSetting from './BaseSetting.vue'
 import MemberSetting from './MemberSetting.vue'
+import EnvSetting from './EnvSetting.vue'
 import TokenSetting from './TokenSetting.vue'
 import DataSetting from './DataSetting.vue'
 

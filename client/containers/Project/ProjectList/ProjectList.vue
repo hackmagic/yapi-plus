@@ -39,6 +39,13 @@ import { useMessage } from 'naive-ui'
 import ProjectCard from '../../components/ProjectCard/ProjectCard.vue'
 import axios from 'axios'
 
+const props = defineProps({
+  groupId: {
+    type: String,
+    default: null
+  }
+})
+
 const message = useMessage()
 const projectList = ref([])
 
@@ -52,7 +59,8 @@ const handleEdit = (project) => {
 
 const fetchProjects = async () => {
   try {
-    const res = await axios.get('/api/project/list')
+    const url = props.groupId ? `/api/project/list?group_id=${props.groupId}` : '/api/project/list'
+    const res = await axios.get(url)
     if (res.data.errcode === 0) {
       projectList.value = res.data.data.list
     }

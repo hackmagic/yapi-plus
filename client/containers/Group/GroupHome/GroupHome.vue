@@ -20,7 +20,7 @@
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import axios from 'axios'
-import ProjectList from './ProjectList.vue'
+import ProjectList from '../../Project/ProjectList/ProjectList.vue'
 
 const route = useRoute()
 const groupId = route.params.id

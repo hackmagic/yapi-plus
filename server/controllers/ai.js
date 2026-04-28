@@ -184,6 +184,13 @@ class aiController extends baseController {
         return;
       }
 
+      const interfaceModel = yapi.getModel('interface');
+      const interfaceData = await interfaceModel.get(interfaceId);
+      if (!interfaceData) {
+        ctx.body = yapi.commons.resError('接口不存在');
+        return;
+      }
+
       const agents = await this.model.getList();
       const agent = agents.find(a => a._id.toString() === agentId);
 
@@ -192,7 +199,16 @@ class aiController extends baseController {
         return;
       }
 
-      const prompt = `请为以下 API 接口生成详细的文档说明，包括：接口描述、请求参数、响应参数示例等。接口信息：projectId=${projectId}, interfaceId=${interfaceId}`;
+      const prompt = `请为以下 API 接口生成详细的文档说明（Markdown格式），包括：接口名称、接口描述、请求路径、请求方法、请求参数说明、响应参数示例等。
+      
+接口信息：
+名称：${interfaceData.title}
+路径：${interfaceData.path}
+方法：${interfaceData.method}
+描述：${interfaceData.desc}
+请求参数：${JSON.stringify(interfaceData.req_query || [])}
+请求体：${interfaceData.req_body_other || JSON.stringify(interfaceData.req_body_form || [])}
+响应体：${interfaceData.res_body}`;
 
       const messages = [
         { role: 'system', content: '你是一个专业的 API 文档生成助手，擅长生成清晰、易读的 API 文档。' },
@@ -235,6 +251,13 @@ class aiController extends baseController {
         return;
       }
 
+      const interfaceModel = yapi.getModel('interface');
+      const interfaceData = await interfaceModel.get(interfaceId);
+      if (!interfaceData) {
+        ctx.body = yapi.commons.resError('接口不存在');
+        return;
+      }
+
       const agents = await this.model.getList();
       const agent = agents.find(a => a._id.toString() === agentId);
 
@@ -243,7 +266,15 @@ class aiController extends baseController {
         return;
       }
 
-      const prompt = `请为以下 API 接口生成测试用例代码，包括正常的请求测试和边界情况测试。接口信息：projectId=${projectId}, interfaceId=${interfaceId}`;
+      const prompt = `请为以下 API 接口生成自动化测试用例代码。要求包括正常的请求测试和边界情况测试，并提供详细的代码注释。
+      
+接口信息：
+名称：${interfaceData.title}
+路径：${interfaceData.path}
+方法：${interfaceData.method}
+请求参数：${JSON.stringify(interfaceData.req_query || [])}
+请求体：${interfaceData.req_body_other || JSON.stringify(interfaceData.req_body_form || [])}
+响应体：${interfaceData.res_body}`;
 
       const messages = [
         { role: 'system', content: '你是一个专业的测试工程师，擅长生成高质量的测试用例代码。' },

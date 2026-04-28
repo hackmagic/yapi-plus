@@ -48,8 +48,15 @@ const routes = [
   },
   {
     path: '/user',
-    name: 'User',
-    component: () => import('../containers/User/UserList/UserDetail.vue')
+    name: 'UserList',
+    component: () => import('../containers/User/UserList/UserList.vue'),
+    meta: { requiresAdmin: true }
+  },
+  {
+    path: '/user/:id',
+    name: 'UserDetail',
+    component: () => import('../containers/User/UserList/UserDetail.vue'),
+    meta: { requiresAdmin: true }
   },
   {
     path: '/follows',
@@ -60,6 +67,12 @@ const routes = [
     path: '/system-settings',
     name: 'SystemSettings',
     component: () => import('../containers/SystemSettings/SystemSettings.vue'),
+    meta: { requiresAdmin: true }
+  },
+  {
+    path: '/ai-agent',
+    name: 'AiAgent',
+    component: () => import('../containers/AiAgent/AiAgent.vue'),
     meta: { requiresAdmin: true }
   }
 ]

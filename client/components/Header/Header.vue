@@ -48,11 +48,22 @@ const router = useRouter()
 const userStore = useUserStore()
 const activeMenu = ref('home')
 
-const menuOptions = computed(() => [
-  { label: '首页', key: 'home', onClick: () => router.push('/') },
-  { label: '我的项目', key: 'group', onClick: () => router.push('/group') },
-  { label: '我的关注', key: 'follow', onClick: () => router.push('/follow') },
-])
+const menuOptions = computed(() => {
+  const options = [
+    { label: '首页', key: 'home', onClick: () => router.push('/') },
+    { label: '项目广场', key: 'group', onClick: () => router.push('/group') }
+  ]
+
+  if (userStore.role === 'admin') {
+    options.push(
+      { label: 'AI 助手', key: 'ai-agent', onClick: () => router.push('/ai-agent') },
+      { label: '用户管理', key: 'user-manage', onClick: () => router.push('/user') },
+      { label: '系统设置', key: 'system-settings', onClick: () => router.push('/system-settings') }
+    )
+  }
+
+  return options
+})
 
 const userMenuOptions = [
   { label: '个人中心', key: 'profile', icon: () => h('span', {}, '👤') },
