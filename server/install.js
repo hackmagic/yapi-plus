@@ -8,6 +8,11 @@ const mongoose = require('mongoose');
 yapi.commons = commons;
 yapi.connect = dbModule.connect();
 
+// 显示弃用提示
+console.log('\n⚠️  注意：此安装方式已被弃用。');
+console.log('推荐使用 Web 配置向导进行初始化配置。');
+console.log('请访问 http://localhost:' + yapi.WEBCONFIG.port + '/setup 进行配置。\n');
+
 function install() {
   let exist = yapi.commons.fileExist(yapi.path.join(yapi.WEBROOT_RUNTIME, 'init.lock'));
 

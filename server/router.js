@@ -5,6 +5,7 @@ const userController = require('./controllers/user.js');
 const interfaceColController = require('./controllers/interfaceCol.js');
 const testController = require('./controllers/test.js');
 const aiController = require('./controllers/ai.js');
+const configController = require('./controllers/configController.js');
 
 const yapi = require('./yapi.js');
 const projectController = require('./controllers/project.js');
@@ -55,6 +56,10 @@ let INTERFACE_CONFIG = {
   ai: {
     prefix: '/ai/',
     controller: aiController
+  },
+  config: {
+    prefix: '/config/',
+    controller: configController
   }
 };
 
@@ -618,6 +623,23 @@ let routerConfig = {
     {
       action: 'generateTestCase',
       path: 'generate/testcase',
+      method: 'post'
+    }
+  ],
+  config: [
+    {
+      action: 'getConfigStatus',
+      path: 'status',
+      method: 'get'
+    },
+    {
+      action: 'testDatabase',
+      path: 'test-db',
+      method: 'post'
+    },
+    {
+      action: 'saveConfig',
+      path: 'save',
       method: 'post'
     }
   ]

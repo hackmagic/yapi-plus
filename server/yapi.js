@@ -10,10 +10,50 @@ const WEBROOT = path.resolve(__dirname, '..'); //路径
 const WEBROOT_SERVER = __dirname;
 const WEBROOT_RUNTIME = path.resolve(__dirname, '../..');
 const WEBROOT_LOG = path.join(WEBROOT_RUNTIME, 'log');
-const WEBCONFIG = config;
+
+// 支持动态配置的 WEBCONFIG
+let WEBCONFIG = { ...config };
 
 fs.ensureDirSync(WEBROOT_LOG);
 
+/**
+ * 从数据库加载配置并更新 WEBCONFIG
+ */
+async function loadConfigFromDB() {
+  try {
+    const mongoose = require('mongoose');
+    const SystemConfigModel = require('./models/systemConfig.js');
+    const SystemConfig = mongoose.model('system_config', new mongoose.Schema(SystemConfigModel.schema));
+    
+    const configs = await SystemConfig.find({ isConfigured: true });
+    if (configs && configs.length > 0) {
+      const configMap = {};
+      configs.forEach(item => {
+        configMap[item.configKey] = item.configValue;
+      });
+      
+      // 更新 WEBCONFIG
+      if (configMap.database) {
+        WEBCONFIG.db = configMap.database;
+      }
+      if (configMap.admin) {
+        WEBCONFIG.adminAccount = configMap.admin.adminAccount;
+      }
+      if (configMap.mail) {
+        WEBCONFIG.mail = configMap.mail;
+      }
+      
+      console.log('✓ 已从数据库加载配置');
+      return true;
+    }
+    return false;
+  } catch (err) {
+    console.log('数据库配置加载失败，使用 config.json:', err.message);
+    return false;
+  }
+}
+
+// 初始化邮件配置
 if (WEBCONFIG.mail && WEBCONFIG.mail.enable) {
   mail = nodemailer.createTransport(WEBCONFIG.mail);
 }
@@ -56,11 +96,17 @@ let r = {
   WEBROOT_SERVER: WEBROOT_SERVER,
   WEBROOT_RUNTIME: WEBROOT_RUNTIME,
   WEBROOT_LOG: WEBROOT_LOG,
-  WEBCONFIG: WEBCONFIG,
+  get WEBCONFIG() {
+    return WEBCONFIG;
+  },
+  set WEBCONFIG(val) {
+    WEBCONFIG = val;
+  },
   getInst: getInst,
   delInst: delInst,
   getInsts: insts,
-  getModel: getModel
+  getModel: getModel,
+  loadConfigFromDB: loadConfigFromDB
 };
 if (mail) r.mail = mail;
 module.exports = r;
