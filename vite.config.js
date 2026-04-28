@@ -29,7 +29,6 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom', 'redux', 'react-redux', 'react-router-dom'],
           lib: ['axios', 'moment', 'mockjs'],
           ui: ['naive-ui']
         }

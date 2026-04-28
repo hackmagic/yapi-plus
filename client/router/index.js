@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import axios from 'axios'
 
 const routes = [
   {
@@ -100,6 +101,83 @@ const routes = [
     name: 'AiAgent',
     component: () => import('../containers/AiAgent/AiAgent.vue'),
     meta: { requiresAdmin: true }
+  },
+  {
+    path: '/search',
+    name: 'Search',
+    component: () => import('../containers/Search/Search.vue')
+  },
+  {
+    path: '/project/:projectId/interface/col/:colId',
+    name: 'InterfaceColContent',
+    component: () => import('../containers/Project/Interface/Interface.vue'),
+    children: [
+      {
+        path: '',
+        redirect: (to) => `/project/${to.params.projectId}/interface/col/${to.params.colId}/list`
+      },
+      {
+        path: 'list',
+        component: () => import('../containers/Project/Interface/InterfaceCol/InterfaceColContent.vue')
+      },
+      {
+        path: 'run',
+        component: () => import('../containers/Project/Interface/InterfaceCol/CaseReport.vue')
+      },
+      {
+        path: 'import',
+        component: () => import('../containers/Project/Interface/InterfaceCol/ImportInterface.vue')
+      },
+      {
+        path: 'addCase',
+        component: () => import('../containers/Project/Interface/InterfaceList/Run/Run.vue')
+      }
+    ]
+  },
+  {
+    path: '/project/:projectId/interface/case/:caseId',
+    name: 'InterfaceCaseContent',
+    component: () => import('../containers/Project/Interface/Interface.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('../containers/Project/Interface/InterfaceCol/InterfaceCaseContent.vue')
+      },
+      {
+        path: 'run',
+        component: () => import('../containers/Project/Interface/InterfaceList/Run/Run.vue')
+      }
+    ]
+  },
+  {
+    path: '/project/:id/interface/api/:actionId',
+    name: 'InterfaceWithId',
+    component: () => import('../containers/Project/Interface/Interface.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('../containers/Project/Interface/InterfaceList/InterfaceEditForm.vue')
+      },
+      {
+        path: 'run',
+        component: () => import('../containers/Project/Interface/InterfaceList/Run/Run.vue')
+      }
+    ]
+  },
+  {
+    path: '/project/:projectId/setting/mock',
+    name: 'ProjectMock',
+    component: () => import('../containers/Project/Setting/ProjectMock/ProjectMock.vue')
+  },
+  {
+    path: '/project/:projectId/setting/request',
+    name: 'ProjectRequest',
+    component: () => import('../containers/Project/Setting/ProjectRequest/ProjectRequest.vue')
+  },
+  {
+    path: '/project/:projectId/setting/tag',
+    name: 'ProjectTag',
+    component: () => import('../containers/Project/Setting/ProjectMessage/ProjectTag.vue')
   }
 ]
 
@@ -108,16 +186,27 @@ const router = createRouter({
   routes
 })
 
-// 路由守卫
-router.beforeEach((to, from, next) => {
-  // 检查是否需要管理员权限
+router.beforeEach(async (to, from, next) => {
   if (to.meta.requiresAdmin) {
-    // TODO: 实现管理员权限检查
-    // const userInfo = getUserInfo()
-    // if (userInfo.role !== 'admin') {
-    //   next('/login')
-    //   return
-    // }
+    const isLoginPage = to.path === '/login'
+    if (!isLoginPage) {
+      try {
+        const res = await axios.get('/api/user/current')
+        if (res.data.errcode === 0) {
+          const userInfo = res.data.data
+          if (userInfo.role !== 'admin') {
+            next('/login')
+            return
+          }
+        } else {
+          next('/login')
+          return
+        }
+      } catch (e) {
+        next('/login')
+        return
+      }
+    }
   }
   
   next()
