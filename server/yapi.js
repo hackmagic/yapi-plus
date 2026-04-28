@@ -22,6 +22,13 @@ fs.ensureDirSync(WEBROOT_LOG);
 async function loadConfigFromDB() {
   try {
     const mongoose = require('mongoose');
+    
+    // 检查数据库是否已连接
+    if (mongoose.connection.readyState !== 1) {
+      console.log('数据库未连接，跳过加载配置');
+      return false;
+    }
+    
     const SystemConfigModel = require('./models/systemConfig.js');
     const SystemConfig = mongoose.model('system_config', new mongoose.Schema(SystemConfigModel.schema));
     

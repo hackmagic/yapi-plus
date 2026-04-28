@@ -68,6 +68,8 @@ function connect(callback) {
     },
     function(err) {
       yapi.commons.log(err + 'mongodb connect error', 'error');
+      // 重新抛出错误，让调用者能够捕获
+      throw err;
     }
   );
 
