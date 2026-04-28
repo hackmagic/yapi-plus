@@ -41,6 +41,7 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
+    "@vicons/ionicons5": "^0.13.0",
     "ace-builds": "^1.43.6",
     "ajv": "^5.5.1",
     "ajv-i18n": "^2.2.0",
