@@ -40,13 +40,34 @@ npm run install-server
 
 > ⚠️ 首次登录后请立即修改密码！
 
-### 启动开发服务器
+### 启动开发服务器（推荐）
+
+**一键启动（前后端同时启动）**：
 
 ```bash
+# 方式1：使用 npm 脚本（推荐）
 npm run dev
-# 或使用 VitePlus 命令
-vp dev
+
+# 方式2：快速启动（跳过图标复制）
+npm run dev:fast
+
+# 方式3：双击批处理文件（Windows）
+start-dev.bat
 ```
+
+**分别启动**：
+
+```bash
+# 仅启动后端
+npm run dev-server
+
+# 仅启动前端
+npm run dev-client
+```
+
+**开发服务器地址**：
+- 前端：http://localhost:4000
+- 后端：http://127.0.0.1:3000
 
 ### 构建生产版本
 
@@ -58,8 +79,20 @@ vp build
 
 ### 启动生产服务
 
+**一键启动（前后端同时）**：
+
 ```bash
-npm run start
+# 使用 npm 脚本
+npm run start:all
+
+# 或双击批处理文件（Windows）
+start.bat
+```
+
+**仅启动后端**：
+
+```bash
+npm start
 ```
 
 ## 项目结构
