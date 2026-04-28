@@ -1,33 +1,153 @@
 <template>
   <div class="project-page">
-    <n-layout>
-      <n-layout-header bordered class="header">
-        <h2>项目详情 - {{ projectId }}</h2>
-      </n-layout-header>
-      <n-layout-content content-style="padding: 24px;">
-        <n-card>
-          <p>组件迁移中...</p>
-          <p>Project 页面正在从 React 转换为 Vue 3</p>
-        </n-card>
-      </n-layout-content>
+    <n-layout has-sider style="min-height: calc(100vh - 60px);">
+      <n-layout-sider
+        bordered
+        :width="200"
+        :collapsed-width="64"
+        collapse-mode="width"
+        :collapsed="collapsed"
+        show-trigger
+        @collapse="collapsed = true"
+        @expand="collapsed = false"
+      >
+        <div class="project-info" v-if="!collapsed">
+          <h3>{{ projectInfo?.name || '加载中...' }}</h3>
+          <p class="project-desc">{{ projectInfo?.desc || '暂无描述' }}</p>
+        </div>
+
+        <n-menu
+          :value="activeMenu"
+          :collapsed="collapsed"
+          :collapsed-width="64"
+          :options="menuOptions"
+          @update:value="handleMenuSelect"
+        />
+      </n-layout-sider>
+
+      <n-layout>
+        <n-layout-content content-style="padding: 16px;">
+          <router-view />
+        </n-layout-content>
+      </n-layout>
     </n-layout>
   </div>
 </template>
 
 <script setup>
-import { useRoute } from 'vue-router'
-import { computed } from 'vue'
+import { ref, computed, onMounted, h } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { NIcon } from 'naive-ui'
+import {
+  ApiOutline,
+  SettingsOutline,
+  SpeedometerOutline,
+  DocumentTextOutline,
+  LayersOutline
+} from '@vicons/ionicons5'
+import { useProjectStore } from '@/store/project'
 
 const route = useRoute()
+const router = useRouter()
+const projectStore = useProjectStore()
+
+const collapsed = ref(false)
 const projectId = computed(() => route.params.id)
-// TODO: 从 React 组件迁移完整功能
+const projectInfo = computed(() => projectStore.currentProject)
+const activeMenu = computed(() => route.meta?.menuKey || 'interface')
+
+const renderIcon = (icon) => {
+  return () => h(NIcon, null, { default: () => h(icon) })
+}
+
+const menuOptions = computed(() => [
+  {
+    label: '接口',
+    key: 'interface',
+    icon: renderIcon(ApiOutline)
+  },
+  {
+    label: '测试',
+    key: 'col',
+    icon: renderIcon(LayersOutline)
+  },
+  {
+    label: '设置',
+    key: 'setting',
+    icon: renderIcon(SettingsOutline),
+    children: [
+      {
+        label: '基础设置',
+        key: 'setting/base',
+        icon: renderIcon(SettingsOutline)
+      },
+      {
+        label: '成员管理',
+        key: 'setting/member',
+        icon: renderIcon(SpeedometerOutline)
+      },
+      {
+        label: '环境配置',
+        key: 'setting/env',
+        icon: renderIcon(SpeedometerOutline)
+      },
+      {
+        label: 'Mock 设置',
+        key: 'setting/mock',
+        icon: renderIcon(DocumentTextOutline)
+      },
+      {
+        label: '高级功能',
+        key: 'setting/advanced',
+        icon: renderIcon(SettingsOutline)
+      }
+    ]
+  }
+])
+
+const loadProject = async () => {
+  if (projectId.value) {
+    await projectStore.fetchProject(projectId.value)
+  }
+}
+
+onMounted(() => {
+  loadProject()
+})
+
+const handleMenuSelect = (key) => {
+  if (key === 'interface') {
+    router.push(`/project/${projectId.value}/interface`)
+  } else if (key === 'col') {
+    router.push(`/project/${projectId.value}/interface/col`)
+  } else if (key.startsWith('setting')) {
+    router.push(`/project/${projectId.value}/${key}`)
+  }
+}
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .project-page {
   min-height: 100vh;
 }
-.header {
-  padding: 16px 24px;
+
+.project-info {
+  padding: 16px;
+  border-bottom: 1px solid #e8e8e8;
+
+  h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  .project-desc {
+    margin: 8px 0 0;
+    font-size: 12px;
+    color: #999;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }
 </style>

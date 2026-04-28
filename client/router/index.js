@@ -24,7 +24,33 @@ const routes = [
   {
     path: '/group/:id',
     name: 'Group',
-    component: () => import('../containers/Group/GroupHome/GroupHome.vue')
+    component: () => import('../containers/Group/Group.vue'),
+    children: [
+      {
+        path: '',
+        redirect: (to) => `/group/${to.params.id}/home`
+      },
+      {
+        path: 'home',
+        component: () => import('../containers/Group/GroupHome/GroupHome.vue')
+      },
+      {
+        path: 'project',
+        component: () => import('../containers/Group/ProjectList/ProjectList.vue')
+      },
+      {
+        path: 'member',
+        component: () => import('../containers/Group/MemberList/MemberList.vue')
+      },
+      {
+        path: 'setting',
+        component: () => import('../containers/Group/GroupSetting/GroupSetting.vue')
+      },
+      {
+        path: 'log',
+        component: () => import('../containers/Group/GroupLog/GroupLog.vue')
+      }
+    ]
   },
   {
     path: '/project/:id',
