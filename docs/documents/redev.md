@@ -98,20 +98,21 @@ npm run dev
 
 后端： koa mongoose
 
-前端： react redux
+前端： vue3 viteplus naive-ui pinia
 
 ## 启动开发环境服务器
 
 ```bash
-  cd vendors
+  npm run dev:server    # 启动后端开发服务器
+  npm run dev:client   # 启动前端开发服务器
+  # 或一键启动（推荐）
   npm run dev
-  # 启动服务器后，请访问 127.0.0.1:{config.json配置的端口}，初次运行会有个编译的过程，请耐心等候
+  # 访问 http://localhost:4000
 ```
 
 ## 启动生产环境服务器
 
 ```bash
-  cd vendors
-  ykit pack -m
-  node server/app.js
+  npm run build        # 构建前端
+  npm start          # 启动后端服务器
 ```

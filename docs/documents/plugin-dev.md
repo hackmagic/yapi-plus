@@ -1,8 +1,11 @@
 ## 运行开发服务器
 ```bash
 npm install
-npm install -g ykit #依赖 ykit 
-npm run dev #启动开发服务器
+npm run dev:server    # 启动后端开发服务器
+npm run dev:client   # 启动前端开发服务器（另一个终端）
+
+# 或一键启动（推荐）
+npm run dev
 ```
 
 ## 加载插件
