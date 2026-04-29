@@ -28,13 +28,19 @@ class interfaceColController extends baseController {
   async list(ctx) {
     try {
       let id = ctx.query.project_id;
+      let page = parseInt(ctx.request.query.page) || 1;
+      let limit = parseInt(ctx.request.query.limit) || 20;
+      const MAX_LIMIT = 500;
+      limit = Math.min(limit, MAX_LIMIT);
+
       let project = await this.projectModel.getBaseInfo(id);
       if (project.project_type === 'private') {
         if ((await this.checkAuth(project._id, 'project', 'view')) !== true) {
           return (ctx.body = yapi.commons.resReturn(null, 406, '没有权限'));
         }
       }
-      let result = await this.colModel.list(id);
+      let count = await this.colModel.listCount(id);
+      let result = await this.colModel.listWithPaging(id, page, limit);
       result = result.sort((a, b) => {
         return a.index - b.index;
       });
@@ -61,7 +67,12 @@ class interfaceColController extends baseController {
         caseList = caseList.sort((a, b) => a.index - b.index);
         result[i].caseList = caseList;
       }
-      ctx.body = yapi.commons.resReturn(result);
+      ctx.body = yapi.commons.resReturn({
+        list: result,
+        total: count,
+        page: page,
+        limit: limit
+      });
     } catch (e) {
       ctx.body = yapi.commons.resReturn(null, 402, e.message);
     }

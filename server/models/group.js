@@ -146,7 +146,24 @@ class groupModel extends baseModel {
       .exec();
   }
 
-  getAuthList(uid){
+  listWithPaging(page, limit) {
+    return this.model
+      .find({
+        type: 'public'
+      })
+      .select('group_name _id group_desc add_time up_time type uid custom_field1')
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .exec();
+  }
+
+  listCount() {
+    return this.model.countDocuments({
+      type: 'public'
+    });
+  }
+
+getAuthListWithPaging(uid, page, limit) {
     return this.model.find({
       $or: [{
         'members.uid': uid,
@@ -155,9 +172,22 @@ class groupModel extends baseModel {
         'type': 'public',
         uid
       }]
-    }).select(' _id group_name group_desc add_time up_time type uid custom_field1')
+    }).select('_id group_name group_desc add_time up_time type uid custom_field1')
+    .skip((page - 1) * limit)
+    .limit(limit)
     .exec();
-    
+  }
+
+  getAuthListCount(uid) {
+    return this.model.countDocuments({
+      $or: [{
+        'members.uid': uid,
+        'type': 'public'
+      }, {
+        'type': 'public',
+        uid
+      }]
+    });
   }
 
   findByGroups(ids = []){

@@ -402,6 +402,11 @@ class groupController extends baseController {
     var groupInst = yapi.getInst(groupModel);
     let projectInst = yapi.getInst(projectModel);
 
+    let page = parseInt(ctx.request.query.page) || 1;
+    let limit = parseInt(ctx.request.query.limit) || 20;
+    const MAX_LIMIT = 500;
+    limit = Math.min(limit, MAX_LIMIT);
+
     let privateGroup = await groupInst.getByPrivateUid(this.getUid());
     let newResult = [];
 
@@ -457,7 +462,13 @@ class groupController extends baseController {
       newResult.unshift(privateGroup);
     }
 
-    ctx.body = yapi.commons.resReturn(newResult);
+    let total = await groupInst.listCount() + (privateGroup ? 1 : 0);
+    ctx.body = yapi.commons.resReturn({
+      list: newResult,
+      total: total,
+      page: page,
+      limit: limit
+    });
   }
 
   /**

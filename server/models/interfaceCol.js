@@ -80,6 +80,23 @@ class interfaceCol extends baseModel {
       .exec();
   }
 
+  listCount(project_id) {
+    return this.model.countDocuments({
+      project_id: project_id
+    });
+  }
+
+  listWithPaging(project_id, page, limit) {
+    return this.model
+      .find({
+        project_id: project_id
+      })
+      .select('name uid project_id desc add_time up_time index')
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .exec();
+  }
+
   del(id) {
     return this.model.remove({
       _id: id

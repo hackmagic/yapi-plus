@@ -559,6 +559,10 @@ class projectController extends baseController {
   async list(ctx) {
     let group_id = ctx.params.group_id,
       project_list = [];
+    let page = parseInt(ctx.request.query.page) || 1;
+    let limit = parseInt(ctx.request.query.limit) || 20;
+    const MAX_LIMIT = 500;
+    limit = Math.min(limit, MAX_LIMIT);
 
     let groupData = await this.groupModel.get(group_id);
     let isPrivateGroup = false;
@@ -566,7 +570,8 @@ class projectController extends baseController {
       isPrivateGroup = true;
     }
     let auth = await this.checkAuth(group_id, 'group', 'view');
-    let result = await this.Model.list(group_id);
+    let count = await this.Model.listCount(group_id);
+    let result = await this.Model.listWithPaging(group_id, page, limit);
     let follow = await this.followModel.list(this.getUid());
     if (isPrivateGroup === false) {
       for (let index = 0, item, r = 1; index < result.length; index++) {
@@ -581,7 +586,6 @@ class projectController extends baseController {
         let f = _.find(follow, fol => {
           return fol.projectid === item._id;
         });
-        // 排序：收藏的项目放前面
         if (f) {
           item.follow = true;
           project_list.unshift(item);
@@ -601,7 +605,10 @@ class projectController extends baseController {
     }
 
     ctx.body = yapi.commons.resReturn({
-      list: project_list
+      list: project_list,
+      total: count,
+      page: page,
+      limit: limit
     });
   }
 

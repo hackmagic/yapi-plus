@@ -60,6 +60,19 @@ exports.schemaToJson = function (schema, options = {}) {
   return result;
 };
 
+exports.errcode = {
+  OK: 0,
+  BAD_REQUEST: 400,
+  UNAUTHORIZED: 401,
+  SERVER_ERROR: 402,
+  NOT_FOUND: 404,
+  FORBIDDEN: 405,
+  NO_PERMISSION: 406,
+  BUSINESS_ERROR: 407,
+  NEED_LOGIN: 40011,
+  INVALID_TOKEN: 40012
+};
+
 exports.resReturn = (data, num, errmsg) => {
   num = num || 0;
 
@@ -81,16 +94,16 @@ exports.log = (msg, type) => {
 
   switch (type) {
     case 'log':
-      f = console.log; // eslint-disable-line
+      f = console.log;
       break;
     case 'warn':
-      f = console.warn; // eslint-disable-line
+      f = console.warn;
       break;
     case 'error':
-      f = console.error; // eslint-disable-line
+      f = console.error;
       break;
     default:
-      f = console.log; // eslint-disable-line
+      f = console.log;
       break;
   }
 
@@ -107,11 +120,10 @@ exports.log = (msg, type) => {
     else msg = JSON.stringify(msg);
   }
 
-  // let data = (new Date).toLocaleString() + '\t|\t' + type + '\t|\t' + msg + '\n';
   let data = `[ ${new Date().toLocaleString()} ] [ ${type} ] ${msg}\n`;
 
-  fs.writeFileSync(logfile, data, {
-    flag: 'a'
+  fs.writeFile(logfile, data, { flag: 'a' }, err => {
+    if (err) console.error('Async log write failed:', err);
   });
 };
 
