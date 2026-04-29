@@ -9,58 +9,70 @@ class aiController extends baseController {
   }
 
   /**
-   * 获取 AI 助手列表
-   */
-  async getAiAgents(ctx) {
-    try {
-      const agents = await this.model.getList();
-      ctx.body = yapi.commons.resSuccess(agents);
-    } catch (err) {
-      ctx.body = yapi.commons.resError(err.message);
-    }
-  }
+    * 获取 AI 助手列表
+    */
+   async getAiAgents(ctx) {
+     if (this.$auth !== true) {
+       return (ctx.body = yapi.commons.resReturn(null, 40011, '请登录...'));
+     }
+     try {
+       const agents = await this.model.getList();
+       ctx.body = yapi.commons.resSuccess(agents);
+     } catch (err) {
+       ctx.body = yapi.commons.resError(err.message);
+     }
+   }
 
   /**
-   * 创建 AI 助手
-   */
-  async addAiAgent(ctx) {
-    try {
-      const params = ctx.request.body;
-      if (!params.baseURL) {
-        params.baseURL = 'https://api.deepseek.com';
-      }
-      const agent = await this.model.save(params);
-      ctx.body = yapi.commons.resSuccess(agent);
-    } catch (err) {
-      ctx.body = yapi.commons.resError(err.message);
-    }
-  }
+    * 创建 AI 助手
+    */
+   async addAiAgent(ctx) {
+     if (this.$auth !== true) {
+       return (ctx.body = yapi.commons.resReturn(null, 40011, '请登录...'));
+     }
+     try {
+       const params = ctx.request.body;
+       if (!params.baseURL) {
+         params.baseURL = 'https://api.deepseek.com';
+       }
+       const agent = await this.model.save(params);
+       ctx.body = yapi.commons.resSuccess(agent);
+     } catch (err) {
+       ctx.body = yapi.commons.resError(err.message);
+     }
+   }
 
   /**
-   * 更新 AI 助手
-   */
-  async updateAiAgent(ctx) {
-    try {
-      const params = ctx.request.body;
-      const agent = await this.model.update(params);
-      ctx.body = yapi.commons.resSuccess(agent);
-    } catch (err) {
-      ctx.body = yapi.commons.resError(err.message);
-    }
-  }
+    * 更新 AI 助手
+    */
+   async updateAiAgent(ctx) {
+     if (this.$auth !== true) {
+       return (ctx.body = yapi.commons.resReturn(null, 40011, '请登录...'));
+     }
+     try {
+       const params = ctx.request.body;
+       const agent = await this.model.update(params);
+       ctx.body = yapi.commons.resSuccess(agent);
+     } catch (err) {
+       ctx.body = yapi.commons.resError(err.message);
+     }
+   }
 
   /**
-   * 删除 AI 助手
-   */
-  async deleteAiAgent(ctx) {
-    try {
-      const id = ctx.request.body.id;
-      await this.model.remove(id);
-      ctx.body = yapi.commons.resSuccess({});
-    } catch (err) {
-      ctx.body = yapi.commons.resError(err.message);
-    }
-  }
+    * 删除 AI 助手
+    */
+   async deleteAiAgent(ctx) {
+     if (this.$auth !== true) {
+       return (ctx.body = yapi.commons.resReturn(null, 40011, '请登录...'));
+     }
+     try {
+       const id = ctx.request.body.id;
+       await this.model.remove(id);
+       ctx.body = yapi.commons.resSuccess({});
+     } catch (err) {
+       ctx.body = yapi.commons.resError(err.message);
+     }
+   }
 
   /**
    * 调用 AI API
@@ -128,10 +140,13 @@ class aiController extends baseController {
   }
 
   /**
-   * 与 AI 助手对话
-   */
-  async chatWithAiAgent(ctx) {
-    try {
+    * 与 AI 助手对话
+    */
+   async chatWithAiAgent(ctx) {
+     if (this.$auth !== true) {
+       return (ctx.body = yapi.commons.resReturn(null, 40011, '请登录...'));
+     }
+     try {
       const params = ctx.request.body;
       const { agentId, message } = params;
 
@@ -172,10 +187,13 @@ class aiController extends baseController {
   }
 
   /**
-   * 生成 API 文档
-   */
-  async generateApiDoc(ctx) {
-    try {
+    * 生成 API 文档
+    */
+   async generateApiDoc(ctx) {
+     if (this.$auth !== true) {
+       return (ctx.body = yapi.commons.resReturn(null, 40011, '请登录...'));
+     }
+     try {
       const params = ctx.request.body;
       const { projectId, interfaceId, agentId } = params;
 
@@ -239,10 +257,13 @@ class aiController extends baseController {
   }
 
   /**
-   * 生成测试用例
-   */
-  async generateTestCase(ctx) {
-    try {
+    * 生成测试用例
+    */
+   async generateTestCase(ctx) {
+     if (this.$auth !== true) {
+       return (ctx.body = yapi.commons.resReturn(null, 40011, '请登录...'));
+     }
+     try {
       const params = ctx.request.body;
       const { projectId, interfaceId, agentId } = params;
 

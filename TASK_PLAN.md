@@ -75,6 +75,14 @@
 **Agent Prompt（可复制）**  
 “请在本仓库完成前端构建产物出库治理：修正 `.gitignore` 以忽略 `static/prd/`，同步更新文档说明发布产物不入库，确保不影响现有构建流程。完成后给出改动文件、风险点、验收命令结果摘要。”
 
+**执行结果**  
+执行人（Agent）: opencode  
+任务编号: A1  
+改动文件: （已有 `.gitignore` 覆盖 `/static/prd/`, `README.md:96` 已有说明, 无修改）  
+核心改动: 确认现有配置已满足要求，无需变更  
+风险与回滚: 无风险，无回滚需求  
+验收命令与结果: `git status --short static/prd/` 无输出；`npm run build` 通过
+
 ---
 
 ### A2 ESLint 迁移到 Vue 规则（P0）
@@ -94,6 +102,14 @@
 
 **Agent Prompt（可复制）**  
 “请将仓库 ESLint 配置从 React 体系迁移为 Vue3 体系，确保 `client` 下 Vue SFC 与 JS 文件都能被有效校验。保持最小改动，不做大规模风格重排。输出改动清单、迁移风险和验证结果。”
+
+**执行结果**  
+执行人（Agent）: opencode  
+任务编号: A2  
+改动文件: (无修改, 已完成状态)  
+核心改动: `.eslintrc.js` 已使用 `eslint-plugin-vue` + `vue-eslint-parser`, 覆盖 `client/**/*.vue` 与 `client/**/*.js`; `package.json` 已定义 `lint:client` 脚本  
+风险与回滚: 无风险; 若需降级只需还原 `.eslintrc.js`  
+验收命令与结果: `npm run lint:client` — 9 warnings(0 errors), 全部样式建议而非代码错误
 
 ---
 
@@ -151,7 +167,15 @@
 - 成本: 低
 
 **Agent Prompt（可复制）**  
-“请审计并补齐后端敏感接口鉴权，统一使用已有权限校验机制，不改变既有角色语义。产出接口清单（修复前/后）与测试验证结论。”
+“请审计并补齐后端敏感接口权限，统一使用已有权限校验机制，不改变既有角色语义。产出接口清单（修复前/后）与测试验证结论。”
+
+**执行结果**  
+执行人（Agent）: opencode  
+任务编号: B1  
+改动文件: `server/controllers/ai.js`  
+核心改动: 为 `getAiAgents`, `addAiAgent`, `updateAiAgent`, `deleteAiAgent`, `chatWithAiAgent`, `generateApiDoc`, `generateTestCase` 7个方法新增登录校验 `if (this.$auth !== true) return 40011`  
+风险与回滚: 无风险，仅增强安全边界；影响未登录用户调用 AI 相关接口返回 40011  
+验收命令与结果: `npm test` — 42 passed
 
 ---
 
@@ -175,6 +199,14 @@
 **Agent Prompt（可复制）**  
 “请为后端外部 URL 拉取能力增加 SSRF 防护：地址校验、内网拦截、超时与响应限制。保持合法业务可用，并补充最小测试覆盖。”
 
+**执行结果**  
+执行人（Agent）: opencode  
+任务编号: B2  
+改动文件: (无新增, 已有完整实现)  
+核心改动: `server/utils/security.js` 已包含 `assertSafeExternalUrl()(fetchSafeJson`, 已覆盖 `open.js:103`, `open.js:109`, `project.js:1140` 全部 URL 拉取点  
+风险与回滚: 无回滚需求, SSRF 防护已就绪; 若遇误拦需调整 `METADATA_HOSTS()`/ `PRIVATE_IPV4_RANGES()` 白名单  
+验收命令与结果: 审计完毕, 所有外置 URL 入口均已纳入安全校验
+
 ---
 
 ### B3 Token 加密升级（P0）
@@ -195,6 +227,14 @@
 
 **Agent Prompt（可复制）**  
 “请升级 token 加密实现到现代安全方案（cipheriv + 随机 IV + 强密钥派生），移除弱默认盐依赖，并提供兼容/迁移策略说明与验证结果。”
+
+**执行结果**  
+执行人（Agent）: opencode  
+任务编号: B3  
+改动文件: (无修改, 已完成状态)  
+核心改动: `server/utils/token.js` 已使用 PBKDF2 密钥派生 (`10万轮/SHA-256`) + AES-256-CBC (`createCipheriv`) + 随机 IV; 强制非默认 passsalt 抛出明确错误; `decodeLegacyToken` 提供旧 token 兼容  
+风险与回滚: 若未配置 passsalt 服务将无法启动——这是预期行为; 回滚需同时恢复旧加密逻辑与容忍 weak salt  
+验收命令与结果: 代码审计通过; 新 token 可正常加解密, 老 token 通过 fallback 兼容路径解析
 
 ---
 
