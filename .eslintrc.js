@@ -1,32 +1,47 @@
-module.exports = {
-    env: {
-        "browser": true,
-        "commonjs": true,
-        "es6": true,
-        "node": true
+﻿module.exports = {
+  root: true,
+  env: {
+    browser: true,
+    commonjs: true,
+    es2021: true,
+    node: true
+  },
+  extends: ['eslint:recommended'],
+  rules: {
+    'indent': ['off', 2],
+    'comma-dangle': 'off',
+    'no-console': ['off'],
+    'no-empty': ['off']
+  },
+  overrides: [
+    {
+      files: ['client/**/*.vue'],
+      parser: 'vue-eslint-parser',
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module'
+      },
+      extends: ['plugin:vue/recommended'],
+      rules: {
+        'no-unused-vars': 'off',
+        'no-undef': 'off',
+        'vue/multi-word-component-names': 'off',
+        'vue/max-attributes-per-line': 'off',
+        'vue/attributes-order': 'off',
+        'vue/singleline-html-element-content-newline': 'off'
+      }
     },
-    extends: ["eslint:recommended", "plugin:react/recommended"],
-    parser: "babel-eslint",
-    parserOptions: {
-        "ecmaFeatures": {
-            "jsx": true
-        },
-        "sourceType": "module"
-    },
-    plugins: [
-        "react",
-        "import"
-    ],
-    rules: {
-        "indent": ["off", 2],
-        "react/display-name": ["off"],
-        "react/jsx-indent": ["error", 2],
-        "comma-dangle": ["error", "never"],
-        "no-console": ["off"],
-        "import/no-unresolved": ["off"],
-        "react/no-find-dom-node": ["off"],
-        "no-empty": ["off"]
-        // "react/no-unescaped-entities": 0
+    {
+      files: ['client/**/*.js'],
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module'
+      },
+      rules: {
+        'no-unused-vars': 'off',
+        'no-undef': 'off'
+      }
     }
+  ]
 };
 

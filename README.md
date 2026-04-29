@@ -1,4 +1,4 @@
-# YAPI Plus
+﻿# YAPI Plus
 
 YAPI Plus 是基于 YAPI 项目进行改造的现代化 API 管理平台，使用 **Vue 3 + VitePlus + Naive UI** 构建，并添加了 AI agent 相关功能。
 
@@ -92,6 +92,8 @@ npm run build
 # 或使用 VitePlus 命令
 vp build
 ```
+
+> `static/prd/` 为前端构建产物目录，由本地构建或 CI/CD 生成，不应提交到仓库。
 
 ### 启动生产服务
 
