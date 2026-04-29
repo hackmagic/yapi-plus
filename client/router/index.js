@@ -186,24 +186,41 @@ const router = createRouter({
   routes
 })
 
+
+// 路由守卫优化：缓存用户信息，401/登出/定时失效
+let lastUserInfo = null
+let lastUserFetchedAt = 0
+const USER_CACHE_MAX_AGE = 5 * 60 * 1000 // 5分钟
+
 router.beforeEach(async (to, from, next) => {
   if (to.meta.requiresAdmin) {
     const isLoginPage = to.path === '/login'
     if (!isLoginPage) {
       try {
         const userStore = useUserStore()
-        const userInfo = await userStore.fetchUserInfo({ maxAgeMs: 5 * 60 * 1000 })
-        if (userInfo.role !== 'admin') {
+        // 判断缓存是否可用
+        const now = Date.now()
+        let userInfo = null
+        if (lastUserInfo && now - lastUserFetchedAt < USER_CACHE_MAX_AGE) {
+          userInfo = lastUserInfo
+        } else {
+          userInfo = await userStore.fetchUserInfo({ maxAgeMs: USER_CACHE_MAX_AGE })
+          lastUserInfo = userInfo
+          lastUserFetchedAt = now
+        }
+        if (!userInfo || userInfo.role !== 'admin') {
           next('/login')
           return
         }
       } catch (e) {
+        // 401/失效/异常，清理缓存
+        lastUserInfo = null
+        lastUserFetchedAt = 0
         next('/login')
         return
       }
     }
   }
-  
   next()
 })
 
