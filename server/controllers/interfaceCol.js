@@ -39,22 +39,27 @@ class interfaceColController extends baseController {
         return a.index - b.index;
       });
 
+      const colIds = result.map(c => c._id);
+      const allCases = await this.caseModel.listByColIds(colIds);
+      const allInterfaceIds = [...new Set(allCases.map(c => c.interface_id))];
+      const interfaceMap = new Map();
+      if (allInterfaceIds.length > 0) {
+        const interfaces = await this.interfaceModel.find({ _id: { $in: allInterfaceIds } });
+        interfaces.forEach(iface => interfaceMap.set(String(iface._id), iface.path));
+      }
+      const casesByCol = new Map();
+      allCases.forEach(c => {
+        const cid = c.col_id;
+        if (!casesByCol.has(cid)) casesByCol.set(cid, []);
+        const item = c.toObject();
+        item.path = interfaceMap.get(String(item.interface_id)) || '';
+        casesByCol.get(cid).push(item);
+      });
       for (let i = 0; i < result.length; i++) {
         result[i] = result[i].toObject();
-        let caseList = await this.caseModel.list(result[i]._id);
-
-        for(let j=0; j< caseList.length; j++){
-          let item = caseList[j].toObject();
-          let interfaceData = await this.interfaceModel.getBaseinfo(item.interface_id);
-          item.path = interfaceData.path;
-          caseList[j] = item;
-        }
-
-        caseList = caseList.sort((a, b) => {
-          return a.index - b.index;
-        });
+        let caseList = casesByCol.get(result[i]._id) || [];
+        caseList = caseList.sort((a, b) => a.index - b.index);
         result[i].caseList = caseList;
-        
       }
       ctx.body = yapi.commons.resReturn(result);
     } catch (e) {

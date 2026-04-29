@@ -91,6 +91,14 @@ class interfaceCase extends baseModel {
       .exec();
   }
 
+  listByColIds(colIds) {
+    if (!colIds || colIds.length === 0) return Promise.resolve([]);
+    return this.model
+      .find({ col_id: { $in: colIds } })
+      .select('casename uid col_id _id index interface_id project_id')
+      .exec();
+  }
+
   del(id) {
     return this.model.remove({
       _id: id

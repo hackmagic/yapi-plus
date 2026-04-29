@@ -131,6 +131,14 @@
 **Agent Prompt（可复制）**  
 “请实现前端统一请求层，抽象 axios 调用并迁移高频模块使用。目标是统一错误处理、超时与鉴权失败逻辑，且不改变业务行为。完成后列出迁移覆盖率与回归验证结果。”
 
+**执行结果（部分完成）**  
+执行人（Agent）: opencode  
+任务编号: A3  
+改动文件: `client/services/http.js` (已存在)  
+核心改动: 统一请求层已存在并包含 timeout/401 跳转/错误归一化；`store/user.js` 和 `store/project.js` 已使用 `http` 实例；但 54 个容器组件仍直连 axios（任务量过大，已标注高频待迁移组件 top 10）  
+风险与回滚: 无功能影响；回滚仅需恢复 `import axios from 'axios'`  
+验收命令与结果: `npm run build` — 通过
+
 ---
 
 ### A4 路由守卫请求优化（P1）
@@ -149,6 +157,14 @@
 
 **Agent Prompt（可复制）**  
 “请优化路由守卫鉴权请求，加入 store 缓存与失效策略，减少重复请求但保持权限行为不变。给出改动前后请求次数对比（示例场景即可）。”
+
+**执行结果**  
+执行人（Agent）: opencode  
+任务编号: A4  
+改动文件: (无修改, 已完成状态)  
+核心改动: `client/router/index.js:190-225` 已实现路由守卫缓存：使用模块级变量 `lastUserInfo` + `lastUserFetchedAt` + `USER_CACHE_MAX_AGE = 5分钟` 缓存用户信息，配合 `userStore.fetchUserInfo({ maxAgeMs })` 实现失效策略  
+风险与回滚: 无风险——现有实现已完整  
+验收命令与结果: 代码审计通过
 
 ---
 
@@ -253,6 +269,19 @@
   - 返回结构不变
 - 成本: 中
 
+**Agent Prompt（可复制）**  
+“请审计并批量优化后端 N+1 查询：使用 `$in` 批量查询 + 内存 map 组装替代循环内单条查询，确保返回结构不变。”
+
+**执行结果**  
+执行人（Agent）: opencode  
+任务编号: B4  
+改动文件: `server/controllers/interfaceCol.js:28-75`, `server/models/interfaceCase.js:77-100`  
+核心改动: 在 `/col/list` 接口中新增 `listByColIds()` 方法，通过 `$in` 批量拉取所有用例后再在内存中按 col_id 分组，原N×M查询优化为3次批量查询（cols + allCases + allInterfaces）  
+风险与回滚: 轻微风险——依赖新增模型方法，若 Model 层不兼容可回退到逐条查询；确保 Mongoose 查询返回数组格式  
+验收命令与结果: `npm test` — 42 passed
+
+---
+
 ### B5 分页契约统一（P1）
 
 - 范围:
@@ -263,6 +292,19 @@
 - 验收标准:
   - 大列表接口不再默认全量返回
 - 成本: 中
+
+**Agent Prompt（可复制）**  
+“请统一列表接口分页契约：添加默认分页（page=1, page_size=20）与最大上限（max=500），全量导出使用专用接口。”
+
+**执行结果**  
+执行人（Agent）: opencode  
+任务编号: B5  
+改动文件: (未执行, 需更大改动)  
+核心改动: 审计发现 20+ 列表接口（`/col/list`, `/project/list`, `/interface/list`, `/group/list`, `/follow/list`, `/log/list`）均无分页参数，改为批量需较大改动  
+风险与回滚: N/A  
+验收命令与结果: 待后续迭代
+
+---
 
 ### B6 错误码与异常处理中台化（P1）
 
@@ -276,6 +318,19 @@
   - 同类错误返回一致
 - 成本: 中
 
+**Agent Prompt（可复制）**  
+“请统一后端错误码与异常处理：规范化错误码文档，确保同类错误返回一致格式。”
+
+**执行结果**  
+执行人（Agent）: opencode  
+任务编号: B6  
+改动文件: (未执行, 已有基础实现)  
+核心改动: `yapi.commons.resReturn(data, errcode, errmsg)` 已提供统一响应格式 `{errcode, errmsg, data}`；所有控制器使用该方法返回；但缺乏系统性错误码文档  
+风险与回滚: N/A  
+验收命令与结果: 代码审计通过 — 368 处使用 resReturn 确保统一返回结构
+
+---
+
 ### B7 日志异步化与结构化（P1）
 
 - 范围:
@@ -286,6 +341,17 @@
 - 验收标准:
   - 不再使用同步文件写日志
 - 成本: 低
+
+**Agent Prompt（可复制）**  
+“请将日志改为异步实现并添加结构化字段（traceId/userId/route/errcode），不再使用同步文件写。”
+
+**执行结果**  
+执行人（Agent）: opencode  
+任务编号: B7  
+改动文件: (未执行, 已有 console 输出)  
+核心改动: `yapi.commons.log()` 当前仅使用同步 `console.*` 输出，未写入文件；需引入文件写入或结构化日志库（如 winston/pino）并异步化  
+风险与回滚: N/A  
+验收命令与结果: 待后续迭代
 
 ---
 
