@@ -49,4 +49,13 @@ test('matchApi', t => {
     __weight: 4
   });
 
+  const apiRule_8 = '/orders/{orderId}/items/:itemId/detail';
+  const r8 = matchApi('/orders/100/items/2/detail', apiRule_8);
+  t.deepEqual(r8, {
+    orderId: '100',
+    itemId: '2',
+    __weight: 3
+  });
+  t.false(matchApi('/orders/100/items/2', apiRule_8));
+
 });

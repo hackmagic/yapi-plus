@@ -6,7 +6,8 @@ import {
   handleParams,
   verifyPath, 
   sandbox,
-  handleVarPath
+  handleVarPath,
+  handleParamsValue
 } from '../../server/utils/commons.js';
 
 test('trim', t => {
@@ -84,3 +85,25 @@ test('handleVarPath4', t=>{
         desc: ''
     }])
 })
+
+test('handleParamsValue should merge by param name', t => {
+  const params = [
+    { name: 'token', value: '', enable: true },
+    { name: 'page', value: '1', enable: true }
+  ];
+  const val = [
+    { name: 'token', value: 'abc123', enable: false }
+  ];
+
+  const merged = handleParamsValue(params, val);
+  t.deepEqual(merged, [
+    { name: 'token', value: 'abc123', enable: false },
+    { name: 'page', value: '1', enable: true }
+  ]);
+});
+
+test('handleParamsValue returns params when one side is empty', t => {
+  const params = [{ name: 'id', value: '1' }];
+  t.deepEqual(handleParamsValue(params, []), params);
+  t.deepEqual(handleParamsValue([], [{ name: 'id', value: '2' }]), []);
+});
