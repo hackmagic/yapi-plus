@@ -9,7 +9,7 @@
       />
       <n-button type="primary" @click="showAddCatModal" style="margin-top: 12px; width: 100%;">
         <template #icon>
-          <n-icon><PlusOutline /></n-icon>
+          <n-icon><AddCircleOutline /></n-icon>
         </template>
         添加分类
       </n-button>
@@ -106,7 +106,7 @@
 import { ref, reactive, onMounted, watch, h } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useMessage } from 'naive-ui'
-import { PlusOutline, AddOutline, CreateOutline, TrashOutline } from '@vicons/ionicons5'
+import { AddCircleOutline, AddOutline, CreateOutline, TrashOutline } from '@vicons/ionicons5'
 import axios from 'axios'
 
 const props = defineProps({

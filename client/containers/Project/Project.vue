@@ -39,7 +39,7 @@ import { ref, computed, onMounted, h } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { NIcon } from 'naive-ui'
 import {
-  ApiOutline,
+  AppsOutline,
   SettingsOutline,
   SpeedometerOutline,
   DocumentTextOutline,
@@ -64,7 +64,7 @@ const menuOptions = computed(() => [
   {
     label: '接口',
     key: 'interface',
-    icon: renderIcon(ApiOutline)
+    icon: renderIcon(AppsOutline)
   },
   {
     label: '测试',

@@ -25,7 +25,7 @@
                   size="tiny"
                   @click.stop="handleEditCol(col)"
                 >
-                  <n-icon><EditOutlined /></n-icon>
+                  <n-icon><CreateOutline /></n-icon>
                 </n-button>
                 <n-button
                   text
@@ -33,7 +33,7 @@
                   type="error"
                   @click.stop="handleDeleteCol(col)"
                 >
-                  <n-icon><DeleteOutlined /></n-icon>
+                  <n-icon><TrashOutline /></n-icon>
                 </n-button>
               </n-space>
             </template>
@@ -92,8 +92,8 @@ import { useRoute, useRouter } from 'vue-router'
 import { useMessage } from 'naive-ui'
 import { useInterfaceColStore } from '@/store/interfaceCol'
 import {
-  EditOutlined,
-  DeleteOutlined
+  CreateOutline,
+  TrashOutline
 } from '@vicons/ionicons5'
 
 const props = defineProps({
