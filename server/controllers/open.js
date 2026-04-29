@@ -1,4 +1,4 @@
-const projectModel = require('../models/project.js');
+﻿const projectModel = require('../models/project.js');
 const interfaceColModel = require('../models/interfaceCol.js');
 const interfaceCaseModel = require('../models/interfaceCase.js');
 const interfaceModel = require('../models/interface.js');
@@ -15,10 +15,10 @@ const {
 } = require('../../common/postmanLib');
 const { handleParamsValue, ArrayToObject } = require('../../common/utils.js');
 const renderToHtml = require('../utils/reportHtml');
-const axios = require('axios');
 const HanldeImportData = require('../../common/HandleImportData');
 const _ = require('underscore');
 const createContex = require('../../common/createContext')
+const { fetchSafeJson } = require('../utils/security');
 
 /**
  * {
@@ -99,24 +99,21 @@ class openController extends baseController {
       return (ctx.body = yapi.commons.resReturn(null, 40022, 'json 或者 url 参数，不能都为空'));
     }
     try {
-      let request = require("request");// let Promise = require('Promise');
-      let syncGet = function (url){
-          return new Promise(function(resolve, reject){
-              request.get({url : url}, function(error, response, body){
-                  if(error){
-                      reject(error);
-                  }else{
-                      resolve(body);
-                  }
-              });
-          });
-      } 
-      if(ctx.params.url){
-        content = await syncGet(ctx.params.url);
-      }else if(content.indexOf('http://') === 0 || content.indexOf('https://') === 0){
-        content = await syncGet(content);
+      if (ctx.params.url) {
+        content = await fetchSafeJson(ctx.params.url, {
+          timeout: 5000,
+          maxBytes: 1024 * 1024,
+          maxRedirects: 2
+        });
+      } else if (content.indexOf('http://') === 0 || content.indexOf('https://') === 0) {
+        content = await fetchSafeJson(content, {
+          timeout: 5000,
+          maxBytes: 1024 * 1024,
+          maxRedirects: 2
+        });
+      } else {
+        content = JSON.parse(content);
       }
-      content = JSON.parse(content);
     } catch (e) {
       return (ctx.body = yapi.commons.resReturn(null, 40022, 'json 格式有误:' + e));
     }

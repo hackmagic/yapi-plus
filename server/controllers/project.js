@@ -1,4 +1,4 @@
-const projectModel = require('../models/project.js');
+﻿const projectModel = require('../models/project.js');
 const yapi = require('../yapi.js');
 const _ = require('underscore');
 const baseController = require('./base.js');
@@ -14,7 +14,7 @@ const followModel = require('../models/follow.js');
 const tokenModel = require('../models/token.js');
 const {getToken} = require('../utils/token')
 const sha = require('sha.js');
-const axios = require('axios').default;
+const { fetchSafeJson } = require('../utils/security');
 
 class projectController extends baseController {
   constructor(ctx) {
@@ -500,6 +500,9 @@ class projectController extends baseController {
     if (!params.id) {
       return (ctx.body = yapi.commons.resReturn(null, 400, '项目id不能为空'));
     }
+    if ((await this.checkAuth(params.id, 'project', 'view')) !== true) {
+      return (ctx.body = yapi.commons.resReturn(null, 405, '没有权限'));
+    }
 
     let project = await this.Model.get(params.id);
     ctx.body = yapi.commons.resReturn(project.members);
@@ -699,6 +702,9 @@ class projectController extends baseController {
     try {
       let params = ctx.request.body;
       let projectInst = yapi.getInst(projectModel);
+      if ((await this.checkAuth(params.id, 'project', 'danger')) !== true) {
+        return (ctx.body = yapi.commons.resReturn(null, 405, '没有权限'));
+      }
       var check = await projectInst.checkMemberRepeat(params.id, params.member_uid);
       if (check === 0) {
         return (ctx.body = yapi.commons.resReturn(null, 400, '项目成员不存在'));
@@ -1000,6 +1006,9 @@ class projectController extends baseController {
   async token(ctx) {
     try {
       let project_id = ctx.params.project_id;
+      if ((await this.checkAuth(project_id, 'project', 'view')) !== true) {
+        return (ctx.body = yapi.commons.resReturn(null, 405, '没有权限'));
+      }
       let data = await this.tokenModel.get(project_id);
       let token;
       if (!data) {
@@ -1035,6 +1044,9 @@ class projectController extends baseController {
   async updateToken(ctx) {
     try {
       let project_id = ctx.params.project_id;
+      if ((await this.checkAuth(project_id, 'project', 'danger')) !== true) {
+        return (ctx.body = yapi.commons.resReturn(null, 405, '没有权限'));
+      }
       let data = await this.tokenModel.get(project_id);
       let token, result;
       if (data && data.token) {
@@ -1125,10 +1137,11 @@ class projectController extends baseController {
   async swaggerUrl(ctx) {
     try {
       const { url } = ctx.request.query;
-      const { data } = await axios.get(url);
-      if (data == null || typeof data !== 'object') {
-        throw new Error('返回数据格式不是 JSON');
-      }
+      const data = await fetchSafeJson(url, {
+        timeout: 5000,
+        maxBytes: 1024 * 1024,
+        maxRedirects: 2
+      });
       ctx.body = yapi.commons.resReturn(data);
     } catch (err) {
       ctx.body = yapi.commons.resReturn(null, 402, String(err));
