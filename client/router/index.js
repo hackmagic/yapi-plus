@@ -1,5 +1,5 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import axios from 'axios'
+﻿import { createRouter, createWebHistory } from 'vue-router'
+import { useUserStore } from '../store/user'
 
 const routes = [
   {
@@ -191,14 +191,9 @@ router.beforeEach(async (to, from, next) => {
     const isLoginPage = to.path === '/login'
     if (!isLoginPage) {
       try {
-        const res = await axios.get('/api/user/current')
-        if (res.data.errcode === 0) {
-          const userInfo = res.data.data
-          if (userInfo.role !== 'admin') {
-            next('/login')
-            return
-          }
-        } else {
+        const userStore = useUserStore()
+        const userInfo = await userStore.fetchUserInfo({ maxAgeMs: 5 * 60 * 1000 })
+        if (userInfo.role !== 'admin') {
           next('/login')
           return
         }

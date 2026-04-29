@@ -1,59 +1,109 @@
-const yapi = require('../yapi')
+﻿const yapi = require('../yapi')
 
 const crypto = require('crypto');
 
-/*
- 下面是使用加密算法
-*/
-
-// 创建加密算法
-const aseEncode = function(data, password) {
-
-  // 如下方法使用指定的算法与密码来创建cipher对象
-  const cipher = crypto.createCipher('aes192', password);
-
-  // 使用该对象的update方法来指定需要被加密的数据
-  let crypted = cipher.update(data, 'utf-8', 'hex');
-
-  crypted += cipher.final('hex');
-
-  return crypted;
-};
-
-// 创建解密算法
-const aseDecode = function(data, password) {
-  /* 
-   该方法使用指定的算法与密码来创建 decipher对象, 第一个算法必须与加密数据时所使用的算法保持一致;
-   第二个参数用于指定解密时所使用的密码，其参数值为一个二进制格式的字符串或一个Buffer对象，该密码同样必须与加密该数据时所使用的密码保持一致
-  */
-  const decipher = crypto.createDecipher('aes192', password);
-
-  /*
-   第一个参数为一个Buffer对象或一个字符串，用于指定需要被解密的数据
-   第二个参数用于指定被解密数据所使用的编码格式，可指定的参数值为 'hex', 'binary', 'base64'等，
-   第三个参数用于指定输出解密数据时使用的编码格式，可选参数值为 'utf-8', 'ascii' 或 'binary';
-  */
-  let decrypted = decipher.update(data, 'hex', 'utf-8');
-
-  decrypted += decipher.final('utf-8');
-  return decrypted;
-}; 
-
 const defaultSalt = 'abcde';
+const TOKEN_PREFIX = 'v2';
+const TOKEN_KEY_LEN = 32;
+const TOKEN_IV_LEN = 16;
+const TOKEN_ALGORITHM = 'aes-256-cbc';
+const TOKEN_KDF_SALT = 'yapi-plus:token:v2';
+
+function resolvePasssalt() {
+  const passsalt = process.env.YAPI_TOKEN_PASSSALT || yapi.WEBCONFIG.passsalt;
+  if (!passsalt || passsalt === defaultSalt) {
+    throw new Error('token 加密配置缺失，请在 config.json 或环境变量 YAPI_TOKEN_PASSSALT 中设置非默认 passsalt');
+  }
+  if (process.env.YAPI_TOKEN_PASSSALT && yapi.WEBCONFIG.passsalt !== process.env.YAPI_TOKEN_PASSSALT) {
+    yapi.WEBCONFIG.passsalt = process.env.YAPI_TOKEN_PASSSALT;
+  }
+  return passsalt;
+}
+
+function deriveKey(passsalt) {
+  return crypto.pbkdf2Sync(passsalt, TOKEN_KDF_SALT, 100000, TOKEN_KEY_LEN, 'sha256');
+}
+
+function encodeTokenPayload(payload, passsalt) {
+  const iv = crypto.randomBytes(TOKEN_IV_LEN);
+  const key = deriveKey(passsalt);
+  const cipher = crypto.createCipheriv(TOKEN_ALGORITHM, key, iv);
+  const encrypted = Buffer.concat([
+    cipher.update(JSON.stringify(payload), 'utf8'),
+    cipher.final()
+  ]);
+  return [TOKEN_PREFIX, iv.toString('hex'), encrypted.toString('hex')].join(':');
+}
+
+function decodeTokenPayload(token, passsalt) {
+  const parts = token.split(':');
+  if (parts.length !== 3 || parts[0] !== TOKEN_PREFIX) {
+    return null;
+  }
+
+  const iv = Buffer.from(parts[1], 'hex');
+  const encrypted = Buffer.from(parts[2], 'hex');
+  const key = deriveKey(passsalt);
+  const decipher = crypto.createDecipheriv(TOKEN_ALGORITHM, key, iv);
+  const decrypted = Buffer.concat([
+    decipher.update(encrypted),
+    decipher.final()
+  ]).toString('utf8');
+  return JSON.parse(decrypted);
+}
+
+function evpBytesToKey(password, keyLen, ivLen) {
+  const passwordBuffer = Buffer.isBuffer(password) ? password : Buffer.from(String(password), 'utf8');
+  let derived = Buffer.alloc(0);
+  let block = Buffer.alloc(0);
+
+  while (derived.length < keyLen + ivLen) {
+    const hash = crypto.createHash('md5');
+    hash.update(block);
+    hash.update(passwordBuffer);
+    block = hash.digest();
+    derived = Buffer.concat([derived, block]);
+  }
+
+  return {
+    key: derived.subarray(0, keyLen),
+    iv: derived.subarray(keyLen, keyLen + ivLen)
+  };
+}
+
+function decodeLegacyToken(token, passsalt) {
+  const { key, iv } = evpBytesToKey(passsalt, 24, 16);
+  const decipher = crypto.createDecipheriv('aes-192-cbc', key, iv);
+  const decrypted = Buffer.concat([
+    decipher.update(Buffer.from(token, 'hex')),
+    decipher.final()
+  ]);
+  return decrypted.toString('utf8');
+}
 
 exports.getToken = function getToken(token, uid){
   if(!token)throw new Error('token 不能为空')
-  yapi.WEBCONFIG.passsalt = yapi.WEBCONFIG.passsalt || defaultSalt;
-  return aseEncode(uid + '|' + token, yapi.WEBCONFIG.passsalt)
+  if (uid === undefined || uid === null || uid === '') {
+    return token;
+  }
+  const passsalt = resolvePasssalt();
+  return encodeTokenPayload({ uid: String(uid), projectToken: token }, passsalt);
 }
 
 exports.parseToken = function parseToken(token){
   if(!token)throw new Error('token 不能为空')
-  yapi.WEBCONFIG.passsalt = yapi.WEBCONFIG.passsalt || defaultSalt;
+  const passsalt = resolvePasssalt();
+  try{
+    const parsed = decodeTokenPayload(token, passsalt);
+    if (parsed && parsed.uid && parsed.projectToken) {
+      return parsed;
+    }
+  }catch(e){}
+
   let tokens;
   try{
-    tokens = aseDecode(token, yapi.WEBCONFIG.passsalt)
-  }catch(e){}  
+    tokens = decodeLegacyToken(token, passsalt)
+  }catch(e){}
   if(tokens && typeof tokens === 'string' && tokens.indexOf('|') > 0){
     tokens = tokens.split('|')
     return {

@@ -1,5 +1,5 @@
-import { defineStore } from 'pinia'
-import axios from 'axios'
+﻿import { defineStore } from 'pinia'
+import http, { unwrapResponse } from '../services/http'
 
 export const useProjectStore = defineStore('project', {
   state: () => ({
@@ -18,12 +18,11 @@ export const useProjectStore = defineStore('project', {
   actions: {
     async fetchProject(projectId) {
       try {
-        const res = await axios.get('/api/project/get', { params: { id: projectId } })
-        if (res.data.errcode === 0) {
-          this.currentProject = res.data.data
-          this.projectEnv = res.data.data.env || []
-          return res.data.data
-        }
+        const res = await http.get('/api/project/get', { params: { id: projectId } })
+        const data = unwrapResponse(res, '获取项目失败')
+        this.currentProject = data
+        this.projectEnv = data.env || []
+        return data
       } catch (e) {
         console.error('获取项目失败', e)
       }
@@ -32,11 +31,10 @@ export const useProjectStore = defineStore('project', {
 
     async fetchProjectList(groupId) {
       try {
-        const res = await axios.get('/api/project/list', { params: { group_id: groupId } })
-        if (res.data.errcode === 0) {
-          this.projectList = res.data.data
-          return res.data.data
-        }
+        const res = await http.get('/api/project/list', { params: { group_id: groupId } })
+        const data = unwrapResponse(res, '获取项目列表失败')
+        this.projectList = data
+        return data
       } catch (e) {
         console.error('获取项目列表失败', e)
       }
@@ -45,11 +43,10 @@ export const useProjectStore = defineStore('project', {
 
     async fetchAllProjects() {
       try {
-        const res = await axios.get('/api/project/list')
-        if (res.data.errcode === 0) {
-          this.projectList = res.data.data
-          return res.data.data
-        }
+        const res = await http.get('/api/project/list')
+        const data = unwrapResponse(res, '获取所有项目失败')
+        this.projectList = data
+        return data
       } catch (e) {
         console.error('获取所有项目失败', e)
       }
@@ -57,38 +54,32 @@ export const useProjectStore = defineStore('project', {
     },
 
     async updateProject(projectId, data) {
-      const res = await axios.put('/api/project/up', { id: projectId, ...data })
-      if (res.data.errcode === 0) {
-        if (this.currentProject && this.currentProject._id === projectId) {
-          this.currentProject = { ...this.currentProject, ...data }
-        }
-        return res.data
+      const res = await http.put('/api/project/up', { id: projectId, ...data })
+      unwrapResponse(res, '更新失败')
+      if (this.currentProject && this.currentProject._id === projectId) {
+        this.currentProject = { ...this.currentProject, ...data }
       }
-      throw new Error(res.data.errmsg || '更新失败')
+      return res.data
     },
 
     async addMember(projectId, memberData) {
-      const res = await axios.post('/api/project/addMember', {
+      const res = await http.post('/api/project/addMember', {
         id: projectId,
         ...memberData
       })
-      if (res.data.errcode === 0) {
-        await this.fetchProject(projectId)
-        return res.data
-      }
-      throw new Error(res.data.errmsg || '添加成员失败')
+      unwrapResponse(res, '添加成员失败')
+      await this.fetchProject(projectId)
+      return res.data
     },
 
     async removeMember(projectId, uid) {
-      const res = await axios.post('/api/project/delMember', {
+      const res = await http.post('/api/project/delMember', {
         id: projectId,
         uid
       })
-      if (res.data.errcode === 0) {
-        await this.fetchProject(projectId)
-        return res.data
-      }
-      throw new Error(res.data.errmsg || '移除成员失败')
+      unwrapResponse(res, '移除成员失败')
+      await this.fetchProject(projectId)
+      return res.data
     },
 
     setProjectEnv(env) {

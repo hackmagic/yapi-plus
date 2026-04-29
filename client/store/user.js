@@ -1,10 +1,12 @@
-import { defineStore } from 'pinia'
-import axios from 'axios'
+﻿import { defineStore } from 'pinia'
+import http, { unwrapResponse } from '../services/http'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
     userInfo: null,
     loginState: 0,
+    userFetchedAt: 0,
+    userFetchPromise: null,
   }),
 
   getters: {
@@ -18,47 +20,68 @@ export const useUserStore = defineStore('user', {
     setUser(userData) {
       this.userInfo = userData
       this.loginState = userData && userData.uid ? 1 : 0
+      this.userFetchedAt = this.loginState ? Date.now() : 0
+    },
+
+    clearUser() {
+      this.userInfo = null
+      this.loginState = 0
+      this.userFetchedAt = 0
+      this.userFetchPromise = null
     },
 
     async login(email, password) {
-      const res = await axios.post('/api/user/login', { email, password })
-      if (res.data.errcode === 0) {
-        this.setUser(res.data.data)
-        return res.data
-      }
-      throw new Error(res.data.errmsg || '登录失败')
+      const res = await http.post('/api/user/login', { email, password })
+      const data = unwrapResponse(res, '登录失败')
+      this.setUser(data)
+      return res.data
     },
 
     async logout() {
       try {
-        await axios.post('/api/user/logout')
+        await http.post('/api/user/logout')
       } catch (e) {
         console.error('登出请求失败', e)
       }
-      this.userInfo = null
-      this.loginState = 0
+      this.clearUser()
     },
 
-    async fetchUserInfo() {
-      try {
-        const res = await axios.get('/api/user/current')
-        if (res.data.errcode === 0) {
-          this.setUser(res.data.data)
-          return res.data.data
-        }
-      } catch (e) {
-        console.error('获取用户信息失败', e)
+    async fetchUserInfo(options = {}) {
+      const { force = false, maxAgeMs = 5 * 60 * 1000 } = options
+      if (!force && this.userInfo && Date.now() - this.userFetchedAt < maxAgeMs) {
+        return this.userInfo
       }
-      return null
+      if (!force && this.userFetchPromise) {
+        return this.userFetchPromise
+      }
+
+      this.userFetchPromise = (async () => {
+        try {
+          const res = await http.get('/api/user/current')
+          const data = unwrapResponse(res, '获取用户信息失败')
+          this.setUser(data)
+          return data
+        } catch (e) {
+          console.error('获取用户信息失败', e)
+          this.clearUser()
+          return null
+        } finally {
+          this.userFetchPromise = null
+        }
+      })()
+
+      try {
+        return await this.userFetchPromise
+      } catch (e) {
+        return null
+      }
     },
 
     async updateUserInfo(data) {
-      const res = await axios.put('/api/user/update', data)
-      if (res.data.errcode === 0) {
-        this.setUser({ ...this.userInfo, ...data })
-        return res.data
-      }
-      throw new Error(res.data.errmsg || '更新失败')
+      const res = await http.put('/api/user/update', data)
+      unwrapResponse(res, '更新失败')
+      this.setUser({ ...this.userInfo, ...data })
+      return res.data
     },
 
     isAdmin() {

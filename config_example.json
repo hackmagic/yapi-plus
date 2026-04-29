@@ -1,5 +1,6 @@
-{
+﻿{
   "port": "3000",
   "timeout": 120000,
+  "passsalt": "replace-with-a-random-long-secret",
   "_comment": "注意：数据库和管理员账号配置已移至Web界面。首次启动请访问 /setup 进行配置。"
 }
