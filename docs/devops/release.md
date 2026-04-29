@@ -17,9 +17,11 @@
 
 | 平台 | 命令 | 输出文件 |
 |------|------|---------|
-| Windows | `npm run package` | `release/yapi-plus-v{version}-win-x64.zip` |
-| Linux | `npm run package` | `release/yapi-plus-v{version}-linux-x64.tar.gz` |
-| macOS | `npm run package` | `release/yapi-plus-v{version}-darwin-x64.tar.gz` |
+| 当前平台 | `npm run package` | `release/yapi-plus-v{version}-{platform}.zip` |
+| 指定平台 | `npm run package -- --platform=linux-x64` | `release/yapi-plus-v{version}-linux-x64.zip` |
+| 指定平台 | `npm run package -- --platform=darwin-x64` | `release/yapi-plus-v{version}-darwin-x64.zip` |
+
+支持的平台：`win-x64`、`linux-x64`、`darwin-x64`
 
 ### 分发包内容
 
@@ -70,9 +72,9 @@ git push origin v1.11.0
 1. **矩阵构建**：同时在 ubuntu-latest / windows-latest / macos-latest 三个 runner 上并行打包
 2. **安装依赖**：`npm ci`
 3. **构建前端**：`npm run build-client`
-4. **打包**：`npm run package`
+4. **打包**：`npm run package -- --platform={runner-platform}`
 5. **上传产物**：所有平台的压缩包上传到 workflow artifacts
-6. **创建 Release**：自动创建 GitHub Release，生成发布说明，上传 3 个平台的压缩包
+6. **创建 Release**：自动创建 GitHub Release，生成发布说明，上传 3 个平台的 zip 包
 
 工作流定义文件：`.github/workflows/release.yml`
 

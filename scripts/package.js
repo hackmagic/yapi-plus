@@ -13,8 +13,51 @@ const PLATFORM_MAP = {
   darwin: 'darwin-x64'
 };
 
+const PLATFORM_REVERSE = {
+  'win-x64': 'win32',
+  'linux-x64': 'linux',
+  'darwin-x64': 'darwin'
+};
+
+function parseArgs() {
+  const args = process.argv.slice(2);
+  let targetPlatform = null;
+
+  for (let i = 0; i < args.length; i++) {
+    if (args[i] === '--platform' && i + 1 < args.length) {
+      targetPlatform = args[i + 1];
+      i++;
+    } else if (args[i].startsWith('--platform=')) {
+      targetPlatform = args[i].split('=')[1];
+    }
+  }
+
+  return targetPlatform;
+}
+
+function getTargetPlatform() {
+  const argPlatform = parseArgs();
+
+  if (argPlatform) {
+    if (!PLATFORM_MAP[PLATFORM_REVERSE[argPlatform]]) {
+      console.error('Invalid platform: ' + argPlatform);
+      console.error('Valid platforms: ' + Object.keys(PLATFORM_MAP).map(k => PLATFORM_MAP[k]).join(', '));
+      process.exit(1);
+    }
+    return argPlatform;
+  }
+
+  const currentPlatform = PLATFORM_MAP[os.platform()];
+  if (!currentPlatform) {
+    console.error('Unsupported platform: ' + os.platform());
+    process.exit(1);
+  }
+
+  return currentPlatform;
+}
+
 function main() {
-  const platform = PLATFORM_MAP[os.platform()];
+  const platform = getTargetPlatform();
   if (!platform) {
     console.error('Unsupported platform: ' + os.platform());
     process.exit(1);
@@ -102,21 +145,12 @@ function main() {
 
   // 4. Create archive
   console.log('[4/4] Creating archive...');
-  var isWin = os.platform() === 'win32';
-  var ext = isWin ? '.zip' : '.tar.gz';
-  var archivePath = path.join(releaseDir, archiveBase + ext);
+  var archivePath = path.join(releaseDir, archiveBase + '.zip');
 
-  if (isWin) {
-    execSync(
-      'powershell -NoProfile -Command "Compress-Archive -Path \\"' +
-        tempDir + '\\*\\" -DestinationPath \\"' + archivePath + '\\""',
-      { stdio: 'inherit' }
-    );
-  } else {
-    execSync('tar -czf "' + archivePath + '" -C "' + ROOT + '" "' + archiveBase + '"', {
-      stdio: 'inherit'
-    });
-  }
+  var AdmZip = require('adm-zip');
+  var zip = new AdmZip();
+  zip.addLocalFolder(tempDir, archiveBase);
+  zip.writeZip(archivePath);
 
   var stats = fs.statSync(archivePath);
   console.log('  -> ' + archivePath + ' (' + (stats.size / 1024 / 1024).toFixed(1) + ' MB)');
