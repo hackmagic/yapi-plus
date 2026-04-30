@@ -17,6 +17,7 @@ let mockServer, websocket, storageCreator;
 const Koa = require('koa');
 const koaStatic = require('koa-static');
 const koaBody = require('koa-body');
+const fs = require('fs');
 
 global.storageCreator = storageCreator;
 let indexFile = process.argv[2] === 'dev' ? 'dev.html' : 'index.html';
@@ -40,14 +41,15 @@ function startConfigMode() {
   // 显式处理根路径和/setup路径，确保返回HTML并设置正确的Content-Type
   app.use(async (ctx, next) => {
     if (ctx.path === '/setup' || ctx.path === '/') {
-      const fs = require('fs');
+      console.log('[DEBUG] Config mode serving:', ctx.path);
       const htmlPath = yapi.path.join(yapi.WEBROOT, 'static', 'dev.html');
       if (fs.existsSync(htmlPath)) {
-        ctx.type = 'text/html; charset=utf-8';
-        ctx.body = fs.createReadStream(htmlPath);
+        ctx.set('Content-Type', 'text/html; charset=utf-8');
+        ctx.body = fs.readFileSync(htmlPath, 'utf-8');
+        console.log('[DEBUG] Config mode response type:', ctx.type);
         return;
       } else {
-        ctx.type = 'text/html; charset=utf-8';
+        ctx.set('Content-Type', 'text/html; charset=utf-8');
         ctx.body = '<h1>配置页面未找到，请确保前端资源已构建</h1>';
         return;
       }
@@ -156,11 +158,12 @@ async function startNormalMode() {
     // 显式处理根路径，确保返回HTML并设置正确的Content-Type
     app.use(async (ctx, next) => {
       if (ctx.path === '/') {
-        const fs = require('fs');
         const htmlPath = yapi.path.join(yapi.WEBROOT, 'static', indexFile);
+        console.log('[DEBUG] Serving root path:', htmlPath);
         if (fs.existsSync(htmlPath)) {
-          ctx.type = 'text/html; charset=utf-8';
-          ctx.body = fs.createReadStream(htmlPath);
+          ctx.set('Content-Type', 'text/html; charset=utf-8');
+          ctx.body = fs.readFileSync(htmlPath, 'utf-8');
+          console.log('[DEBUG] Response type set to:', ctx.response.get('Content-Type'));
           return;
         }
       }
