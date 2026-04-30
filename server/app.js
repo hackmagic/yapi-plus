@@ -42,13 +42,13 @@ function startConfigMode() {
   const staticOptions = { 
     index: indexFile, 
     gzip: true,
-    setHeaders: (ctx, path) => {
+    setHeaders: (res, path) => {
       if (path.endsWith('.html')) {
-        ctx.set('Content-Type', 'text/html; charset=utf-8');
+        res.setHeader('Content-Type', 'text/html; charset=utf-8');
       } else if (path.endsWith('.js')) {
-        ctx.set('Content-Type', 'application/javascript; charset=utf-8');
+        res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
       } else if (path.endsWith('.css')) {
-        ctx.set('Content-Type', 'text/css; charset=utf-8');
+        res.setHeader('Content-Type', 'text/css; charset=utf-8');
       }
     }
   };
@@ -142,18 +142,32 @@ async function startNormalMode() {
 
     websocket(app);
 
-    // 静态文件服务配置
+    // 静态文件服务配置 - 必须在路径重写中间件之前
     const staticOptions = { 
       index: indexFile, 
       gzip: true,
-      // 设置常用的 Content-Type，避免浏览器下载文件
-      setHeaders: (ctx, path) => {
+      // 设置允许的 Content-Type 列表
+      contentTypes: {
+        'text/html': ['html', 'htm'],
+        'text/css': ['css'],
+        'application/javascript': ['js'],
+        'application/json': ['json'],
+        'image/png': ['png'],
+        'image/jpeg': ['jpg', 'jpeg'],
+        'image/gif': ['gif'],
+        'image/svg+xml': ['svg'],
+        'font/ttf': ['ttf'],
+        'font/woff': ['woff'],
+        'font/woff2': ['woff2']
+      },
+      // 设置 Content-Type 响应头
+      setHeaders: (res, path) => {
         if (path.endsWith('.html')) {
-          ctx.set('Content-Type', 'text/html; charset=utf-8');
+          res.setHeader('Content-Type', 'text/html; charset=utf-8');
         } else if (path.endsWith('.js')) {
-          ctx.set('Content-Type', 'application/javascript; charset=utf-8');
+          res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
         } else if (path.endsWith('.css')) {
-          ctx.set('Content-Type', 'text/css; charset=utf-8');
+          res.setHeader('Content-Type', 'text/css; charset=utf-8');
         }
       }
     };
