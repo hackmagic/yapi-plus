@@ -56,6 +56,22 @@ class followModel extends baseModel {
       .exec();
   }
 
+  listWithPaging(uid, page, limit) {
+    return this.model
+      .find({
+        uid: uid
+      })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .exec();
+  }
+
+  listCount(uid) {
+    return this.model.countDocuments({
+      uid: uid
+    });
+  }
+
   listByProjectId(projectid) {
     return this.model.find({
       projectid: projectid
