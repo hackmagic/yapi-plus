@@ -134,6 +134,11 @@ async function startNormalMode() {
 
     websocket(app);
 
+    // 静态文件服务应该放在前面，避免被后续中间件拦截
+    const staticOptions = { index: indexFile, gzip: true };
+    staticOptions.contentTypes = ['text/html', 'text/plain', 'text/css', 'text/javascript', 'application/javascript', 'application/json', 'image/png', 'image/jpeg', 'image/gif', 'image/svg+xml', 'font/ttf', 'font/woff', 'font/woff2', 'application/octet-stream'];
+    app.use(koaStatic(yapi.path.join(yapi.WEBROOT, 'static'), staticOptions));
+
     app.use(async (ctx, next) => {
       if (/^\/(?!api)[a-zA-Z0-9\/\-_]*$/.test(ctx.path)) {
         ctx.path = '/';
@@ -153,8 +158,6 @@ async function startNormalMode() {
       }
       await next();
     });
-
-    app.use(koaStatic(yapi.path.join(yapi.WEBROOT, 'static'), { index: indexFile, gzip: true }));
 
     const server = app.listen(yapi.WEBCONFIG.port);
     server.setTimeout(yapi.WEBCONFIG.timeout);
