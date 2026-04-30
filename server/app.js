@@ -17,7 +17,6 @@ let mockServer, websocket, storageCreator;
 const Koa = require('koa');
 const koaStatic = require('koa-static');
 const koaBody = require('koa-body');
-const configController = require('./controllers/configController.js');
 
 global.storageCreator = storageCreator;
 let indexFile = process.argv[2] === 'dev' ? 'dev.html' : 'index.html';
@@ -33,14 +32,32 @@ function startConfigMode() {
   const configRouter = require('./configRouter.js');
   
   app.use(koaBody({ strict: false, multipart: true, jsonLimit: '2mb', formLimit: '1mb', textLimit: '1mb' }));
-  
+
   // 配置路由
   app.use(configRouter.routes());
   app.use(configRouter.allowedMethods());
-  
-  // 静态文件服务 - 优先处理静态文件
-  const staticOptions = { 
-    index: indexFile, 
+
+  // 显式处理根路径和/setup路径，确保返回HTML并设置正确的Content-Type
+  app.use(async (ctx, next) => {
+    if (ctx.path === '/setup' || ctx.path === '/') {
+      const fs = require('fs');
+      const htmlPath = yapi.path.join(yapi.WEBROOT, 'static', 'dev.html');
+      if (fs.existsSync(htmlPath)) {
+        ctx.type = 'text/html; charset=utf-8';
+        ctx.body = fs.createReadStream(htmlPath);
+        return;
+      } else {
+        ctx.type = 'text/html; charset=utf-8';
+        ctx.body = '<h1>配置页面未找到，请确保前端资源已构建</h1>';
+        return;
+      }
+    }
+    await next();
+  });
+
+  // 静态文件服务 - 禁用自动index，已在上面显式处理
+  const staticOptions = {
+    index: false,
     gzip: true,
     setHeaders: (res, path) => {
       if (path.endsWith('.html')) {
@@ -53,20 +70,6 @@ function startConfigMode() {
     }
   };
   app.use(koaStatic(yapi.path.join(yapi.WEBROOT, 'static'), staticOptions));
-  
-  // 如果静态文件没找到，返回配置页面
-  app.use(async (ctx) => {
-    if (ctx.path === '/setup' || ctx.path === '/') {
-      ctx.type = 'html';
-      const fs = require('fs');
-      const htmlPath = yapi.path.join(yapi.WEBROOT, 'static', 'dev.html');
-      if (fs.existsSync(htmlPath)) {
-        ctx.body = fs.readFileSync(htmlPath, 'utf-8');
-      } else {
-        ctx.body = '<h1>配置页面未找到，请确保前端资源已构建</h1>';
-      }
-    }
-  });
   
   const server = app.listen(yapi.WEBCONFIG.port);
   server.setTimeout(yapi.WEBCONFIG.timeout);
@@ -83,7 +86,7 @@ async function startNormalMode() {
     // 尝试从数据库加载配置（如果数据库未连接则跳过）
     try {
       await yapi.loadConfigFromDB();
-    } catch (e) {
+    } catch (_e) {
       console.log('数据库配置加载失败，将使用 config.json');
     }
     
@@ -142,24 +145,32 @@ async function startNormalMode() {
 
     websocket(app);
 
-    // 静态文件服务配置 - 必须在路径重写中间件之前
-    const staticOptions = { 
-      index: indexFile, 
+    // 路径重写中间件 - 必须在静态文件服务之前
+    app.use(async (ctx, next) => {
+      if (/^\/(?!api)[a-zA-Z0-9/\-_]*$/.test(ctx.path)) {
+        ctx.path = '/';
+      }
+      await next();
+    });
+
+    // 显式处理根路径，确保返回HTML并设置正确的Content-Type
+    app.use(async (ctx, next) => {
+      if (ctx.path === '/') {
+        const fs = require('fs');
+        const htmlPath = yapi.path.join(yapi.WEBROOT, 'static', indexFile);
+        if (fs.existsSync(htmlPath)) {
+          ctx.type = 'text/html; charset=utf-8';
+          ctx.body = fs.createReadStream(htmlPath);
+          return;
+        }
+      }
+      await next();
+    });
+
+    // 静态文件服务配置
+    const staticOptions = {
+      index: false, // 禁用自动index，已在上面显式处理
       gzip: true,
-      // 设置允许的 Content-Type 列表
-      contentTypes: {
-        'text/html': ['html', 'htm'],
-        'text/css': ['css'],
-        'application/javascript': ['js'],
-        'application/json': ['json'],
-        'image/png': ['png'],
-        'image/jpeg': ['jpg', 'jpeg'],
-        'image/gif': ['gif'],
-        'image/svg+xml': ['svg'],
-        'font/ttf': ['ttf'],
-        'font/woff': ['woff'],
-        'font/woff2': ['woff2']
-      },
       // 设置 Content-Type 响应头
       setHeaders: (res, path) => {
         if (path.endsWith('.html')) {
@@ -172,15 +183,6 @@ async function startNormalMode() {
       }
     };
     app.use(koaStatic(yapi.path.join(yapi.WEBROOT, 'static'), staticOptions));
-
-    app.use(async (ctx, next) => {
-      if (/^\/(?!api)[a-zA-Z0-9\/\-_]*$/.test(ctx.path)) {
-        ctx.path = '/';
-        await next();
-      } else {
-        await next();
-      }
-    });
 
     app.use(async (ctx, next) => {
       if (ctx.path.indexOf('/prd') === 0) {
