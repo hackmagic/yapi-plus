@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const autoIncrement = require('mongoose-auto-increment');
+const autoIncrement = require('../utils/mongoose-auto-increment');
 
 const aiSchema = new mongoose.Schema({
   name: {
