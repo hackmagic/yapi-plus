@@ -1,21 +1,16 @@
 @echo off
 setlocal
 echo ======================================
-echo   YAPI Plus 启动脚本
+echo   YAPI Plus 启动脚本 (调试版)
 echo ======================================
 echo.
 
-REM 检查 MongoDB 是否运行
 echo [1/3] 检查 MongoDB 状态...
 tasklist /FI "IMAGENAME eq mongod.exe" 2>NUL | find /I /N "mongod.exe">NUL
 if "%ERRORLEVEL%"=="0" (
     echo ✓ MongoDB 正在运行
 ) else (
-    echo ⚠️  MongoDB 未运行
-    echo    提示: 如果没有安装 MongoDB，YAPI 将进入配置模式
-    echo    安装 MongoDB 下载: https://www.mongodb.com/try/download/community
-    echo.
-    REM 尝试自动启动 MongoDB（如果命令可用）
+    echo ✗ MongoDB 未运行，尝试启动...
     set "MONGOD_CMD=mongod"
     if not "%YAPI_MONGOD_PATH%"=="" (
         set "MONGOD_CMD=%YAPI_MONGOD_PATH%"
@@ -23,12 +18,19 @@ if "%ERRORLEVEL%"=="0" (
     if "%YAPI_MONGOD_PATH%"=="" (
         where mongod >NUL 2>&1
         if not "%ERRORLEVEL%"=="0" (
-            echo ℹ️  未找到 mongod 命令，将直接启动服务器（配置模式）
-            goto skip_mongodb
+            echo ✗ 未找到 mongod 命令。
+            echo.
+            echo 请先安装 MongoDB 或设置环境变量:
+            echo   set YAPI_MONGOD_PATH=C:\path\to\mongod.exe
+            echo   set YAPI_MONGO_DBPATH=C:\path\to\mongodb-data
+            echo.
+            echo 按任意键退出...
+            pause >nul
+            exit /b 1
         )
     )
-    
-    echo 正在启动 MongoDB...
+
+    echo 启动 MongoDB: "%MONGOD_CMD%"
     if "%YAPI_MONGO_DBPATH%"=="" (
         start "" /B "%MONGOD_CMD%" --port 27017
     ) else (
@@ -39,16 +41,24 @@ if "%ERRORLEVEL%"=="0" (
     if "%ERRORLEVEL%"=="0" (
         echo ✓ MongoDB 已启动
     ) else (
-        echo ✗ MongoDB 启动失败，将直接启动服务器（配置模式）
+        echo ✗ MongoDB 启动失败，请检查路径与数据目录配置
+        echo 按任意键退出...
+        pause >nul
+        exit /b 1
     )
 )
-:skip_mongodb
 
 echo.
 echo [2/3] 检查依赖...
 if not exist "node_modules\" (
     echo 安装依赖...
     call npm install
+    if errorlevel 1 (
+        echo ✗ 依赖安装失败
+        echo 按任意键退出...
+        pause >nul
+        exit /b 1
+    )
 )
 
 echo.
@@ -66,4 +76,8 @@ echo.
 REM 启动开发服务器（前后端）
 call npm run dev
 
-pause
+echo.
+echo ======================================
+echo 服务器已停止
+echo 按任意键退出...
+pause >nul

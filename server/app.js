@@ -34,11 +34,27 @@ function startConfigMode() {
   
   app.use(koaBody({ strict: false, multipart: true, jsonLimit: '2mb', formLimit: '1mb', textLimit: '1mb' }));
   
-  // 使用配置路由
+  // 配置路由
   app.use(configRouter.routes());
   app.use(configRouter.allowedMethods());
   
-  // 静态文件服务 - 前端配置引导页面
+  // 静态文件服务 - 优先处理静态文件
+  const staticOptions = { 
+    index: indexFile, 
+    gzip: true,
+    setHeaders: (ctx, path) => {
+      if (path.endsWith('.html')) {
+        ctx.set('Content-Type', 'text/html; charset=utf-8');
+      } else if (path.endsWith('.js')) {
+        ctx.set('Content-Type', 'application/javascript; charset=utf-8');
+      } else if (path.endsWith('.css')) {
+        ctx.set('Content-Type', 'text/css; charset=utf-8');
+      }
+    }
+  };
+  app.use(koaStatic(yapi.path.join(yapi.WEBROOT, 'static'), staticOptions));
+  
+  // 如果静态文件没找到，返回配置页面
   app.use(async (ctx) => {
     if (ctx.path === '/setup' || ctx.path === '/') {
       ctx.type = 'html';
@@ -48,14 +64,6 @@ function startConfigMode() {
         ctx.body = fs.readFileSync(htmlPath, 'utf-8');
       } else {
         ctx.body = '<h1>配置页面未找到，请确保前端资源已构建</h1>';
-      }
-    } else if (!ctx.path.startsWith('/api')) {
-      // 其他非 API 请求也返回配置页面（SPA）
-      ctx.type = 'html';
-      const fs = require('fs');
-      const htmlPath = yapi.path.join(yapi.WEBROOT, 'static', indexFile);
-      if (fs.existsSync(htmlPath)) {
-        ctx.body = fs.readFileSync(htmlPath, 'utf-8');
       }
     }
   });
@@ -134,9 +142,21 @@ async function startNormalMode() {
 
     websocket(app);
 
-    // 静态文件服务应该放在前面，避免被后续中间件拦截
-    const staticOptions = { index: indexFile, gzip: true };
-    staticOptions.contentTypes = ['text/html', 'text/plain', 'text/css', 'text/javascript', 'application/javascript', 'application/json', 'image/png', 'image/jpeg', 'image/gif', 'image/svg+xml', 'font/ttf', 'font/woff', 'font/woff2', 'application/octet-stream'];
+    // 静态文件服务配置
+    const staticOptions = { 
+      index: indexFile, 
+      gzip: true,
+      // 设置常用的 Content-Type，避免浏览器下载文件
+      setHeaders: (ctx, path) => {
+        if (path.endsWith('.html')) {
+          ctx.set('Content-Type', 'text/html; charset=utf-8');
+        } else if (path.endsWith('.js')) {
+          ctx.set('Content-Type', 'application/javascript; charset=utf-8');
+        } else if (path.endsWith('.css')) {
+          ctx.set('Content-Type', 'text/css; charset=utf-8');
+        }
+      }
+    };
     app.use(koaStatic(yapi.path.join(yapi.WEBROOT, 'static'), staticOptions));
 
     app.use(async (ctx, next) => {
@@ -167,33 +187,27 @@ async function startNormalMode() {
         yapi.WEBCONFIG.port == '80' ? '' : ':' + yapi.WEBCONFIG.port
       }/`
     );
-  } catch (err) {
-    console.log('\n❌ 启动失败');
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    
-    if (err.message.includes('ECONNREFUSED') || err.message.includes('connect')) {
-      console.log('\n📋 可能原因:');
-      console.log('   1. MongoDB 服务未启动');
-      console.log('   2. MongoDB 连接地址或端口不正确');
-      console.log('\n💡 解决方案:');
-      console.log('   1. 启动 MongoDB 服务:');
-      console.log('      Windows: net start MongoDB');
-      console.log('      或: mongod --dbpath "你的数据目录"');
-      console.log('      macOS/Linux: sudo systemctl start mongod');
-      console.log('   2. 检查 config.json 中的数据库配置');
-      console.log(`      当前配置: mongodb://${yapi.WEBCONFIG.db.servername || '127.0.0.1'}:${yapi.WEBCONFIG.db.port || 27017}/${yapi.WEBCONFIG.db.DATABASE || 'yapi'}`);
-      console.log('\n🔧 或者，如果你想重新配置数据库连接:');
-      console.log('   1. 删除或重命名 config.json');
-      console.log('   2. 运行 npm start 进入配置向导');
-    } else {
-      console.log('\n错误信息:', err.message);
-    }
-    
-    console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
-    
-    // 退出程序
-    process.exit(1);
-  }
+   } catch (err) {
+     console.log('\n❌ 启动失败');
+     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+     
+     if (err.message.includes('ECONNREFUSED') || err.message.includes('connect')) {
+       console.log('\n📋 可能原因:');
+       console.log('   1. MongoDB 服务未启动');
+       console.log('   2. MongoDB 连接地址或端口不正确');
+       console.log('\n💡 解决方案:');
+       console.log('   1. 启动 MongoDB 服务');
+       console.log('   2. 检查 config.json 中的数据库配置');
+       console.log(`      当前配置: mongodb://${yapi.WEBCONFIG.db.servername || '127.0.0.1'}:${yapi.WEBCONFIG.db.port || 27017}/${yapi.WEBCONFIG.db.DATABASE || 'yapi'}`);
+       console.log('\n🔧 现在将进入配置模式（不需要数据库）...\n');
+     } else {
+       console.log('\n错误信息:', err.message);
+       console.log('\n🔧 现在将进入配置模式（不需要数据库）...\n');
+     }
+     
+     // 抛出错误，让上层 catch 块处理进入配置模式
+     throw err;
+   }
 }
 
 // 主启动逻辑
@@ -204,7 +218,7 @@ async function start() {
     console.log('配置状态:', JSON.stringify(configStatus));
     
     if (!configStatus.configured) {
-      // 进入配置模式
+      // 未配置，进入配置模式
       startConfigMode();
     } else {
       console.log('配置已存在，尝试启动正常模式...');
@@ -213,8 +227,16 @@ async function start() {
     }
   } catch (err) {
     console.error('启动失败:', err);
-    // 如果出错，也尝试启动配置模式
-    startConfigMode();
+    
+    // 如果是数据库连接错误，进入配置模式
+    if (err.message.includes('ECONNREFUSED') || err.message.includes('connect') || err.message.includes('MongoNetworkError')) {
+      console.log('\n📋 数据库连接失败，进入配置模式...\n');
+      startConfigMode();
+    } else {
+      // 其他错误，也尝试进入配置模式作为fallback
+      console.log('\n尝试进入配置模式作为fallback...\n');
+      startConfigMode();
+    }
   }
 }
 
