@@ -103,7 +103,11 @@ async function startNormalMode() {
     // 连接成功，初始化 yapi.connect
     yapi.connect = Promise.resolve(mongoose.connection);
     yapi.commons.log('mongodb load success...');
-    
+
+    // 初始化 mongoose-auto-increment
+    const mongooseAutoIncrement = require('./utils/mongoose-auto-increment');
+    mongooseAutoIncrement.initialize(mongoose.connection);
+
     console.log('正在加载插件系统...');
     // 加载正常模式所需的模块
     require('./plugin.js');  // 加载插件系统

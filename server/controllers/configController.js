@@ -1,7 +1,6 @@
 const yapi = require('../yapi.js');
 const baseController = require('./base.js');
 const configChecker = require('../configChecker.js');
-const userModel = require('../models/user.js');
 const fs = require('fs-extra');
 const mongoose = require('mongoose');
 
@@ -27,7 +26,7 @@ class configController extends baseController {
    */
   async testDatabase(ctx) {
     try {
-      const dbConfig = ctx.params;
+      const dbConfig = ctx.request.body;
       
       if (!dbConfig) {
         ctx.body = yapi.commons.resReturn(null, 400, '请提供数据库配置');
@@ -51,7 +50,7 @@ class configController extends baseController {
    */
   async saveConfig(ctx) {
     try {
-      const config = ctx.params;
+      const config = ctx.request.body;
       
       // 验证必需的配置
       if (!config.db) {
@@ -95,47 +94,83 @@ class configController extends baseController {
       
       await mongoose.connect(connectString, options);
       
+      // 加载 db.js 以初始化 yapi.db 方法
+      require('../utils/db.js');
+      
       // 保存配置到数据库
-      const SystemConfig = yapi.getInst(require('../models/systemConfig.js'));
       const time = yapi.commons.time();
       
+      // 创建 SystemConfig mongoose model
+      const systemConfigSchema = new mongoose.Schema({
+        configKey: { type: String, required: true, unique: true },
+        configValue: { type: Object, required: true },
+        isConfigured: { type: Boolean, default: false },
+        createTime: Number,
+        updateTime: Number
+      });
+      const SystemConfigModel = mongoose.model('system_config', systemConfigSchema, 'system_config');
+      
       // 保存数据库配置
-      await SystemConfig.save({
-        configKey: 'database',
-        configValue: config.db,
-        isConfigured: true,
-        createTime: time,
-        updateTime: time
-      });
-      
-      // 保存管理员配置
-      await SystemConfig.save({
-        configKey: 'admin',
-        configValue: { adminAccount: config.adminAccount },
-        isConfigured: true,
-        createTime: time,
-        updateTime: time
-      });
-      
-      // 保存邮件配置（如果有）
-      if (config.mail) {
-        await SystemConfig.save({
-          configKey: 'mail',
-          configValue: config.mail,
+      await SystemConfigModel.findOneAndUpdate(
+        { configKey: 'database' },
+        {
+          configKey: 'database',
+          configValue: config.db,
           isConfigured: true,
           createTime: time,
           updateTime: time
-        });
+        },
+        { upsert: true, new: true }
+      );
+      
+      // 保存管理员配置
+      await SystemConfigModel.findOneAndUpdate(
+        { configKey: 'admin' },
+        {
+          configKey: 'admin',
+          configValue: { adminAccount: config.adminAccount },
+          isConfigured: true,
+          createTime: time,
+          updateTime: time
+        },
+        { upsert: true, new: true }
+      );
+      
+      // 保存邮件配置（如果有）
+      if (config.mail) {
+        await SystemConfigModel.findOneAndUpdate(
+          { configKey: 'mail' },
+          {
+            configKey: 'mail',
+            configValue: config.mail,
+            isConfigured: true,
+            createTime: time,
+            updateTime: time
+          },
+          { upsert: true, new: true }
+        );
       }
       
       // 创建管理员账号
-      const userInst = yapi.getInst(userModel);
       const passsalt = yapi.commons.randStr();
       const adminEmail = config.adminAccount;
       const adminUsername = adminEmail.substr(0, adminEmail.indexOf('@'));
       const adminPassword = config.adminPassword || 'ymfe.org';
       
-      await userInst.save({
+      // 创建 User mongoose model
+      const userSchema = new mongoose.Schema({
+        username: { type: String, required: true },
+        password: { type: String, required: true },
+        email: { type: String, required: true },
+        passsalt: String,
+        role: String,
+        add_time: Number,
+        up_time: Number,
+        type: { type: String, enum: ['site', 'third'], default: 'site' }
+      });
+      const UserModel = mongoose.model('user', userSchema, 'user');
+      
+      await UserModel.create({
         username: adminUsername,
         email: adminEmail,
         password: yapi.commons.generatePassword(adminPassword, passsalt),
