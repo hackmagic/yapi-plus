@@ -45,3 +45,4 @@ tsconfig.json
 client/plugin-module.js
 .vscode
 /iconfont
+~/.config/opencode/plugins/andrej-karpathy-skills
