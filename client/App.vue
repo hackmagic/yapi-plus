@@ -2,6 +2,7 @@
   <n-config-provider :theme-overrides="themeOverrides">
     <n-message-provider>
       <n-dialog-provider>
+        <Header v-if="!isAuthPage" />
         <router-view />
       </n-dialog-provider>
     </n-message-provider>
@@ -9,7 +10,15 @@
 </template>
 
 <script setup>
+import { computed } from "vue";
+import { useRoute } from "vue-router";
 import { NConfigProvider, NMessageProvider, NDialogProvider } from "naive-ui";
+import Header from "./components/Header/Header.vue";
+
+const route = useRoute();
+
+const authPages = ["/login", "/reg", "/setup"];
+const isAuthPage = computed(() => authPages.includes(route.path));
 
 // Naive UI 主题配置
 const themeOverrides = {

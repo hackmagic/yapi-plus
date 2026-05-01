@@ -1,20 +1,6 @@
 <template>
   <div class="home-container">
     <n-layout>
-      <n-layout-header bordered>
-        <n-page-header>
-          <template #title> YAPI Plus </template>
-          <template #extra>
-            <n-space>
-              <n-button v-if="!userStore.loginState" @click="$router.push('/login')">
-                登录
-              </n-button>
-              <n-button v-if="userStore.loginState" @click="handleLogout"> 退出 </n-button>
-            </n-space>
-          </template>
-        </n-page-header>
-      </n-layout-header>
-
       <n-layout-content content-style="padding: 24px;">
         <n-space vertical :size="24">
           <n-card title="欢迎使用 YAPI Plus">
@@ -45,16 +31,7 @@
 </template>
 
 <script setup>
-import { useUserStore } from "../../store/user";
-import { useRouter } from "vue-router";
-
-const userStore = useUserStore();
-const router = useRouter();
-
-const handleLogout = () => {
-  userStore.logout();
-  router.push("/login");
-};
+// 全局 Header 已由 App.vue 提供，此处不再需要独立 Header
 </script>
 
 <style scoped>
