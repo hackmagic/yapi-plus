@@ -34,7 +34,7 @@ yapi server
 ```bash
 mkdir yapi
 cd yapi
-git clone https://github.com/YMFE/yapi.git vendors //或者下载 zip 包解压到 vendors 目录（clone 整个仓库大概 140+ M，可以通过 `git clone --depth=1 https://github.com/YMFE/yapi.git vendors` 命令减少，大概 10+ M）
+git clone https://github.com/hackmagic/yapi-plus.git vendors //或者下载 zip 包解压到 vendors 目录（clone 整个仓库可以通过 `git clone --depth=1 https://github.com/hackmagic/yapi-plus.git vendors` 命令减少大小）
 cp vendors/config_example.json ./config.json //复制完成后请修改相关配置
 cd vendors
 npm install --production --registry https://registry.npm.taobao.org

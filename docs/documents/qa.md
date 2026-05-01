@@ -29,7 +29,7 @@
 
 ## Q4 发现了 Bug 怎么办？
 
-请反馈到 <a href="https://github.com/YMFE/yapi/issues" _blank="target">Github</a>，功能性的问题我们会在一周内修复，并在每周一发布新的版本 Tag.
+请反馈到 <a href="https://github.com/hackmagic/yapi-plus/issues" _blank="target">Github</a>，功能性问题请提交 Issue.
 
 ## Q5 部署不成功怎么办？
 

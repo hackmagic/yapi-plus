@@ -1,6 +1,6 @@
 ## 怎么分享我的插件？
 
-Fork [yapi](https://github.com/YMFE/yapi), 然后修改 docs/documents/plugin-list.md, 修改完成后请 Pull-Request.
+Fork [yapi-plus](https://github.com/hackmagic/yapi-plus), 然后修改 docs/documents/plugin-list.md, 修改完成后请 Pull-Request.
 
 ## 插件列表
 
