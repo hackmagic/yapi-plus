@@ -1,4 +1,4 @@
-@import '../../../styles/mixin.scss';
+@import "../../../styles/mixin.scss";
 
 .left-menu {
   min-height: 5rem;
@@ -276,23 +276,22 @@
   }
 }
 
-.common-setting-modal{
-  
-  .setting-item{
+.common-setting-modal {
+  .setting-item {
     margin: 10px;
     line-height: 35px;
-    .col-item{
-      padding:5px;
+    .col-item {
+      padding: 5px;
     }
   }
 
-  .case-script{
+  .case-script {
     min-height: 200px;
     margin: 10px;
     width: 98%;
   }
 
-  .insert-code{
+  .insert-code {
     padding-top: 45px;
   }
 }

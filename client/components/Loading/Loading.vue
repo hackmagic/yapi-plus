@@ -12,9 +12,9 @@
 defineProps({
   size: {
     type: String,
-    default: 'medium'
-  }
-})
+    default: "medium",
+  },
+});
 </script>
 
 <style scoped>

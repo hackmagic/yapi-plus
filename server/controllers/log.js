@@ -1,9 +1,9 @@
-const logModel = require('../models/log.js');
-const yapi = require('../yapi.js');
-const baseController = require('./base.js');
-const groupModel = require('../models/group');
-const projectModel = require('../models/project');
-const interfaceModel = require('../models/interface');
+const logModel = require("../models/log.js");
+const yapi = require("../yapi.js");
+const baseController = require("./base.js");
+const groupModel = require("../models/group");
+const projectModel = require("../models/project");
+const interfaceModel = require("../models/interface");
 
 class logController extends baseController {
   constructor(ctx) {
@@ -14,15 +14,15 @@ class logController extends baseController {
     this.interfaceModel = yapi.getInst(interfaceModel);
     this.schemaMap = {
       listByUpdate: {
-        '*type': 'string',
-        '*typeid': 'number',
+        "*type": "string",
+        "*typeid": "number",
         apis: [
           {
-            method: 'string',
-            path: 'string'
-          }
-        ]
-      }
+            method: "string",
+            path: "string",
+          },
+        ],
+      },
     };
   }
 
@@ -46,13 +46,13 @@ class logController extends baseController {
       type = ctx.request.query.type,
       selectValue = ctx.request.query.selectValue;
     if (!typeid) {
-      return (ctx.body = yapi.commons.resReturn(null, 400, 'typeid不能为空'));
+      return (ctx.body = yapi.commons.resReturn(null, 400, "typeid不能为空"));
     }
     if (!type) {
-      return (ctx.body = yapi.commons.resReturn(null, 400, 'type不能为空'));
+      return (ctx.body = yapi.commons.resReturn(null, 400, "type不能为空"));
     }
     try {
-      if (type === 'group') {
+      if (type === "group") {
         let projectList = await this.projectModel.list(typeid);
         let projectIds = [],
           projectDatas = {};
@@ -64,11 +64,11 @@ class logController extends baseController {
           typeid,
           projectIds,
           page,
-          limit
+          limit,
         );
         projectLogList.forEach((item, index) => {
           item = item.toObject();
-          if (item.type === 'project') {
+          if (item.type === "project") {
             item.content =
               `在 <a href="/project/${item.typeid}">${projectDatas[item.typeid].name}</a> 项目: ` +
               item.content;
@@ -78,7 +78,7 @@ class logController extends baseController {
         let total = await this.Model.listCountByGroup(typeid, projectIds);
         ctx.body = yapi.commons.resReturn({
           list: projectLogList,
-          total: Math.ceil(total / limit)
+          total: Math.ceil(total / limit),
         });
       } else if (type === "project") {
         let result = await this.Model.listWithPaging(typeid, type, page, limit, selectValue);
@@ -86,7 +86,7 @@ class logController extends baseController {
 
         ctx.body = yapi.commons.resReturn({
           total: Math.ceil(count / limit),
-          list: result
+          list: result,
         });
       }
     } catch (err) {
@@ -110,7 +110,7 @@ class logController extends baseController {
     try {
       let { typeid, type, apis } = params;
       let list = [];
-      let projectDatas = await this.projectModel.getBaseInfo(typeid, 'basepath');
+      let projectDatas = await this.projectModel.getBaseInfo(typeid, "basepath");
       let basePath = projectDatas.toObject().basepath;
 
       for (let i = 0; i < apis.length; i++) {
@@ -122,7 +122,7 @@ class logController extends baseController {
           typeid,
           api.path,
           api.method,
-          '_id'
+          "_id",
         );
 
         for (let j = 0; j < interfaceIdList.length; j++) {

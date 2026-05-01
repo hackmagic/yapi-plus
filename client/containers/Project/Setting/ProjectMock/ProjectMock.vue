@@ -56,7 +56,7 @@ return result;"
           </template>
         </n-card>
 
-        <n-card title="Mock 规则" style="margin-top: 16px;" v-if="formData.enable">
+        <n-card title="Mock 规则" style="margin-top: 16px" v-if="formData.enable">
           <n-space vertical>
             <n-button type="primary" @click="showRuleModal = true">
               <template #icon>
@@ -68,7 +68,7 @@ return result;"
             <n-data-table
               :columns="ruleColumns"
               :data="ruleList"
-              :row-key="row => row._id"
+              :row-key="(row) => row._id"
               :pagination="false"
             />
           </n-space>
@@ -102,147 +102,151 @@ return result;"
 </template>
 
 <script setup>
-import { ref, onMounted, h } from 'vue'
-import { useMessage, NButton, NIcon, NPopconfirm } from 'naive-ui'
-import axios from 'axios'
-import { AddOutline } from '@vicons/ionicons5'
+import { ref, onMounted, h } from "vue";
+import { useMessage, NButton, NIcon, NPopconfirm } from "naive-ui";
+import axios from "axios";
+import { AddOutline } from "@vicons/ionicons5";
 
 const props = defineProps({
   projectId: {
     type: Number,
-    required: true
-  }
-})
+    required: true,
+  },
+});
 
-const message = useMessage()
+const message = useMessage();
 
-const loading = ref(false)
-const saving = ref(false)
-const showRuleModal = ref(false)
-const ruleList = ref([])
+const loading = ref(false);
+const saving = ref(false);
+const showRuleModal = ref(false);
+const ruleList = ref([]);
 
 const formData = ref({
   enable: false,
   dataFrom: false,
   delay: 0,
-  script: ''
-})
+  script: "",
+});
 
 const ruleFormData = ref({
-  path: '',
-  method: 'GET',
-  response: ''
-})
+  path: "",
+  method: "GET",
+  response: "",
+});
 
 const ruleFormRules = {
-  path: { required: true, message: '请输入匹配路径', trigger: 'blur' },
-  method: { required: true, message: '请选择方法', trigger: 'change' },
-  response: { required: true, message: '请输入返回数据', trigger: 'blur' }
-}
+  path: { required: true, message: "请输入匹配路径", trigger: "blur" },
+  method: { required: true, message: "请选择方法", trigger: "change" },
+  response: { required: true, message: "请输入返回数据", trigger: "blur" },
+};
 
 const methodOptions = [
-  { label: 'GET', value: 'GET' },
-  { label: 'POST', value: 'POST' },
-  { label: 'PUT', value: 'PUT' },
-  { label: 'DELETE', value: 'DELETE' }
-]
+  { label: "GET", value: "GET" },
+  { label: "POST", value: "POST" },
+  { label: "PUT", value: "PUT" },
+  { label: "DELETE", value: "DELETE" },
+];
 
 const ruleColumns = [
-  { title: '路径', key: 'path' },
-  { title: '方法', key: 'method', width: 100 },
-  { title: '返回数据', key: 'response', ellipsis: { tooltip: true } },
+  { title: "路径", key: "path" },
+  { title: "方法", key: "method", width: 100 },
+  { title: "返回数据", key: "response", ellipsis: { tooltip: true } },
   {
-    title: '操作',
-    key: 'actions',
+    title: "操作",
+    key: "actions",
     width: 120,
     render(row) {
-      return h(NPopconfirm, {
-        onPositiveClick: () => handleDeleteRule(row)
-      }, {
-        trigger: () => h(NButton, { size: 'small', type: 'error' }, () => '删除'),
-        default: () => '确定删除此规则吗？'
-      })
-    }
-  }
-]
+      return h(
+        NPopconfirm,
+        {
+          onPositiveClick: () => handleDeleteRule(row),
+        },
+        {
+          trigger: () => h(NButton, { size: "small", type: "error" }, () => "删除"),
+          default: () => "确定删除此规则吗？",
+        },
+      );
+    },
+  },
+];
 
 const loadSettings = async () => {
-  loading.value = true
+  loading.value = true;
   try {
-    const res = await axios.get(`/api/project/get?id=${props.projectId}`)
+    const res = await axios.get(`/api/project/get?id=${props.projectId}`);
     if (res.data.errcode === 0) {
-      const data = res.data.data
+      const data = res.data.data;
       if (data.mock_settings) {
-        formData.value = { ...formData.value, ...data.mock_settings }
+        formData.value = { ...formData.value, ...data.mock_settings };
       }
-      ruleList.value = data.mock_rules || []
+      ruleList.value = data.mock_rules || [];
     }
   } catch (e) {
-    message.error('加载设置失败')
+    message.error("加载设置失败");
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 const handleSave = async () => {
-  saving.value = true
+  saving.value = true;
   try {
-    const res = await axios.post('/api/project/up', {
+    const res = await axios.post("/api/project/up", {
       id: props.projectId,
-      mock_settings: formData.value
-    })
+      mock_settings: formData.value,
+    });
     if (res.data.errcode === 0) {
-      message.success('保存成功')
+      message.success("保存成功");
     }
   } catch (e) {
-    message.error('保存失败')
+    message.error("保存失败");
   } finally {
-    saving.value = false
+    saving.value = false;
   }
-}
+};
 
 const handleTestMock = () => {
-  message.info('Mock 测试功能开发中')
-}
+  message.info("Mock 测试功能开发中");
+};
 
 const handleAddRule = async () => {
   if (!ruleFormData.value.path || !ruleFormData.value.response) {
-    message.warning('请填写完整信息')
-    return
+    message.warning("请填写完整信息");
+    return;
   }
   ruleList.value.push({
     ...ruleFormData.value,
-    _id: Date.now()
-  })
-  showRuleModal.value = false
-  ruleFormData.value = { path: '', method: 'GET', response: '' }
-  
+    _id: Date.now(),
+  });
+  showRuleModal.value = false;
+  ruleFormData.value = { path: "", method: "GET", response: "" };
+
   try {
-    await axios.post('/api/project/up', {
+    await axios.post("/api/project/up", {
       id: props.projectId,
-      mock_rules: ruleList.value
-    })
+      mock_rules: ruleList.value,
+    });
   } catch (e) {
-    message.error('保存规则失败')
+    message.error("保存规则失败");
   }
-}
+};
 
 const handleDeleteRule = async (row) => {
-  ruleList.value = ruleList.value.filter(r => r._id !== row._id)
+  ruleList.value = ruleList.value.filter((r) => r._id !== row._id);
   try {
-    await axios.post('/api/project/up', {
+    await axios.post("/api/project/up", {
       id: props.projectId,
-      mock_rules: ruleList.value
-    })
-    message.success('删除成功')
+      mock_rules: ruleList.value,
+    });
+    message.success("删除成功");
   } catch (e) {
-    message.error('删除失败')
+    message.error("删除失败");
   }
-}
+};
 
 onMounted(() => {
-  loadSettings()
-})
+  loadSettings();
+});
 </script>
 
 <style scoped lang="scss">

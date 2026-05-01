@@ -7,15 +7,11 @@
           <span class="logo-text">YAPI Plus</span>
         </router-link>
       </div>
-      
+
       <div class="header-center">
-        <n-menu
-          v-model:value="activeMenu"
-          :options="menuOptions"
-          mode="horizontal"
-        />
+        <n-menu v-model:value="activeMenu" :options="menuOptions" mode="horizontal" />
       </div>
-      
+
       <div class="header-right">
         <n-space>
           <Search />
@@ -38,46 +34,46 @@
 </template>
 
 <script setup>
-import { ref, h, computed } from 'vue'
-import { useRouter } from 'vue-router'
-import { useUserStore } from '../../store/user'
-import LogoSVG from '../../components/LogoSVG/LogoSVG.vue'
-import Search from './Search/Search.vue'
+import { ref, h, computed } from "vue";
+import { useRouter } from "vue-router";
+import { useUserStore } from "../../store/user";
+import LogoSVG from "../../components/LogoSVG/LogoSVG.vue";
+import Search from "./Search/Search.vue";
 
-const router = useRouter()
-const userStore = useUserStore()
-const activeMenu = ref('home')
+const router = useRouter();
+const userStore = useUserStore();
+const activeMenu = ref("home");
 
 const menuOptions = computed(() => {
   const options = [
-    { label: '首页', key: 'home', onClick: () => router.push('/') },
-    { label: '项目广场', key: 'group', onClick: () => router.push('/group') }
-  ]
+    { label: "首页", key: "home", onClick: () => router.push("/") },
+    { label: "项目广场", key: "group", onClick: () => router.push("/group") },
+  ];
 
-  if (userStore.role === 'admin') {
+  if (userStore.role === "admin") {
     options.push(
-      { label: 'AI 助手', key: 'ai-agent', onClick: () => router.push('/ai-agent') },
-      { label: '用户管理', key: 'user-manage', onClick: () => router.push('/user') },
-      { label: '系统设置', key: 'system-settings', onClick: () => router.push('/system-settings') }
-    )
+      { label: "AI 助手", key: "ai-agent", onClick: () => router.push("/ai-agent") },
+      { label: "用户管理", key: "user-manage", onClick: () => router.push("/user") },
+      { label: "系统设置", key: "system-settings", onClick: () => router.push("/system-settings") },
+    );
   }
 
-  return options
-})
+  return options;
+});
 
 const userMenuOptions = [
-  { label: '个人中心', key: 'profile', icon: () => h('span', {}, '👤') },
-  { label: '退出登录', key: 'logout', icon: () => h('span', {}, '🚪') },
-]
+  { label: "个人中心", key: "profile", icon: () => h("span", {}, "👤") },
+  { label: "退出登录", key: "logout", icon: () => h("span", {}, "🚪") },
+];
 
 const handleUserMenu = (key) => {
-  if (key === 'profile') {
-    router.push('/user')
-  } else if (key === 'logout') {
-    userStore.logout()
-    router.push('/login')
+  if (key === "profile") {
+    router.push("/user");
+  } else if (key === "logout") {
+    userStore.logout();
+    router.push("/login");
   }
-}
+};
 </script>
 
 <style scoped>

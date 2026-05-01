@@ -28,6 +28,7 @@ npm run dev
 访问 `http://localhost:3000/setup`，配置向导将引导你完成 3 个步骤：
 
 #### 步骤 1: 数据库配置
+
 - **连接方式**：选择简单配置或连接字符串
 - **简单配置**：
   - 服务器地址（默认: 127.0.0.1）
@@ -37,10 +38,12 @@ npm run dev
 - **测试连接**：点击按钮验证数据库连接
 
 #### 步骤 2: 管理员账号
+
 - 管理员邮箱（用于登录）
 - 初始密码（默认: ymfe.org）
 
 #### 步骤 3: 邮件配置（可选）
+
 - 启用/禁用邮件服务
 - SMTP 服务器配置
 - 可跳过，稍后在系统设置中配置
@@ -48,6 +51,7 @@ npm run dev
 ### 3. 完成配置
 
 点击"完成配置"后，系统将：
+
 1. 保存配置到数据库
 2. 创建管理员账号
 3. 初始化数据库索引
@@ -77,10 +81,8 @@ npm run dev
 
 1. **数据库配置**（优先）
    - 从 `system_configs` 集合读取
-   
 2. **配置文件**（备选）
    - 从 `config.json` 读取（兼容旧版本）
-   
 3. **配置模式**（未配置时）
    - 启动轻量化配置服务器
    - 引导用户完成配置
@@ -106,11 +108,13 @@ npm run install-server
 ### 新增文件
 
 **后端**：
+
 - `server/models/systemConfig.js` - 系统配置数据模型
 - `server/configChecker.js` - 配置检测工具
 - `server/controllers/configController.js` - 配置控制器
 
 **前端**：
+
 - `client/containers/Setup/SetupWizard.vue` - 配置引导页面
 - `client/containers/SystemSettings/SystemSettings.vue` - 系统设置页面
 - `client/router/index.js` - 路由配置
@@ -144,12 +148,14 @@ mongod
 ### Q: 配置保存在哪里？
 
 配置同时保存在：
+
 1. MongoDB 的 `system_configs` 集合（主要）
 2. `config.json` 文件（备份）
 
 ### Q: 如何迁移旧配置？
 
 如果已有 config.json 配置，系统会自动读取。建议：
+
 1. 启动服务
 2. 进入系统设置
 3. 确认配置正确
@@ -161,11 +167,12 @@ mongod
 ✅ **优雅引导** - 分步骤向导，实时验证  
 ✅ **集中管理** - 所有配置在 Web 界面完成  
 ✅ **向后兼容** - 支持旧版 config.json  
-✅ **安全可靠** - 敏感信息存储在数据库  
+✅ **安全可靠** - 敏感信息存储在数据库
 
 ## 支持
 
 如有问题，请查看：
+
 - 项目 README
 - GitHub Issues
 - 官方文档

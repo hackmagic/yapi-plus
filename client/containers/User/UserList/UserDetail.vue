@@ -7,7 +7,7 @@
           <n-button @click="$router.back()">返回</n-button>
         </n-space>
       </template>
-      
+
       <n-descriptions label-placement="left" bordered :column="2">
         <n-descriptions-item label="用户名">
           {{ userInfo.username }}
@@ -17,7 +17,7 @@
         </n-descriptions-item>
         <n-descriptions-item label="角色">
           <n-tag :type="userInfo.role === 'admin' ? 'error' : 'info'">
-            {{ userInfo.role === 'admin' ? '管理员' : '成员' }}
+            {{ userInfo.role === "admin" ? "管理员" : "成员" }}
           </n-tag>
         </n-descriptions-item>
         <n-descriptions-item label="注册时间">
@@ -35,36 +35,36 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
-import { useMessage } from 'naive-ui'
-import axios from 'axios'
+import { ref, onMounted } from "vue";
+import { useRoute } from "vue-router";
+import { useMessage } from "naive-ui";
+import axios from "axios";
 
-const route = useRoute()
-const message = useMessage()
-const userInfo = ref({})
+const route = useRoute();
+const message = useMessage();
+const userInfo = ref({});
 
 const formatDate = (timestamp) => {
-  if (!timestamp) return '-'
-  return new Date(timestamp).toLocaleString()
-}
+  if (!timestamp) return "-";
+  return new Date(timestamp).toLocaleString();
+};
 
 const fetchUserInfo = async () => {
   try {
-    const res = await axios.get(`/api/user/info?id=${route.params.id}`)
+    const res = await axios.get(`/api/user/info?id=${route.params.id}`);
     if (res.data.errcode === 0) {
-      userInfo.value = res.data.data
+      userInfo.value = res.data.data;
     } else {
-      message.error(res.data.errmsg || '获取用户信息失败')
+      message.error(res.data.errmsg || "获取用户信息失败");
     }
   } catch (error) {
-    message.error('获取用户信息失败')
+    message.error("获取用户信息失败");
   }
-}
+};
 
 onMounted(() => {
-  fetchUserInfo()
-})
+  fetchUserInfo();
+});
 </script>
 
 <style scoped>

@@ -1,9 +1,6 @@
 <template>
   <n-breadcrumb>
-    <n-breadcrumb-item
-      v-for="(item, index) in breadcrumbList"
-      :key="index"
-    >
+    <n-breadcrumb-item v-for="(item, index) in breadcrumbList" :key="index">
       <router-link v-if="item.path" :to="item.path">
         {{ item.name }}
       </router-link>
@@ -13,14 +10,12 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { ref } from "vue";
+import { useRoute } from "vue-router";
 
-const route = useRoute()
+const route = useRoute();
 
-const breadcrumbList = ref([
-  { name: '首页', path: '/' }
-])
+const breadcrumbList = ref([{ name: "首页", path: "/" }]);
 </script>
 
 <style scoped>

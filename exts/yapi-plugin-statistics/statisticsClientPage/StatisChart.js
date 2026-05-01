@@ -1,11 +1,11 @@
 /**
  * Created by gxl.gao on 2017/10/25.
  */
-import React, { Component } from 'react';
+import React, { Component } from "react";
 // import PropTypes from 'prop-types'
-import axios from 'axios';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
-import { Spin } from 'antd';
+import axios from "axios";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
+import { Spin } from "antd";
 class StatisChart extends Component {
   static propTypes = {};
 
@@ -15,8 +15,8 @@ class StatisChart extends Component {
       showLoading: true,
       chartDate: {
         mockCount: 0,
-        mockDateList: []
-      }
+        mockDateList: [],
+      },
     };
   }
 
@@ -26,12 +26,12 @@ class StatisChart extends Component {
 
   // 获取mock 请求次数信息
   async getMockData() {
-    let result = await axios.get('/api/plugin/statismock/get');
+    let result = await axios.get("/api/plugin/statismock/get");
     if (result.data.errcode === 0) {
       let mockStatisData = result.data.data;
       this.setState({
         showLoading: false,
-        chartDate: { ...mockStatisData }
+        chartDate: { ...mockStatisData },
       });
     }
   }

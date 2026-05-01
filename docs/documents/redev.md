@@ -22,7 +22,7 @@ vi ./config.json
   "adminAccount": "admin@admin.com",
   "db": {
     "servername": "127.0.0.1",
-    "DATABASE":  "yapi",
+    "DATABASE": "yapi",
     "port": 27017,
     "user": "yapi",
     "pass": "yapi123"
@@ -33,12 +33,13 @@ vi ./config.json
     "port": 465,
     "from": "***@163.com",
     "auth": {
-        "user": "***@163.com",
-        "pass": "*****"
+      "user": "***@163.com",
+      "pass": "*****"
     }
   }
 }
 ```
+
 > db.user 和 db.pass 是 mongodb 的用户名和密码，如果没有开启 mongo 认证功能，请删除这两个选项。
 
 3.安装依赖
@@ -91,8 +92,6 @@ npm run dev
     |-- ydocfile.js
     `-- ykit.config.js
 ```
-
-
 
 ## 技术栈说明
 

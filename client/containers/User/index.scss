@@ -1,4 +1,4 @@
-@import '../../styles/mixin.scss';
+@import "../../styles/mixin.scss";
 
 .g-doc {
   margin: 0 auto 0.24rem;
@@ -176,7 +176,9 @@
   }
   .avatar-uploader {
     border: none;
-    box-shadow: 0 4px 6px rgba(50, 50, 93, 0.31), 0 1px 3px rgba(0, 0, 0, 0.08);
+    box-shadow:
+      0 4px 6px rgba(50, 50, 93, 0.31),
+      0 1px 3px rgba(0, 0, 0, 0.08);
   }
   .avatar-uploader,
   .avatar-uploader-trigger {
@@ -195,7 +197,9 @@
     overflow: hidden;
     height: 100px;
     background-color: white;
-    box-shadow: 0 4px 6px rgba(50, 50, 93, 0.31), 0 1px 3px rgba(0, 0, 0, 0.08);
+    box-shadow:
+      0 4px 6px rgba(50, 50, 93, 0.31),
+      0 1px 3px rgba(0, 0, 0, 0.08);
     margin-left: 60px;
     img {
       width: 100%;

@@ -1,22 +1,22 @@
-const baseModel = require('./base.js');
-const mongoose = require('mongoose');
+const baseModel = require("./base.js");
+const mongoose = require("mongoose");
 
 class stroageModel extends baseModel {
   constructor() {
-    super()
-    let storageCol = mongoose.connection.db.collection('storage');
+    super();
+    let storageCol = mongoose.connection.db.collection("storage");
     storageCol.createIndex(
       {
-        key: 1
+        key: 1,
       },
       {
-        unique: true
-      }
+        unique: true,
+      },
     );
   }
 
   getName() {
-    return 'storage';
+    return "storage";
   }
 
   getSchema() {
@@ -24,44 +24,47 @@ class stroageModel extends baseModel {
       key: { type: Number, required: true },
       data: {
         type: String,
-        default: ''
-      } //用于原始数据存储
+        default: "",
+      }, //用于原始数据存储
     };
   }
   save(key, data = {}, isInsert = false) {
-
     let saveData = {
       key,
-      data: JSON.stringify(data, null, 2)
+      data: JSON.stringify(data, null, 2),
     };
-    if(isInsert){
+    if (isInsert) {
       let r = new this.model(saveData);
       return r.save();
     }
-    return this.model.updateOne({
-      key
-    }, saveData)
+    return this.model.updateOne(
+      {
+        key,
+      },
+      saveData,
+    );
   }
 
   del(key) {
     return this.model.remove({
-      key
+      key,
     });
   }
 
   get(key) {
     return this.model
       .findOne({
-        key
+        key,
       })
-      .exec().then(data => {
-        this.save(key, {})
+      .exec()
+      .then((data) => {
+        this.save(key, {});
         if (!data) return null;
         data = data.toObject().data;
         try {
-          return JSON.parse(data)
+          return JSON.parse(data);
         } catch (e) {
-          return {}
+          return {};
         }
       });
   }

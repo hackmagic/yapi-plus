@@ -5,14 +5,15 @@
 YAPI Plus 为了解决这个问题，开发了可视化接口自动化测试功能，只需要配置每个接口的入参和对 RESPONSE 断言，即可实现对接口的自动化测试，大大提升了接口测试的效率。
 
 ## 第一步，测试集合
+
 使用 YAPI Plus 自动化测试，第一步需要做得是创建测试集合和导入接口,点击添加集合创建，创建完成后导入接口(同一个接口可以多次导入)。
 
 ![](case-col.png)
 
 ![](import-case.png)
 
-
 ## 第二步，编辑测试用例
+
 编写测试用例主要涉及两个方面，一个是请求参数，另外一个是断言脚本。
 
 ### 编辑请求参数
@@ -95,23 +96,23 @@ $.{key}.{params|body}.{path}
 
 #### 常用 api
 
-* assert(value)
+- assert(value)
 
   判断 value 是否为 truth, 例如 assert(1) 通过， assert(0) 不通过，只要 value 不是 null, 0, false 等值验证通过
 
-* assert.equal(actual, expected)
+- assert.equal(actual, expected)
 
   判断 actual 是否等于 expected，例如 assert(1, 1)通过
 
-* assert.notEqual(actual, expected)
+- assert.notEqual(actual, expected)
 
   判断 actual 是否不等于 expected
 
-* assert.deepEqual(actual, expected)
+- assert.deepEqual(actual, expected)
 
   假设： actual = {a:1} 是一个对象，即便 expected = {a:1}，如果使用 assert.equal 可能也是不相等的，因为在 js 引用的只是对象的一个指针，需要使用 assert.deepEqual 比较两个对象是否相等
 
-* assert.notDeepEaual(actual, expected)
+- assert.notDeepEaual(actual, expected)
 
   深度比较两个对象是否不相等
 
@@ -140,14 +141,14 @@ http request params, 合并了 query 和 body
 log（message） 函数,调试时使用，log 信息仅仅在断言失败后打印,失败断言前的信息
 
 ```
-log(234)   
+log(234)
 assert.equal(status, 400)
 log(123)
 ```
+
 输出结果：
 log: 234  
 AssertionError: 200 == 400
-
 
 ### 示例
 
@@ -160,7 +161,6 @@ assert.equal(status, 200)
 
 ## 服务端自动化测试
 
-
 开始测试功能是在浏览器跑自动化测试，他依赖于浏览器的使用环境。服务端自动化测试功能是在YAPI Plus服务端跑自动化测试，不需要依赖浏览器环境，只需要访问 YAPI Plus 提供的 url 链接就能跑自动化测试，非常的简单易用，而且可以集成到 jenkins。
 
 ### 详细使用方法
@@ -171,6 +171,7 @@ assert.equal(status, 200)
 <img src="./images/autoTestResult.png" />
 
 ## 配置通用规则
+
 ![](2019-01-15-14-05-46.png)
 
 配置通用规则能够使自动化测试，可以基于通用的规则去控制，无需手动一个一个维护case.

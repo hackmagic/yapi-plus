@@ -1,30 +1,30 @@
-const baseModel = require('./base.js');
+const baseModel = require("./base.js");
 
 class userModel extends baseModel {
   getName() {
-    return 'user';
+    return "user";
   }
 
   getSchema() {
     return {
       username: {
         type: String,
-        required: true
+        required: true,
       },
       password: {
         type: String,
-        required: true
+        required: true,
       },
       email: {
         type: String,
-        required: true
+        required: true,
       },
       passsalt: String,
       study: { type: Boolean, default: false },
       role: String,
       add_time: Number,
       up_time: Number,
-      type: { type: String, enum: ['site', 'third'], default: 'site' } //site用户是网站注册用户, third是第三方登录过来的用户
+      type: { type: String, enum: ["site", "third"], default: "site" }, //site用户是网站注册用户, third是第三方登录过来的用户
     };
   }
 
@@ -35,23 +35,20 @@ class userModel extends baseModel {
 
   checkRepeat(email) {
     return this.model.countDocuments({
-      email: email
+      email: email,
     });
   }
 
   list() {
-    return this.model
-      .find()
-      .select('_id username email role type  add_time up_time study')
-      .exec(); //显示id name email role
+    return this.model.find().select("_id username email role type  add_time up_time study").exec(); //显示id name email role
   }
 
   findByUids(uids) {
     return this.model
       .find({
-        _id: { $in: uids }
+        _id: { $in: uids },
       })
-      .select('_id username email role type  add_time up_time study')
+      .select("_id username email role type  add_time up_time study")
       .exec();
   }
 
@@ -63,7 +60,7 @@ class userModel extends baseModel {
       .sort({ _id: -1 })
       .skip((page - 1) * limit)
       .limit(limit)
-      .select('_id username email role type  add_time up_time study')
+      .select("_id username email role type  add_time up_time study")
       .exec();
   }
 
@@ -77,22 +74,22 @@ class userModel extends baseModel {
 
   findById(id) {
     return this.model.findOne({
-      _id: id
+      _id: id,
     });
   }
 
   del(id) {
     return this.model.remove({
-      _id: id
+      _id: id,
     });
   }
 
   update(id, data) {
     return this.model.update(
       {
-        _id: id
+        _id: id,
       },
-      data
+      data,
     );
   }
 
@@ -100,12 +97,12 @@ class userModel extends baseModel {
     return this.model
       .find(
         {
-          $or: [{ email: new RegExp(keyword, 'i') }, { username: new RegExp(keyword, 'i') }]
+          $or: [{ email: new RegExp(keyword, "i") }, { username: new RegExp(keyword, "i") }],
         },
         {
           passsalt: 0,
-          password: 0
-        }
+          password: 0,
+        },
       )
       .limit(10);
   }

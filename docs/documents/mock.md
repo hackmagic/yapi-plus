@@ -4,25 +4,24 @@
  
  **mock地址解析**：`YAPI Plus平台网址 + mock + 您的项目id + 接口实际请求path`
 
- 假设你 YAPI Plus 的部署地址为：
+假设你 YAPI Plus 的部署地址为：
 
     mockd 地址： http://yapi.xxx.com/mock/29/api/hackathon/login
 
- > 注：项目 id 可以在项目设置里查看到
- 
+> 注：项目 id 可以在项目设置里查看到
+
 ## 定义 mock 数据示例
 
 项目 -> 接口编辑 -> 返回数据设置
 
 返回数据设置有两种方式，最新版本默认是基于 `json+注释` 的方式，另外一种是基于 `json-schema` 定义数据结构,请根据实际情况灵活选择使用。
 
-
 ## 方式1. mockjs
 
 <img src="./images/usage/mock-demo.jpg" />
 
-
 ### 原理
+
 基于 [mockjs](http://mockjs.com)，跟 Mockjs 区别是 yapi 基于 json + 注释 定义 mock 数据，无法使用 mockjs 原有的函数功能。
 
 1. 正则表达式需要基于 rule 书写，示例如下：
@@ -41,14 +40,13 @@
 {
   "name": "${query.name}", //请求的url是/path?name=xiaoming, 返回的name字段是xiaoming
   "type": "${body.type}",   //请求的requestBody type=1,返回的type字段是1
-  
+
 }
 
 ```
 
-
-
 3. 示例
+
 ```
 /**
  * 这是一个接口返回数据示例
@@ -65,11 +63,10 @@
 
 ```
 
-
-
 详细使用文档请查看：<a href="http://mockjs.com/examples.html" target="_blank">Mockjs 官网</a>
 
 ## 方式2. json-schema
+
 <img src="./images/usage/json-schema-demo.jpg" />
 
 开启 json-schema 功能后，根据 json-schema 定义的数据结构，生成随机数据。
@@ -88,22 +85,18 @@
 
 > 如果不是以@字符开头的话或者匹配不到Mockjs中的占位符就会直接生成输入的值
 
-
-
-
-
 ## 如何使用 Mock
 
 ### 1 在 js 代码直接请求yapi提供的 mock 地址（不用担心跨域问题）
 
 在代码直接请求 yapi 提供的 mock 地址，以 jQuery 为例：
 
-````javascript
-let prefix = 'http://yapi.xxx.com/mock/2817'
-$.post(prefix+'/baseapi/path', {username: 'xxx'}, function(res){
-    console.log(res) //返回上图预览部分的数据
-})
-````
+```javascript
+let prefix = "http://yapi.xxx.com/mock/2817";
+$.post(prefix + "/baseapi/path", { username: "xxx" }, function (res) {
+  console.log(res); //返回上图预览部分的数据
+});
+```
 
 ### 2 基于本地服务器反向代理
 
@@ -111,13 +104,12 @@ $.post(prefix+'/baseapi/path', {username: 'xxx'}, function(res){
 
 #### 2.1 基于 nginx 反向代理
 
-```` nginx
+```nginx
 location /baseapi
 {
 proxy_pass   http://yapi.xxx.com/mock/2817/baseapi; #baseapi后面没有"/"
 }
-````
-
+```
 
 #### 2.1 基于 Charles 代理
 
@@ -131,10 +123,9 @@ proxy_pass   http://yapi.xxx.com/mock/2817/baseapi; #baseapi后面没有"/"
 
 1. 打开 项目 -> 设置 开启 mock 严格模式
 2. 针对 query, form 中设置的必须字段会进行必填校验
-<img src="./images/mock-strice.png"/>
+   <img src="./images/mock-strice.png"/>
 
 3. 针对 req_body_type 是json schema 格式的数据进行校验
 
 <img src="./images/mock-strice3.png"/>
 <img src="./images/mock-strice2.png"/>
-  

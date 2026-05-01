@@ -23,16 +23,16 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
-import BaseSetting from './BaseSetting.vue'
-import MemberSetting from './MemberSetting.vue'
-import EnvSetting from './EnvSetting.vue'
-import TokenSetting from './TokenSetting.vue'
-import DataSetting from './DataSetting.vue'
+import { computed } from "vue";
+import { useRoute } from "vue-router";
+import BaseSetting from "./BaseSetting.vue";
+import MemberSetting from "./MemberSetting.vue";
+import EnvSetting from "./EnvSetting.vue";
+import TokenSetting from "./TokenSetting.vue";
+import DataSetting from "./DataSetting.vue";
 
-const route = useRoute()
-const projectId = computed(() => route.params.id)
+const route = useRoute();
+const projectId = computed(() => route.params.id);
 </script>
 
 <style scoped>

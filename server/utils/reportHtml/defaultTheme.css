@@ -38,7 +38,9 @@ blockquote {
 }
 
 .yapi-run-auto-test {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimSun, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Helvetica,
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimSun, sans-serif;
   font-size: 13px;
   line-height: 25px;
   color: #393838;
@@ -60,12 +62,15 @@ th {
   padding: 5px 10px;
 }
 
-.yapi-run-auto-test a, a:link, a:visited {
+.yapi-run-auto-test a,
+a:link,
+a:visited {
   color: #34495e;
   text-decoration: none;
 }
 
-.yapi-run-auto-test a:hover, a:focus {
+.yapi-run-auto-test a:hover,
+a:focus {
   color: #59d69d;
   text-decoration: none;
 }
@@ -155,7 +160,11 @@ h6 {
 
 .yapi-run-auto-test code,
 pre {
-  font-family: Monaco, Andale Mono, Courier New, monospace;
+  font-family:
+    Monaco,
+    Andale Mono,
+    Courier New,
+    monospace;
 }
 
 .yapi-run-auto-test code {
@@ -248,7 +257,6 @@ body {
   padding-right: 8px;
 }
 
-
 .yapi-run-auto-test .content-right {
   max-width: 700px;
   margin-left: 290px;
@@ -328,7 +336,7 @@ body {
   color: #fff;
   margin-left: 16px;
   padding: 8px;
-  transition: color .2s;
+  transition: color 0.2s;
 }
 .yapi-run-auto-test .m-header .nav a:hover {
   color: #59d69d;
@@ -339,7 +347,7 @@ body {
   padding-top: 16px;
   padding-bottom: 16px;
 }
-.yapi-run-auto-test .row{
+.yapi-run-auto-test .row {
   position: relative;
   height: auto;
   zoom: 1;
@@ -406,10 +414,9 @@ body {
   font-size: 18px;
 }
 
-.yapi-run-auto-test .success{
+.yapi-run-auto-test .success {
   color: #208054;
   font-weight: 700;
-
 }
 
 .yapi-run-auto-test .status {
@@ -428,8 +435,6 @@ body {
 .yapi-run-auto-test .status-ok {
   background-color: #17c5a6;
 }
-
-
 
 .yapi-run-auto-test .status-ko {
   background-color: #fd3c3c;

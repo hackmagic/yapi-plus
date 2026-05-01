@@ -9,7 +9,7 @@
               <template #unchecked>禁用</template>
             </n-switch>
           </n-form-item>
-          
+
           <template v-if="formData.proxy.enable">
             <n-form-item label="代理地址">
               <n-input v-model:value="formData.proxy.host" placeholder="127.0.0.1" />
@@ -50,7 +50,10 @@
               </n-checkbox-group>
             </n-form-item>
             <n-form-item label="允许的 Headers">
-              <n-input v-model:value="formData.cors.allowedHeaders" placeholder="Content-Type, Authorization" />
+              <n-input
+                v-model:value="formData.cors.allowedHeaders"
+                placeholder="Content-Type, Authorization"
+              />
             </n-form-item>
           </template>
 
@@ -79,77 +82,77 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useMessage } from 'naive-ui'
-import axios from 'axios'
+import { ref, onMounted } from "vue";
+import { useMessage } from "naive-ui";
+import axios from "axios";
 
 const props = defineProps({
   projectId: {
     type: Number,
-    required: true
-  }
-})
+    required: true,
+  },
+});
 
-const message = useMessage()
+const message = useMessage();
 
-const loading = ref(false)
-const saving = ref(false)
+const loading = ref(false);
+const saving = ref(false);
 
 const formData = ref({
   proxy: {
     enable: false,
-    host: '',
+    host: "",
     port: 8080,
-    username: '',
-    password: ''
+    username: "",
+    password: "",
   },
   cors: {
     enable: false,
-    allowedOrigin: '*',
-    allowedMethods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: 'Content-Type'
+    allowedOrigin: "*",
+    allowedMethods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: "Content-Type",
   },
   timeout: 30000,
-  sslVerify: true
-})
+  sslVerify: true,
+});
 
 const loadSettings = async () => {
-  loading.value = true
+  loading.value = true;
   try {
-    const res = await axios.get(`/api/project/get?id=${props.projectId}`)
+    const res = await axios.get(`/api/project/get?id=${props.projectId}`);
     if (res.data.errcode === 0) {
-      const data = res.data.data
+      const data = res.data.data;
       if (data.request_settings) {
-        formData.value = { ...formData.value, ...data.request_settings }
+        formData.value = { ...formData.value, ...data.request_settings };
       }
     }
   } catch (e) {
-    message.error('加载设置失败')
+    message.error("加载设置失败");
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 const handleSave = async () => {
-  saving.value = true
+  saving.value = true;
   try {
-    const res = await axios.post('/api/project/up', {
+    const res = await axios.post("/api/project/up", {
       id: props.projectId,
-      request_settings: formData.value
-    })
+      request_settings: formData.value,
+    });
     if (res.data.errcode === 0) {
-      message.success('保存成功')
+      message.success("保存成功");
     }
   } catch (e) {
-    message.error('保存失败')
+    message.error("保存失败");
   } finally {
-    saving.value = false
+    saving.value = false;
   }
-}
+};
 
 onMounted(() => {
-  loadSettings()
-})
+  loadSettings();
+});
 </script>
 
 <style scoped lang="scss">

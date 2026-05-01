@@ -1,14 +1,14 @@
-const baseController = require('controllers/base.js');
-const interfaceModel = require('models/interface.js');
-const projectModel = require('models/project.js');
+const baseController = require("controllers/base.js");
+const interfaceModel = require("models/interface.js");
+const projectModel = require("models/project.js");
 // const wikiModel = require('../yapi-plugin-wiki/wikiModel.js');
-const interfaceCatModel = require('models/interfaceCat.js');
-const yapi = require('yapi.js');
-const markdownIt = require('markdown-it');
-const markdownItAnchor = require('markdown-it-anchor');
-const markdownItTableOfContents = require('markdown-it-table-of-contents');
-const defaultTheme = require('./defaultTheme.js');
-const md = require('../../common/markdown');
+const interfaceCatModel = require("models/interfaceCat.js");
+const yapi = require("yapi.js");
+const markdownIt = require("markdown-it");
+const markdownItAnchor = require("markdown-it-anchor");
+const markdownItTableOfContents = require("markdown-it-table-of-contents");
+const defaultTheme = require("./defaultTheme.js");
+const md = require("../../common/markdown");
 
 // const htmlToPdf = require("html-pdf");
 class exportController extends baseController {
@@ -17,7 +17,6 @@ class exportController extends baseController {
     this.catModel = yapi.getInst(interfaceCatModel);
     this.interModel = yapi.getInst(interfaceModel);
     this.projectModel = yapi.getInst(projectModel);
-    
   }
 
   async handleListClass(pid, status) {
@@ -34,14 +33,14 @@ class exportController extends baseController {
         newResult.push(item);
       }
     }
-    
+
     return newResult;
   }
 
   handleExistId(data) {
     function delArrId(arr, fn) {
       if (!Array.isArray(arr)) return;
-      arr.forEach(item => {
+      arr.forEach((item) => {
         delete item._id;
         delete item.__v;
         delete item.uid;
@@ -49,17 +48,17 @@ class exportController extends baseController {
         delete item.catid;
         delete item.project_id;
 
-        if (typeof fn === 'function') fn(item);
+        if (typeof fn === "function") fn(item);
       });
     }
 
-    delArrId(data, function(item) {
-      delArrId(item.list, function(api) {
+    delArrId(data, function (item) {
+      delArrId(item.list, function (api) {
         delArrId(api.req_body_form);
         delArrId(api.req_params);
         delArrId(api.req_query);
         delArrId(api.req_headers);
-        if (api.query_path && typeof api.query_path === 'object') {
+        if (api.query_path && typeof api.query_path === "object") {
           delArrId(api.query_path.params);
         }
       });
@@ -75,41 +74,41 @@ class exportController extends baseController {
     let isWiki = ctx.request.query.isWiki;
 
     if (!pid) {
-      ctx.body = yapi.commons.resReturn(null, 200, 'pid 不为空');
+      ctx.body = yapi.commons.resReturn(null, 200, "pid 不为空");
     }
     let curProject, wikiData;
-    let tp = '';
+    let tp = "";
     try {
       curProject = await this.projectModel.get(pid);
-      if (isWiki === 'true') {
-        const wikiModel = require('../yapi-plugin-wiki/wikiModel.js');
+      if (isWiki === "true") {
+        const wikiModel = require("../yapi-plugin-wiki/wikiModel.js");
         wikiData = await yapi.getInst(wikiModel).get(pid);
       }
-      ctx.set('Content-Type', 'application/octet-stream');
+      ctx.set("Content-Type", "application/octet-stream");
       const list = await this.handleListClass(pid, status);
 
       switch (type) {
-        case 'markdown': {
+        case "markdown": {
           tp = await createMarkdown.bind(this)(list, false);
-          ctx.set('Content-Disposition', `attachment; filename=api.md`);
+          ctx.set("Content-Disposition", `attachment; filename=api.md`);
           return (ctx.body = tp);
         }
-        case 'json': {
+        case "json": {
           let data = this.handleExistId(list);
           tp = JSON.stringify(data, null, 2);
-          ctx.set('Content-Disposition', `attachment; filename=api.json`);
+          ctx.set("Content-Disposition", `attachment; filename=api.json`);
           return (ctx.body = tp);
         }
         default: {
           //默认为html
           tp = await createHtml.bind(this)(list);
-          ctx.set('Content-Disposition', `attachment; filename=api.html`);
+          ctx.set("Content-Disposition", `attachment; filename=api.html`);
           return (ctx.body = tp);
         }
       }
     } catch (error) {
-      yapi.commons.log(error, 'error');
-      ctx.body = yapi.commons.resReturn(null, 502, '下载出错');
+      yapi.commons.log(error, "error");
+      ctx.body = yapi.commons.resReturn(null, 502, "下载出错");
     }
 
     async function createHtml(list) {
@@ -117,7 +116,7 @@ class exportController extends baseController {
       let markdown = markdownIt({ html: true, breaks: true });
       markdown.use(markdownItAnchor); // Optional, but makes sense as you really want to link to something
       markdown.use(markdownItTableOfContents, {
-        markerPattern: /^\[toc\]/im
+        markerPattern: /^\[toc\]/im,
       });
 
       // require('fs').writeFileSync('./a.markdown', md);
@@ -127,13 +126,13 @@ class exportController extends baseController {
       // console.log('tp',tp);
       let content = tp.replace(
         /<div\s+?class="table-of-contents"\s*>[\s\S]*?<\/ul>\s*<\/div>/gi,
-        function(match) {
+        function (match) {
           left = match;
-          return '';
-        }
+          return "";
+        },
       );
 
-      return createHtml5(left || '', content);
+      return createHtml5(left || "", content);
     }
 
     function createHtml5(left, tp) {
@@ -179,8 +178,8 @@ class exportController extends baseController {
         mdTemplate += md.createClassMarkdown(curProject, list, isToc);
         return mdTemplate;
       } catch (e) {
-        yapi.commons.log(e, 'error');
-        ctx.body = yapi.commons.resReturn(null, 502, '下载出错');
+        yapi.commons.log(e, "error");
+        ctx.body = yapi.commons.resReturn(null, 502, "下载出错");
       }
     }
   }

@@ -1,12 +1,12 @@
-const yapi = require('../yapi.js');
-const baseModel = require('./base.js');
+const yapi = require("../yapi.js");
+const baseModel = require("./base.js");
 
 /**
  * 接口分类
  */
 class interfaceCat extends baseModel {
   getName() {
-    return 'interface_cat';
+    return "interface_cat";
   }
 
   getSchema() {
@@ -17,7 +17,7 @@ class interfaceCat extends baseModel {
       desc: String,
       add_time: Number,
       up_time: Number,
-      index: { type: Number, default: 0 }
+      index: { type: Number, default: 0 },
     };
   }
 
@@ -29,21 +29,21 @@ class interfaceCat extends baseModel {
   get(id) {
     return this.model
       .findOne({
-        _id: id
+        _id: id,
       })
       .exec();
   }
 
   checkRepeat(name) {
     return this.model.countDocuments({
-      name: name
+      name: name,
     });
   }
 
   list(project_id) {
     return this.model
       .find({
-        project_id: project_id
+        project_id: project_id,
       })
       .sort({ index: 1 })
       .exec();
@@ -51,13 +51,13 @@ class interfaceCat extends baseModel {
 
   del(id) {
     return this.model.remove({
-      _id: id
+      _id: id,
     });
   }
 
   delByProjectId(id) {
     return this.model.remove({
-      project_id: id
+      project_id: id,
     });
   }
 
@@ -65,20 +65,20 @@ class interfaceCat extends baseModel {
     data.up_time = yapi.commons.time();
     return this.model.update(
       {
-        _id: id
+        _id: id,
       },
-      data
+      data,
     );
   }
 
   upCatIndex(id, index) {
     return this.model.update(
       {
-        _id: id
+        _id: id,
       },
       {
-        index: index
-      }
+        index: index,
+      },
     );
   }
 }

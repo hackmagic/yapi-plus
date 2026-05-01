@@ -1,8 +1,5 @@
-@import '../../styles/mixin.scss';
+@import "../../styles/mixin.scss";
 .postman {
-
-
-  
   .adv-button {
     margin-bottom: 8px;
   }
@@ -24,41 +21,39 @@
   }
 
   .interface-test {
-    padding: .24rem;
-    .ant-checkbox-wrapper{
+    padding: 0.24rem;
+    .ant-checkbox-wrapper {
       display: flex;
     }
   }
 
-  
-
-  .insert-code{
-    
+  .insert-code {
     margin-right: 20px;
-    .code-item{
+    .code-item {
       border: 1px solid #dbd9d9;
-      padding:3px;
+      padding: 3px;
       line-height: 30px;
       margin-bottom: 5px;
     }
   }
 
-  .case-script{
+  .case-script {
     min-height: 500px;
     margin: 10px;
   }
 
-  .response-tab{    
+  .response-tab {
     margin-top: 20px;
     margin-bottom: 20px;
-    .ant-tabs-nav{
+    .ant-tabs-nav {
       background: #f7f7f7;
-      border-radius: 0 0 4px 4px;      
+      border-radius: 0 0 4px 4px;
       border: 1px solid #d9d9d9;
       width: 100%;
     }
 
-    .header, .body{
+    .header,
+    .body {
       margin-bottom: 10px;
     }
 
@@ -72,7 +67,7 @@
       padding-right: 10px;
     }
 
-    .response-test{
+    .response-test {
       min-height: 400px;
     }
   }
@@ -86,11 +81,11 @@
     }
   }
   .res-code {
-    padding: .08rem .28rem;
+    padding: 0.08rem 0.28rem;
     color: #fff;
-    margin-left: -.1rem;
-    margin-right: -.28rem;
-    transition: all .2s;
+    margin-left: -0.1rem;
+    margin-right: -0.28rem;
+    transition: all 0.2s;
     position: relative;
     border-radius: 2px;
   }
@@ -104,10 +99,12 @@
   // 容器：左侧是header 右侧是body
   .container-header-body {
     display: flex;
-    padding-bottom: .36rem;
-    .header, .body {
+    padding-bottom: 0.36rem;
+    .header,
+    .body {
       flex: 1 0 300px;
-      .pretty-editor-header, .pretty-editor-body {
+      .pretty-editor-header,
+      .pretty-editor-body {
         height: 100%;
       }
       .postman .pretty-editor-body {
@@ -123,18 +120,18 @@
     .container-title {
       display: flex;
       justify-content: space-between;
-      padding: .08rem 0;
+      padding: 0.08rem 0;
     }
     .resizer {
       flex: 0 0 21px;
       position: relative;
       &:after {
-        content: '';
+        content: "";
         display: block;
         width: 1px;
         height: 100%;
         background-color: #acaaaa;
-        opacity: .8;
+        opacity: 0.8;
         position: absolute;
         left: 50%;
       }
@@ -148,7 +145,9 @@
     }
   }
 
-  .has-plugin, .req-part, .resp-part {
+  .has-plugin,
+  .req-part,
+  .resp-part {
     margin-bottom: 16px;
   }
   .url {
@@ -168,7 +167,7 @@
     .eq-symbol {
       margin: 0 5px;
     }
-    .params-enable{
+    .params-enable {
       width: 24px;
     }
   }
@@ -179,11 +178,10 @@
   .icon-btn:hover {
     color: #2395f1;
   }
-
 }
 
-.env-modal{
-  .ant-modal-body{
+.env-modal {
+  .ant-modal-body {
     padding: 0;
   }
 }

@@ -1,17 +1,17 @@
 $imgUrl: "../../../static/image/";
-$color-grey: #E5E5E5;
+$color-grey: #e5e5e5;
 $color-blue: #2395f1;
 $color-white: #fff;
 
-.intro-container{
-  .imgWrapper{
+.intro-container {
+  .imgWrapper {
     height: 100%;
     width: 50%;
     overflow: hidden;
     position: absolute;
     left: 0;
   }
-  .textWrapper{
+  .textWrapper {
     display: block;
     width: 50%;
     height: 150px;
@@ -20,55 +20,55 @@ $color-white: #fff;
     margin: auto;
     right: 0;
   }
-  .des-container{
-    padding-left: .15rem;
-    .des-title{
-      font-size: .24rem;
-      margin-bottom: .1rem;
+  .des-container {
+    padding-left: 0.15rem;
+    .des-title {
+      font-size: 0.24rem;
+      margin-bottom: 0.1rem;
     }
-    .des-detail{
-      font-size: .15rem;
-      margin-bottom: .2rem;
+    .des-detail {
+      font-size: 0.15rem;
+      margin-bottom: 0.2rem;
     }
-    .des-switch{
-      .switch-content{
+    .des-switch {
+      .switch-content {
         float: left;
         width: 50%;
-        max-height: .85rem;
-        font-size: .14rem;
-        padding: .1rem .15rem .1rem 0;
-        div{
+        max-height: 0.85rem;
+        font-size: 0.14rem;
+        padding: 0.1rem 0.15rem 0.1rem 0;
+        div {
           float: left;
         }
-        .icon-switch{
-          height: .4rem;
-          width: .4rem;
-          border-radius: .02rem;
+        .icon-switch {
+          height: 0.4rem;
+          width: 0.4rem;
+          border-radius: 0.02rem;
           background-color: $color-blue;
-          margin-right: .1rem;
+          margin-right: 0.1rem;
           color: $color-white;
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: .18rem;
+          font-size: 0.18rem;
         }
-        .text-switch{
-          width: calc(100% - .65rem);
+        .text-switch {
+          width: calc(100% - 0.65rem);
         }
       }
     }
   }
-  .img-container{
+  .img-container {
     height: 100%;
     width: 100%;
-    padding-right: .15rem;
+    padding-right: 0.15rem;
     //background-image: url("#{$imgUrl}demo-img.png");
-    img{
+    img {
       height: 100%;
       width: 100%;
-      border: .01rem solid $color-grey;
-      box-shadow : 0 0 3px 1px $color-grey;
-      border-radius: .04rem;
+      border: 0.01rem solid $color-grey;
+      box-shadow: 0 0 3px 1px $color-grey;
+      border-radius: 0.04rem;
     }
   }
 }

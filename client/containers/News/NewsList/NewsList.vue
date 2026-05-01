@@ -8,7 +8,7 @@
               <n-space vertical>
                 <n-text strong>{{ notice.title }}</n-text>
                 <n-text depth="3">{{ notice.content }}</n-text>
-                <n-text depth="3" style="font-size: 12px;">
+                <n-text depth="3" style="font-size: 12px">
                   {{ formatDate(notice.add_time) }}
                 </n-text>
               </n-space>
@@ -16,7 +16,7 @@
           </n-list>
           <n-empty v-else description="暂无系统通知" />
         </n-tab-pane>
-        
+
         <n-tab-pane name="project" tab="项目动态">
           <n-timeline v-if="projectActivities.length > 0">
             <n-timeline-item
@@ -36,46 +36,46 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useMessage } from 'naive-ui'
-import axios from 'axios'
+import { ref, onMounted } from "vue";
+import { useMessage } from "naive-ui";
+import axios from "axios";
 
-const message = useMessage()
+const message = useMessage();
 
-const systemNotices = ref([])
-const projectActivities = ref([])
+const systemNotices = ref([]);
+const projectActivities = ref([]);
 
 const formatDate = (timestamp) => {
-  if (!timestamp) return '-'
-  return new Date(timestamp).toLocaleString()
-}
+  if (!timestamp) return "-";
+  return new Date(timestamp).toLocaleString();
+};
 
 const fetchNotices = async () => {
   try {
-    const res = await axios.get('/api/notice/list')
+    const res = await axios.get("/api/notice/list");
     if (res.data.errcode === 0) {
-      systemNotices.value = res.data.data.list
+      systemNotices.value = res.data.data.list;
     }
   } catch (error) {
-    message.error('获取系统通知失败')
+    message.error("获取系统通知失败");
   }
-}
+};
 
 const fetchActivities = async () => {
   try {
-    const res = await axios.get('/api/log/list')
+    const res = await axios.get("/api/log/list");
     if (res.data.errcode === 0) {
-      projectActivities.value = res.data.data.list
+      projectActivities.value = res.data.data.list;
     }
   } catch (error) {
-    message.error('获取项目动态失败')
+    message.error("获取项目动态失败");
   }
-}
+};
 
 onMounted(() => {
-  fetchNotices()
-  fetchActivities()
-})
+  fetchNotices();
+  fetchActivities();
+});
 </script>
 
 <style scoped>

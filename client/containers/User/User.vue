@@ -1,20 +1,16 @@
 <template>
   <div class="user-page">
-    <n-layout has-sider style="min-height: calc(100vh - 60px);">
+    <n-layout has-sider style="min-height: calc(100vh - 60px)">
       <n-layout-sider bordered :width="200">
         <div class="user-profile">
           <n-avatar :size="80" :style="{ backgroundColor: '#2080f0' }">
-            {{ userStore.username?.charAt(0)?.toUpperCase() || 'U' }}
+            {{ userStore.username?.charAt(0)?.toUpperCase() || "U" }}
           </n-avatar>
           <div class="user-name">{{ userStore.username }}</div>
           <div class="user-email">{{ userStore.email }}</div>
         </div>
 
-        <n-menu
-          :value="activeMenu"
-          :options="menuOptions"
-          @update:value="handleMenuSelect"
-        />
+        <n-menu :value="activeMenu" :options="menuOptions" @update:value="handleMenuSelect" />
       </n-layout-sider>
 
       <n-layout-content content-style="padding: 24px;">
@@ -34,13 +30,11 @@
             </n-form-item>
             <n-form-item label="角色">
               <n-tag :type="userStore.role === 'admin' ? 'error' : 'default'">
-                {{ userStore.role === 'admin' ? '管理员' : '普通用户' }}
+                {{ userStore.role === "admin" ? "管理员" : "普通用户" }}
               </n-tag>
             </n-form-item>
             <n-form-item>
-              <n-button type="primary" @click="handleSave" :loading="saving">
-                保存修改
-              </n-button>
+              <n-button type="primary" @click="handleSave" :loading="saving"> 保存修改 </n-button>
             </n-form-item>
           </n-form>
         </n-card>
@@ -87,102 +81,97 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, h } from 'vue'
-import { useRouter } from 'vue-router'
-import { useMessage } from 'naive-ui'
-import { useUserStore } from '@/store/user'
-import axios from 'axios'
-import {
-  PersonOutline,
-  KeyOutline,
-  SettingsOutline,
-  BookmarksOutline
-} from '@vicons/ionicons5'
+import { ref, computed, onMounted, h } from "vue";
+import { useRouter } from "vue-router";
+import { useMessage } from "naive-ui";
+import { useUserStore } from "@/store/user";
+import axios from "axios";
+import { PersonOutline, KeyOutline, SettingsOutline, BookmarksOutline } from "@vicons/ionicons5";
 
-const router = useRouter()
-const message = useMessage()
-const userStore = useUserStore()
+const router = useRouter();
+const message = useMessage();
+const userStore = useUserStore();
 
-const activeMenu = ref('profile')
-const saving = ref(false)
+const activeMenu = ref("profile");
+const saving = ref(false);
 
 const userForm = ref({
-  username: ''
-})
+  username: "",
+});
 
 const pwdForm = ref({
-  oldPassword: '',
-  newPassword: '',
-  confirmPassword: ''
-})
+  oldPassword: "",
+  newPassword: "",
+  confirmPassword: "",
+});
 
 const settings = ref({
-  emailNotification: true
-})
+  emailNotification: true,
+});
 
 const rules = {
-  username: { required: true, message: '请输入用户名', trigger: 'blur' }
-}
+  username: { required: true, message: "请输入用户名", trigger: "blur" },
+};
 
 const pwdRules = {
-  oldPassword: { required: true, message: '请输入原密码', trigger: 'blur' },
-  newPassword: { required: true, message: '请输入新密码', trigger: 'blur' },
+  oldPassword: { required: true, message: "请输入原密码", trigger: "blur" },
+  newPassword: { required: true, message: "请输入新密码", trigger: "blur" },
   confirmPassword: [
-    { required: true, message: '请确认新密码', trigger: 'blur' },
+    { required: true, message: "请确认新密码", trigger: "blur" },
     {
       validator: (rule, value) => value === pwdForm.value.newPassword,
-      message: '两次输入的密码不一致',
-      trigger: 'blur'
-    }
-  ]
-}
+      message: "两次输入的密码不一致",
+      trigger: "blur",
+    },
+  ],
+};
 
 const renderIcon = (icon) => {
-  return () => h(NIcon, null, { default: () => h(icon) })
-}
+  return () => h(NIcon, null, { default: () => h(icon) });
+};
 
 const menuOptions = [
-  { label: '个人资料', key: 'profile', icon: renderIcon(PersonOutline) },
-  { label: '修改密码', key: 'password', icon: renderIcon(KeyOutline) },
-  { label: '个人设置', key: 'settings', icon: renderIcon(SettingsOutline) },
-  { label: '我的收藏', key: 'favorites', icon: renderIcon(BookmarksOutline) }
-]
+  { label: "个人资料", key: "profile", icon: renderIcon(PersonOutline) },
+  { label: "修改密码", key: "password", icon: renderIcon(KeyOutline) },
+  { label: "个人设置", key: "settings", icon: renderIcon(SettingsOutline) },
+  { label: "我的收藏", key: "favorites", icon: renderIcon(BookmarksOutline) },
+];
 
 onMounted(() => {
-  userForm.value.username = userStore.username
-})
+  userForm.value.username = userStore.username;
+});
 
 const handleMenuSelect = (key) => {
-  activeMenu.value = key
-}
+  activeMenu.value = key;
+};
 
 const handleSave = async () => {
-  saving.value = true
+  saving.value = true;
   try {
-    await userStore.updateUserInfo({ username: userForm.value.username })
-    message.success('保存成功')
+    await userStore.updateUserInfo({ username: userForm.value.username });
+    message.success("保存成功");
   } catch (e) {
-    message.error(e.message || '保存失败')
+    message.error(e.message || "保存失败");
   } finally {
-    saving.value = false
+    saving.value = false;
   }
-}
+};
 
 const handleChangePassword = async () => {
-  saving.value = true
+  saving.value = true;
   try {
-    await axios.post('/api/user/changePassword', {
+    await axios.post("/api/user/changePassword", {
       oldPassword: pwdForm.value.oldPassword,
-      newPassword: pwdForm.value.newPassword
-    })
-    message.success('密码修改成功')
-    pwdForm.value = { oldPassword: '', newPassword: '', confirmPassword: '' }
+      newPassword: pwdForm.value.newPassword,
+    });
+    message.success("密码修改成功");
+    pwdForm.value = { oldPassword: "", newPassword: "", confirmPassword: "" };
   } catch (e) {
-    message.error(e.response?.data?.errmsg || '修改失败')
+    message.error(e.response?.data?.errmsg || "修改失败");
   } finally {
-    saving.value = false
+    saving.value = false;
   }
-}
+};
 </script>
 
 <style scoped lang="scss">

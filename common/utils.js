@@ -1,8 +1,8 @@
-const Mock = require('mockjs');
-const filter = require('./power-string.js').filter;
-const stringUtils = require('./power-string.js').utils;
-const json5 = require('json5');
-const Ajv = require('ajv');
+const Mock = require("mockjs");
+const filter = require("./power-string.js").filter;
+const stringUtils = require("./power-string.js").utils;
+const json5 = require("json5");
+const Ajv = require("ajv");
 /**
  * 作用：解析规则串 key ，然后根据规则串的规则以及路径找到在 json 中对应的数据
  * 规则串：$.{key}.{body||params}.{dataPath} 其中 body 为返回数据，params 为请求数据，datapath 为数据的路径
@@ -14,11 +14,11 @@ const Ajv = require('ajv');
  * @returns
  */
 function simpleJsonPathParse(key, json) {
-  if (!key || typeof key !== 'string' || key.indexOf('$.') !== 0 || key.length <= 2) {
+  if (!key || typeof key !== "string" || key.indexOf("$.") !== 0 || key.length <= 2) {
     return null;
   }
-  let keys = key.substr(2).split('.');
-  keys = keys.filter(item => {
+  let keys = key.substr(2).split(".");
+  keys = keys.filter((item) => {
     return item;
   });
   for (let i = 0, l = keys.length; i < l; i++) {
@@ -30,7 +30,7 @@ function simpleJsonPathParse(key, json) {
         json = json[keys[i]];
       }
     } catch (e) {
-      json = '';
+      json = "";
       break;
     }
   }
@@ -41,16 +41,16 @@ function simpleJsonPathParse(key, json) {
 // 全局变量 {{ global.value }}
 // value 是在环境变量中定义的字段
 function handleGlobalWord(word, json) {
-  if (!word || typeof word !== 'string' || word.indexOf('global.') !== 0) return word;
-  let keys = word.split('.');
-  keys = keys.filter(item => {
+  if (!word || typeof word !== "string" || word.indexOf("global.") !== 0) return word;
+  let keys = word.split(".");
+  keys = keys.filter((item) => {
     return item;
   });
   return json[keys[0]][keys[1]] || word;
 }
 
 function handleMockWord(word) {
-  if (!word || typeof word !== 'string' || word[0] !== '@') return word;
+  if (!word || typeof word !== "string" || word[0] !== "@") return word;
   return Mock.mock(word);
 }
 
@@ -63,9 +63,9 @@ function handleJson(data, handleValueFn) {
   if (!data) {
     return data;
   }
-  if (typeof data === 'string') {
+  if (typeof data === "string") {
     return handleValueFn(data);
-  } else if (typeof data === 'object') {
+  } else if (typeof data === "object") {
     for (let i in data) {
       data[i] = handleJson(data[i], handleValueFn);
     }
@@ -76,12 +76,12 @@ function handleJson(data, handleValueFn) {
 }
 
 function handleValueWithFilter(context) {
-  return function(match) {
-    if (match[0] === '@') {
+  return function (match) {
+    if (match[0] === "@") {
       return handleMockWord(match);
-    } else if (match.indexOf('$.') === 0) {
+    } else if (match.indexOf("$.") === 0) {
       return simpleJsonPathParse(match, context);
-    } else if (match.indexOf('global.') === 0) {
+    } else if (match.indexOf("global.") === 0) {
       return handleGlobalWord(match, context);
     } else {
       return match;
@@ -102,7 +102,7 @@ function handleFilter(str, match, context) {
 
 function handleParamsValue(val, context = {}) {
   const variableRegexp = /\{\{\s*([^}]+?)\}\}/g;
-  if (!val || typeof val !== 'string') {
+  if (!val || typeof val !== "string") {
     return val;
   }
   val = val.trim();
@@ -110,7 +110,7 @@ function handleParamsValue(val, context = {}) {
   let match = val.match(/^\{\{([^\}]+)\}\}$/);
   if (!match) {
     // val ==> @name 或者 $.body
-    if (val[0] === '@' || val[0] === '$') {
+    if (val[0] === "@" || val[0] === "$") {
       return handleFilter(val, val, context);
     }
   } else {
@@ -130,10 +130,10 @@ exports.handleMockWord = handleMockWord;
 
 exports.joinPath = (domain, joinPath) => {
   let l = domain.length;
-  if (domain[l - 1] === '/') {
+  if (domain[l - 1] === "/") {
     domain = domain.substr(0, l - 1);
   }
-  if (joinPath[0] !== '/') {
+  if (joinPath[0] !== "/") {
     joinPath = joinPath.substr(1);
   }
   return domain + joinPath;
@@ -169,15 +169,15 @@ function isJson(json) {
 
 exports.isJson = isJson;
 
-exports.unbase64 = function(base64Str) {
-    try {
-      return stringUtils.unbase64(base64Str);
-    } catch (err) {
-      return base64Str;
-    }
-  };
+exports.unbase64 = function (base64Str) {
+  try {
+    return stringUtils.unbase64(base64Str);
+  } catch (err) {
+    return base64Str;
+  }
+};
 
-exports.json_parse = function(json) {
+exports.json_parse = function (json) {
   try {
     return JSON.parse(json);
   } catch (err) {
@@ -185,24 +185,24 @@ exports.json_parse = function(json) {
   }
 };
 
-exports.json_format = function(json) {
+exports.json_format = function (json) {
   try {
-    return JSON.stringify(JSON.parse(json), null, '   ');
+    return JSON.stringify(JSON.parse(json), null, "   ");
   } catch (e) {
     return json;
   }
 };
 
-exports.ArrayToObject = function(arr) {
+exports.ArrayToObject = function (arr) {
   let obj = {};
-  safeArray(arr).forEach(item => {
+  safeArray(arr).forEach((item) => {
     obj[item.name] = item.value;
   });
 
   return obj;
 };
 
-exports.timeago = function(timestamp) {
+exports.timeago = function (timestamp) {
   let minutes, hours, days, seconds, mouth, year;
   const timeNow = parseInt(new Date().getTime() / 1000);
   seconds = timeNow - timestamp;
@@ -228,61 +228,61 @@ exports.timeago = function(timestamp) {
   }
   minutes = parseInt(seconds / 60);
   if (year > 0) {
-    return year + '年前';
+    return year + "年前";
   } else if (mouth > 0 && year <= 0) {
-    return mouth + '月前';
+    return mouth + "月前";
   } else if (days > 0 && mouth <= 0) {
-    return days + '天前';
+    return days + "天前";
   } else if (days <= 0 && hours > 0) {
-    return hours + '小时前';
+    return hours + "小时前";
   } else if (hours <= 0 && minutes > 0) {
-    return minutes + '分钟前';
+    return minutes + "分钟前";
   } else if (minutes <= 0 && seconds > 0) {
     if (seconds < 30) {
-      return '刚刚';
+      return "刚刚";
     } else {
-      return seconds + '秒前';
+      return seconds + "秒前";
     }
   } else {
-    return '刚刚';
+    return "刚刚";
   }
 };
 
 // json schema 验证器
-exports.schemaValidator = function(schema, params) {
+exports.schemaValidator = function (schema, params) {
   try {
     const ajv = new Ajv({
       format: false,
-      meta: false
+      meta: false,
     });
-    let metaSchema = require('ajv/lib/refs/json-schema-draft-04.json');
+    let metaSchema = require("ajv/lib/refs/json-schema-draft-04.json");
     ajv.addMetaSchema(metaSchema);
     ajv._opts.defaultMeta = metaSchema.id;
-    ajv._refs['http://json-schema.org/schema'] = 'http://json-schema.org/draft-04/schema';
-    var localize = require('ajv-i18n');
+    ajv._refs["http://json-schema.org/schema"] = "http://json-schema.org/draft-04/schema";
+    var localize = require("ajv-i18n");
 
     schema = schema || {
-      type: 'object',
-      title: 'empty object',
-      properties: {}
+      type: "object",
+      title: "empty object",
+      properties: {},
     };
     const validate = ajv.compile(schema);
     let valid = validate(params);
 
-    let message = '';
+    let message = "";
     if (!valid) {
       localize.zh(validate.errors);
-      message += ajv.errorsText(validate.errors, { separator: '\n' });
+      message += ajv.errorsText(validate.errors, { separator: "\n" });
     }
 
     return {
       valid: valid,
-      message: message
+      message: message,
     };
   } catch (e) {
     return {
       valid: false,
-      message: e.message
+      message: e.message,
     };
   }
 };

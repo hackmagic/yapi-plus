@@ -1,26 +1,9 @@
 <template>
   <div class="guide-btns">
     <n-space>
-      <n-button
-        v-if="showPrev"
-        @click="$emit('prev')"
-      >
-        上一步
-      </n-button>
-      <n-button
-        v-if="showNext"
-        type="primary"
-        @click="$emit('next')"
-      >
-        下一步
-      </n-button>
-      <n-button
-        v-if="showFinish"
-        type="success"
-        @click="$emit('finish')"
-      >
-        完成
-      </n-button>
+      <n-button v-if="showPrev" @click="$emit('prev')"> 上一步 </n-button>
+      <n-button v-if="showNext" type="primary" @click="$emit('next')"> 下一步 </n-button>
+      <n-button v-if="showFinish" type="success" @click="$emit('finish')"> 完成 </n-button>
     </n-space>
   </div>
 </template>
@@ -29,19 +12,19 @@
 defineProps({
   showPrev: {
     type: Boolean,
-    default: true
+    default: true,
   },
   showNext: {
     type: Boolean,
-    default: true
+    default: true,
   },
   showFinish: {
     type: Boolean,
-    default: false
-  }
-})
+    default: false,
+  },
+});
 
-defineEmits(['prev', 'next', 'finish'])
+defineEmits(["prev", "next", "finish"]);
 </script>
 
 <style scoped>

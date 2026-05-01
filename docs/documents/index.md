@@ -5,13 +5,17 @@
 ## 新特性
 
 ### Vue 3 + VitePlus
+
 使用 **Vue 3** 作为前端框架，**VitePlus** 作为构建工具，开发和构建速度更快，开发体验更好。
 
 ### Naive UI
+
 使用 **Naive UI** 作为 UI 库，界面更现代化，完全适配 Vue 3。
 
 ### AI 助手
+
 YAPI Plus 支持 AI 助手功能，可以帮助你：
+
 - 与 AI 助手对话，获取 API 相关帮助
 - 使用 AI 自动生成 API 文档
 - 使用 AI 自动生成测试用例
@@ -59,6 +63,7 @@ YAPI Plus 支持 AI 助手功能，可以帮助你：
 <img src="./images/usage/project.png" />
 
 ## 个人中心
+
 鼠标移动到右上角的用户头像或用户名上，即可点击“个人中心”查看个人信息。
 
 <img src="./images/usage/hover.png" />

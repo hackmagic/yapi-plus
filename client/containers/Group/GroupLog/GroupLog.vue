@@ -20,39 +20,39 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
-import axios from 'axios'
+import { ref, computed, onMounted } from "vue";
+import { useRoute } from "vue-router";
+import axios from "axios";
 
-const route = useRoute()
+const route = useRoute();
 
-const groupId = computed(() => route.params.id)
-const loading = ref(false)
-const logList = ref([])
+const groupId = computed(() => route.params.id);
+const loading = ref(false);
+const logList = ref([]);
 
 const formatTime = (timestamp) => {
-  return new Date(timestamp * 1000).toLocaleString()
-}
+  return new Date(timestamp * 1000).toLocaleString();
+};
 
 const loadLogs = async () => {
-  loading.value = true
+  loading.value = true;
   try {
-    const res = await axios.get('/api/log/list', {
-      params: { group_id: groupId.value, type: 'group' }
-    })
+    const res = await axios.get("/api/log/list", {
+      params: { group_id: groupId.value, type: "group" },
+    });
     if (res.data.errcode === 0) {
-      logList.value = res.data.data || []
+      logList.value = res.data.data || [];
     }
   } catch (e) {
-    console.error('加载日志失败', e)
+    console.error("加载日志失败", e);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 onMounted(() => {
-  loadLogs()
-})
+  loadLogs();
+});
 </script>
 
 <style scoped lang="scss">

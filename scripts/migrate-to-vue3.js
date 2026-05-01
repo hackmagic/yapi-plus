@@ -3,28 +3,30 @@
 /**
  * Vue 3 迁移辅助脚本
  * 帮助批量迁移 React 组件到 Vue 3
- * 
+ *
  * 使用方法：
  * node scripts/migrate-to-vue3.js <文件路径>
  */
 
-const fs = require('fs')
-const path = require('path')
+const fs = require("fs");
+const path = require("path");
 
 // 获取要迁移的文件路径
-const filePath = process.argv[2]
+const filePath = process.argv[2];
 
 if (!filePath) {
-  console.log('使用方法: node migrate-to-vue3.js <文件路径>')
-  console.log('示例: node migrate-to-vue3.js client/containers/Project/Interface/InterfaceEditForm.js')
-  process.exit(1)
+  console.log("使用方法: node migrate-to-vue3.js <文件路径>");
+  console.log(
+    "示例: node migrate-to-vue3.js client/containers/Project/Interface/InterfaceEditForm.js",
+  );
+  process.exit(1);
 }
 
 // 读取源文件
-const sourceCode = fs.readFileSync(filePath, 'utf-8')
+const sourceCode = fs.readFileSync(filePath, "utf-8");
 
 // 生成目标文件路径
-const targetPath = filePath.replace(/\.jsx?$/, '.vue')
+const targetPath = filePath.replace(/\.jsx?$/, ".vue");
 
 // 基础模板
 const template = `<template>
@@ -91,7 +93,7 @@ onMounted(() => {
   // TODO: 添加样式
 }
 </style>
-`
+`;
 
 // 生成迁移提示
 const migrationTips = `
@@ -139,12 +141,12 @@ const migrationTips = `
 6. ⏳ 删除旧的 .js 文件
 
 ========================================
-`
+`;
 
 // 写入文件
-fs.writeFileSync(targetPath, template, 'utf-8')
+fs.writeFileSync(targetPath, template, "utf-8");
 
-console.log(migrationTips)
-console.log(`✅ 已创建: ${targetPath}`)
-console.log(`📝 请按照上述步骤完成迁移`)
-console.log(``)
+console.log(migrationTips);
+console.log(`✅ 已创建: ${targetPath}`);
+console.log(`📝 请按照上述步骤完成迁移`);
+console.log(``);

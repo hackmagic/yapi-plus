@@ -21,60 +21,60 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { ref, computed, onMounted } from "vue";
+import { useRoute } from "vue-router";
 
-const route = useRoute()
+const route = useRoute();
 
-const projectId = computed(() => route.params.id)
-const loading = ref(false)
-const activityList = ref([])
+const projectId = computed(() => route.params.id);
+const loading = ref(false);
+const activityList = ref([]);
 
 const formatTime = (timestamp) => {
-  if (!timestamp) return ''
-  return new Date(timestamp * 1000).toLocaleString()
-}
+  if (!timestamp) return "";
+  return new Date(timestamp * 1000).toLocaleString();
+};
 
 const getActivityType = (type) => {
   const typeMap = {
-    'add': 'success',
-    'update': 'info',
-    'delete': 'error',
-    'create': 'success',
-    'edit': 'info'
-  }
-  return typeMap[type] || 'default'
-}
+    add: "success",
+    update: "info",
+    delete: "error",
+    create: "success",
+    edit: "info",
+  };
+  return typeMap[type] || "default";
+};
 
 const getActivityTitle = (type) => {
   const titleMap = {
-    'add': '新增',
-    'update': '更新',
-    'delete': '删除',
-    'create': '创建',
-    'edit': '编辑'
-  }
-  return titleMap[type] || '操作'
-}
+    add: "新增",
+    update: "更新",
+    delete: "删除",
+    create: "创建",
+    edit: "编辑",
+  };
+  return titleMap[type] || "操作";
+};
 
 const loadActivities = async () => {
-  loading.value = true
+  loading.value = true;
   try {
-    const res = await fetch(`/api/project/activity?project_id=${projectId.value}`)
-    const data = await res.json()
+    const res = await fetch(`/api/project/activity?project_id=${projectId.value}`);
+    const data = await res.json();
     if (data.errcode === 0) {
-      activityList.value = data.data || []
+      activityList.value = data.data || [];
     }
   } catch (e) {
-    console.error('加载动态失败', e)
+    console.error("加载动态失败", e);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 onMounted(() => {
-  loadActivities()
-})
+  loadActivities();
+});
 </script>
 
 <style scoped lang="scss">

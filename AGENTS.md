@@ -42,23 +42,23 @@ npm run dev
 
 ## 命令速查（精确名称）
 
-| 用途 | 命令 | 备注 |
-|------|------|------|
-| **开发** | `npm run dev` | 前后端同时启动（推荐） |
-| | `npm run dev:fast` | 跳过图标复制，更快 |
-| | `npm run dev-server` | 仅后端（Koa + nodemon） |
-| | `npm run dev-client` | 仅前端（VitePlus + HMR） |
-| **生产** | `npm run start` | 仅后端（单进程） |
-| | `npm run start:all` | 前后端统一（concurrently） |
-| | `vp preview` | 预览生产构建 |
-| **构建** | `npm run build` 或 `vp build` | 输出到 `static/prd/` |
-| **质量** | `npm run check` / `vp check` | ESLint + 类型检查 + 格式 |
-| | `npm run lint` / `vp lint` | 仅 ESLint |
-| | `npm run lint:client` | ESLint 仅 `client/**` |
-| | `npm run fmt` / `vp fmt` | Prettier 格式化 |
-| **测试** | `npm test` | 运行所有 Ava 测试 |
-| **打包** | `npm run package` | 生成平台特定 zip/tar.gz |
-| **发布** | `npm run release` | git tag → GitHub Actions |
+| 用途     | 命令                          | 备注                       |
+| -------- | ----------------------------- | -------------------------- |
+| **开发** | `npm run dev`                 | 前后端同时启动（推荐）     |
+|          | `npm run dev:fast`            | 跳过图标复制，更快         |
+|          | `npm run dev-server`          | 仅后端（Koa + nodemon）    |
+|          | `npm run dev-client`          | 仅前端（VitePlus + HMR）   |
+| **生产** | `npm run start`               | 仅后端（单进程）           |
+|          | `npm run start:all`           | 前后端统一（concurrently） |
+|          | `vp preview`                  | 预览生产构建               |
+| **构建** | `npm run build` 或 `vp build` | 输出到 `static/prd/`       |
+| **质量** | `npm run check` / `vp check`  | ESLint + 类型检查 + 格式   |
+|          | `npm run lint` / `vp lint`    | 仅 ESLint                  |
+|          | `npm run lint:client`         | ESLint 仅 `client/**`      |
+|          | `npm run fmt` / `vp fmt`      | Prettier 格式化            |
+| **测试** | `npm test`                    | 运行所有 Ava 测试          |
+| **打包** | `npm run package`             | 生成平台特定 zip/tar.gz    |
+| **发布** | `npm run release`             | git tag → GitHub Actions   |
 
 ---
 
@@ -86,20 +86,24 @@ vite.config.js             ← VitePlus 配置（别名、代理、chunks）
 ## 开发流程要点
 
 ### 1. 数据库先行
+
 - 修改后端逻辑前，**先确认 MongoDB 正在运行**。
 - 开发模式使用 `config.json` 或 Web 配置向导（`/setup`）。
 - 数据库变更涉及模型文件在 `server/models/`。
 
 ### 2. 前端开发
+
 - 修改 Vue 组件后，HMR 自动生效；如遇问题，手动刷新 `http://localhost:4000`。
 - 别名：`@` → `client/`，`common/`、`exts/` 也配置了别名。
 - 样式：全局样式在 `client/styles/`，组件级样式用 `<style scoped>`。
 
 ### 3. 后端开发
+
 - 使用 `nodemon` 监视 `server/`、`common/`、`exts/`（见 `nodemon.json`）。
 - 日志输出到 `log/` 目录，调试时查看。
 
 ### 4. 构建与部署
+
 - `npm run build` 生成 `static/prd/`，供生产环境统一服务加载。
 - 生产启动脚本（`start.bat` / `start.sh`）同时启动 Koa 和静态文件服务。
 - **永远不要提交 `static/prd/` 内容**（已在 `.gitignore`）。
@@ -133,6 +137,7 @@ vite.config.js             ← VitePlus 配置（别名、代理、chunks）
 **注册插件**：修改 `plugin.json` 添加元数据，插件自动加载。
 
 **示例插件**：
+
 - `yapi-plugin-wiki` — Wiki 页面功能
 - `yapi-plugin-import-swagger` — Swagger 导入
 - `yapi-plugin-statistics` — 统计面板
@@ -145,6 +150,7 @@ vite.config.js             ← VitePlus 配置（别名、代理、chunks）
 YAPI Plus 内置 AI 助手管理（支持 DeepSeek、OpenAI、Claude、Gemini、Custom）。
 
 **创建助手**：在管理页面填写：
+
 - `name`、`description`、`type`（提供商）
 - `apiKey`、`model`、`baseURL`（可选）
 - `temperature`（默认 0.7）、`maxTokens`（默认 1000）
@@ -153,12 +159,12 @@ YAPI Plus 内置 AI 助手管理（支持 DeepSeek、OpenAI、Claude、Gemini、
 
 ## 环境变量与配置
 
-| 变量 | 用途 |
-|------|------|
-| `YAPI_MONGOD_PATH` | Windows 下指定 `mongod.exe` 路径（`start-dev.bat` 使用） |
-| `YAPI_MONGO_DBPATH` | MongoDB 数据目录（可选） |
-| `NODE_ENV` | `development` / `production` |
-| `PORT` | 后端端口（默认 3000，可覆盖 `config.json`） |
+| 变量                | 用途                                                     |
+| ------------------- | -------------------------------------------------------- |
+| `YAPI_MONGOD_PATH`  | Windows 下指定 `mongod.exe` 路径（`start-dev.bat` 使用） |
+| `YAPI_MONGO_DBPATH` | MongoDB 数据目录（可选）                                 |
+| `NODE_ENV`          | `development` / `production`                             |
+| `PORT`              | 后端端口（默认 3000，可覆盖 `config.json`）              |
 
 **配置文件优先级**：启动时按顺序加载 `config.json` → Web 配置向导 → 环境变量。
 
@@ -178,13 +184,13 @@ YAPI Plus 内置 AI 助手管理（支持 DeepSeek、OpenAI、Claude、Gemini、
 
 ## 故障排除
 
-| 现象 | 检查点 |
-|------|--------|
-| 前端请求 404 /api/* | 确认 `vite.config.js` 代理到 `http://localhost:3000`，后端已启动 |
-| 数据库连接失败 | `mongod` 是否运行；`config.json` 连接参数是否正确 |
+| 现象                 | 检查点                                                                       |
+| -------------------- | ---------------------------------------------------------------------------- |
+| 前端请求 404 /api/\* | 确认 `vite.config.js` 代理到 `http://localhost:3000`，后端已启动             |
+| 数据库连接失败       | `mongod` 是否运行；`config.json` 连接参数是否正确                            |
 | `npm run build` 失败 | 检查 `node_modules` 版本冲突；删除 `node_modules` + `package-lock.json` 重装 |
-| 测试失败 | 确认 `test/babel-register.js` 被正确加载（`ava` 配置的 `require` 字段） |
-| 端口占用 | 3000/4000 是否被其他进程占用 |
+| 测试失败             | 确认 `test/babel-register.js` 被正确加载（`ava` 配置的 `require` 字段）      |
+| 端口占用             | 3000/4000 是否被其他进程占用                                                 |
 
 ---
 

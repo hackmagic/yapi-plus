@@ -1,19 +1,9 @@
 {
-  "presets": [
-    ["es2015", { "modules": false }],
-    "es2017",
-    "stage-0"
-  ],
-  "plugins": [
-    "transform-runtime"
-  ],
+  "presets": [["es2015", { "modules": false }], "es2017", "stage-0"],
+  "plugins": ["transform-runtime"],
   "env": {
     "test": {
-      "presets": [
-        ["es2015", { "modules": "commonjs" }],
-        "es2017",
-        "stage-0"
-      ],
+      "presets": [["es2015", { "modules": "commonjs" }], "es2017", "stage-0"],
       "plugins": []
     }
   }

@@ -1,1 +1,5 @@
-{"db":{"servername":"127.0.0.1","port":27017,"DATABASE":"yapi","authSource":"admin"},"adminAccount":"admin@test.com","adminPassword":"test123456"}
+{
+  "db": { "servername": "127.0.0.1", "port": 27017, "DATABASE": "yapi", "authSource": "admin" },
+  "adminAccount": "admin@test.com",
+  "adminPassword": "test123456"
+}

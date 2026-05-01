@@ -1,8 +1,8 @@
-const defaultTheme = require('./defaultTheme.js');
+const defaultTheme = require("./defaultTheme.js");
 
 function json_format(json) {
-  if (json && typeof json === 'object') {
-    return JSON.stringify(json, null, '   ');
+  if (json && typeof json === "object") {
+    return JSON.stringify(json, null, "   ");
   }
   return json;
 }
@@ -74,7 +74,7 @@ function createHtml5(left, tp, msg, runTime) {
 }
 
 function requestHtml(url, headers, params) {
-  headers = json_format(headers, null, '   ');
+  headers = json_format(headers, null, "   ");
   params = json_format(params);
   let html = ``;
   html += `
@@ -107,8 +107,8 @@ function requestHtml(url, headers, params) {
 }
 
 function reponseHtml(res_header, res_body) {
-  res_header = json_format(res_header, null, '   ');
-  res_body = json_format(res_body, null, '   ');
+  res_header = json_format(res_header, null, "   ");
+  res_body = json_format(res_body, null, "   ");
   let html = ``;
   html += `<div><h3>Reponse</h3>`;
 

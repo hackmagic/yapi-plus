@@ -1,7 +1,7 @@
 <template>
   <div class="setup-wizard">
     <n-card class="wizard-card" title="YAPI Plus 初始化配置" :bordered="false">
-      <n-alert type="info" style="margin-bottom: 24px;">
+      <n-alert type="info" style="margin-bottom: 24px">
         欢迎使用 YAPI Plus！请完成以下配置步骤以初始化系统。
       </n-alert>
 
@@ -37,9 +37,7 @@
                   type="textarea"
                   :rows="3"
                 />
-                <template #extra>
-                  示例: mongodb://yapi:yapi@127.0.0.1:27017/yapi
-                </template>
+                <template #extra> 示例: mongodb://yapi:yapi@127.0.0.1:27017/yapi </template>
               </n-form-item>
             </template>
 
@@ -61,7 +59,12 @@
               </n-form-item>
 
               <n-form-item label="密码" path="pass">
-                <n-input v-model:value="dbConfig.pass" type="password" placeholder="可选" show-password-on="click" />
+                <n-input
+                  v-model:value="dbConfig.pass"
+                  type="password"
+                  placeholder="可选"
+                  show-password-on="click"
+                />
               </n-form-item>
 
               <n-form-item label="认证数据库" path="authSource">
@@ -74,7 +77,7 @@
                 type="primary"
                 :loading="testingDb"
                 @click="testDatabase"
-                style="margin-right: 12px;"
+                style="margin-right: 12px"
               >
                 测试连接
               </n-button>
@@ -97,9 +100,7 @@
           >
             <n-form-item label="管理员邮箱" path="adminAccount">
               <n-input v-model:value="adminConfig.adminAccount" placeholder="admin@admin.com" />
-              <template #extra>
-                用于登录系统的管理员账号
-              </template>
+              <template #extra> 用于登录系统的管理员账号 </template>
             </n-form-item>
 
             <n-form-item label="初始密码" path="adminPassword">
@@ -109,9 +110,7 @@
                 placeholder="ymfe.org"
                 show-password-on="click"
               />
-              <template #extra>
-                默认密码为 ymfe.org，建议首次登录后修改
-              </template>
+              <template #extra> 默认密码为 ymfe.org，建议首次登录后修改 </template>
             </n-form-item>
           </n-form>
         </div>
@@ -156,7 +155,7 @@
               </n-form-item>
             </template>
 
-            <n-alert type="warning" style="margin-top: 16px;">
+            <n-alert type="warning" style="margin-top: 16px">
               邮件配置用于系统通知，可以稍后在系统设置中修改。如不需要可以跳过。
             </n-alert>
           </n-form>
@@ -164,23 +163,13 @@
       </div>
 
       <div class="wizard-actions">
-        <n-button v-if="currentStep > 1" @click="prevStep" style="margin-right: 12px;">
+        <n-button v-if="currentStep > 1" @click="prevStep" style="margin-right: 12px">
           上一步
         </n-button>
-        <n-button
-          v-if="currentStep < 3"
-          type="primary"
-          @click="nextStep"
-          :disabled="!canProceed"
-        >
+        <n-button v-if="currentStep < 3" type="primary" @click="nextStep" :disabled="!canProceed">
           下一步
         </n-button>
-        <n-button
-          v-if="currentStep === 3"
-          type="primary"
-          :loading="saving"
-          @click="saveConfig"
-        >
+        <n-button v-if="currentStep === 3" type="primary" :loading="saving" @click="saveConfig">
           完成配置
         </n-button>
       </div>
@@ -189,134 +178,88 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue'
-import { useMessage } from 'naive-ui'
-import axios from 'axios'
+import { ref, reactive, computed } from "vue";
+import { useMessage } from "naive-ui";
+import axios from "axios";
 
-const message = useMessage()
-const currentStep = ref(1)
-const stepStatus = ref('process')
-const testingDb = ref(false)
-const dbTestResult = ref(null)
-const saving = ref(false)
+const message = useMessage();
+const currentStep = ref(1);
+const stepStatus = ref("process");
+const testingDb = ref(false);
+const dbTestResult = ref(null);
+const saving = ref(false);
 
 // 数据库配置
-const dbFormRef = ref(null)
+const dbFormRef = ref(null);
 const dbConfig = reactive({
-  connectionType: 'simple',
-  servername: '127.0.0.1',
+  connectionType: "simple",
+  servername: "127.0.0.1",
   port: 27017,
-  DATABASE: 'yapi',
-  user: '',
-  pass: '',
-  authSource: '',
-  connectString: ''
-})
+  DATABASE: "yapi",
+  user: "",
+  pass: "",
+  authSource: "",
+  connectString: "",
+});
 
 const dbRules = {
-  servername: { required: true, message: '请输入服务器地址', trigger: 'blur' },
-  port: { required: true, message: '请输入端口', trigger: 'blur' },
-  DATABASE: { required: true, message: '请输入数据库名', trigger: 'blur' }
-}
+  servername: { required: true, message: "请输入服务器地址", trigger: "blur" },
+  port: { required: true, message: "请输入端口", trigger: "blur" },
+  DATABASE: { required: true, message: "请输入数据库名", trigger: "blur" },
+};
 
 // 管理员配置
-const adminFormRef = ref(null)
+const adminFormRef = ref(null);
 const adminConfig = reactive({
-  adminAccount: 'admin@admin.com',
-  adminPassword: 'ymfe.org'
-})
+  adminAccount: "admin@admin.com",
+  adminPassword: "ymfe.org",
+});
 
 const adminRules = {
   adminAccount: {
     required: true,
-    type: 'email',
-    message: '请输入有效的邮箱地址',
-    trigger: 'blur'
+    type: "email",
+    message: "请输入有效的邮箱地址",
+    trigger: "blur",
   },
-  adminPassword: { required: true, message: '请输入密码', trigger: 'blur' }
-}
+  adminPassword: { required: true, message: "请输入密码", trigger: "blur" },
+};
 
 // 邮件配置
-const mailFormRef = ref(null)
+const mailFormRef = ref(null);
 const mailConfig = reactive({
   enable: false,
-  host: 'smtp.163.com',
+  host: "smtp.163.com",
   port: 465,
-  from: '',
+  from: "",
   auth: {
-    user: '',
-    pass: ''
-  }
-})
+    user: "",
+    pass: "",
+  },
+});
 
 // 计算是否可以继续
 const canProceed = computed(() => {
   if (currentStep.value === 1) {
-    return dbTestResult.value?.success === true
+    return dbTestResult.value?.success === true;
   }
   if (currentStep.value === 2) {
-    return adminConfig.adminAccount && adminConfig.adminPassword
+    return adminConfig.adminAccount && adminConfig.adminPassword;
   }
-  return true
-})
+  return true;
+});
 
 // 测试数据库连接
 const testDatabase = async () => {
-  const valid = await dbFormRef.value?.validate()
-  if (!valid) return
+  const valid = await dbFormRef.value?.validate();
+  if (!valid) return;
 
-  testingDb.value = true
-  dbTestResult.value = null
-
-  try {
-    const config = dbConfig.connectionType === 'connectionString'
-      ? { connectString: dbConfig.connectString }
-      : {
-          servername: dbConfig.servername,
-          port: dbConfig.port,
-          DATABASE: dbConfig.DATABASE,
-          user: dbConfig.user,
-          pass: dbConfig.pass,
-          authSource: dbConfig.authSource
-        }
-
-    const res = await axios.post('/api/config/test-db', config)
-    if (res.data.errcode === 0) {
-      dbTestResult.value = { success: true, message: '数据库连接成功' }
-      message.success('数据库连接测试成功')
-    } else {
-      dbTestResult.value = { success: false, message: res.data.errmsg }
-      message.error(res.data.errmsg)
-    }
-  } catch (error) {
-    dbTestResult.value = { success: false, message: '连接失败，请检查配置' }
-    message.error('数据库连接测试失败')
-  } finally {
-    testingDb.value = false
-  }
-}
-
-// 下一步
-const nextStep = () => {
-  if (currentStep.value === 1 && !dbTestResult.value?.success) {
-    message.warning('请先测试数据库连接')
-    return
-  }
-  currentStep.value++
-}
-
-// 上一步
-const prevStep = () => {
-  currentStep.value--
-}
-
-// 保存配置
-const saveConfig = async () => {
-  saving.value = true
+  testingDb.value = true;
+  dbTestResult.value = null;
 
   try {
-    const config = {
-      db: dbConfig.connectionType === 'connectionString'
+    const config =
+      dbConfig.connectionType === "connectionString"
         ? { connectString: dbConfig.connectString }
         : {
             servername: dbConfig.servername,
@@ -324,33 +267,81 @@ const saveConfig = async () => {
             DATABASE: dbConfig.DATABASE,
             user: dbConfig.user,
             pass: dbConfig.pass,
-            authSource: dbConfig.authSource
-          },
+            authSource: dbConfig.authSource,
+          };
+
+    const res = await axios.post("/api/config/test-db", config);
+    if (res.data.errcode === 0) {
+      dbTestResult.value = { success: true, message: "数据库连接成功" };
+      message.success("数据库连接测试成功");
+    } else {
+      dbTestResult.value = { success: false, message: res.data.errmsg };
+      message.error(res.data.errmsg);
+    }
+  } catch (error) {
+    dbTestResult.value = { success: false, message: "连接失败，请检查配置" };
+    message.error("数据库连接测试失败");
+  } finally {
+    testingDb.value = false;
+  }
+};
+
+// 下一步
+const nextStep = () => {
+  if (currentStep.value === 1 && !dbTestResult.value?.success) {
+    message.warning("请先测试数据库连接");
+    return;
+  }
+  currentStep.value++;
+};
+
+// 上一步
+const prevStep = () => {
+  currentStep.value--;
+};
+
+// 保存配置
+const saveConfig = async () => {
+  saving.value = true;
+
+  try {
+    const config = {
+      db:
+        dbConfig.connectionType === "connectionString"
+          ? { connectString: dbConfig.connectString }
+          : {
+              servername: dbConfig.servername,
+              port: dbConfig.port,
+              DATABASE: dbConfig.DATABASE,
+              user: dbConfig.user,
+              pass: dbConfig.pass,
+              authSource: dbConfig.authSource,
+            },
       adminAccount: adminConfig.adminAccount,
       adminPassword: adminConfig.adminPassword,
       mail: mailConfig.enable ? mailConfig : null,
-      timeout: 120000
-    }
+      timeout: 120000,
+    };
 
-    const res = await axios.post('/api/config/save', config)
+    const res = await axios.post("/api/config/save", config);
     if (res.data.errcode === 0) {
-      message.success('配置保存成功！')
-      
+      message.success("配置保存成功！");
+
       // 显示成功对话框
       setTimeout(() => {
-        if (confirm('配置已完成！点击确定重启服务。')) {
-          window.location.reload()
+        if (confirm("配置已完成！点击确定重启服务。")) {
+          window.location.reload();
         }
-      }, 500)
+      }, 500);
     } else {
-      message.error(res.data.errmsg || '配置保存失败')
+      message.error(res.data.errmsg || "配置保存失败");
     }
   } catch (error) {
-    message.error('配置保存失败')
+    message.error("配置保存失败");
   } finally {
-    saving.value = false
+    saving.value = false;
   }
-}
+};
 </script>
 
 <style scoped>

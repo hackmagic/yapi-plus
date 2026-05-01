@@ -11,15 +11,15 @@
           @click="handleProjectClick(project)"
         >
           <div class="project-icon" :style="{ backgroundColor: project.color || '#2080f0' }">
-            {{ project.name?.charAt(0)?.toUpperCase() || 'P' }}
+            {{ project.name?.charAt(0)?.toUpperCase() || "P" }}
           </div>
           <div class="project-info">
             <h4>{{ project.name }}</h4>
-            <p>{{ project.desc || '暂无描述' }}</p>
+            <p>{{ project.desc || "暂无描述" }}</p>
             <div class="project-meta">
-              <span>{{ project.basepath || '/' }}</span>
+              <span>{{ project.basepath || "/" }}</span>
               <n-tag :type="project.project_type === 'public' ? 'success' : 'default'" size="small">
-                {{ project.project_type === 'public' ? '公开' : '私有' }}
+                {{ project.project_type === "public" ? "公开" : "私有" }}
               </n-tag>
             </div>
           </div>
@@ -30,45 +30,45 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { useProjectStore } from '@/store/project'
+import { ref, computed, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { useProjectStore } from "@/store/project";
 
 const props = defineProps({
   groupId: {
     type: [Number, String],
-    default: null
-  }
-})
+    default: null,
+  },
+});
 
-const router = useRouter()
-const projectStore = useProjectStore()
+const router = useRouter();
+const projectStore = useProjectStore();
 
-const loading = ref(false)
-const projectList = computed(() => projectStore.projectList)
+const loading = ref(false);
+const projectList = computed(() => projectStore.projectList);
 
 const loadProjects = async () => {
-  loading.value = true
+  loading.value = true;
   try {
     if (props.groupId) {
-      await projectStore.fetchProjectList(props.groupId)
+      await projectStore.fetchProjectList(props.groupId);
     } else {
-      await projectStore.fetchAllProjects()
+      await projectStore.fetchAllProjects();
     }
   } catch (e) {
-    console.error('加载项目失败', e)
+    console.error("加载项目失败", e);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 onMounted(() => {
-  loadProjects()
-})
+  loadProjects();
+});
 
 const handleProjectClick = (project) => {
-  router.push(`/project/${project._id}`)
-}
+  router.push(`/project/${project._id}`);
+};
 </script>
 
 <style scoped lang="scss">

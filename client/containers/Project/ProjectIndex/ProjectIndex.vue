@@ -12,13 +12,13 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
-import InterfaceList from './InterfaceList.vue'
-import ProjectSetting from './ProjectSetting.vue'
+import { computed } from "vue";
+import { useRoute } from "vue-router";
+import InterfaceList from "./InterfaceList.vue";
+import ProjectSetting from "./ProjectSetting.vue";
 
-const route = useRoute()
-const projectId = computed(() => route.params.id)
+const route = useRoute();
+const projectId = computed(() => route.params.id);
 </script>
 
 <style scoped>

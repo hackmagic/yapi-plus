@@ -19,14 +19,20 @@
             <n-card :title="groupInfo?.group_name" :bordered="false">
               <n-space vertical>
                 <n-descriptions :column="2">
-                  <n-descriptions-item label="组名称">{{ groupInfo?.group_name }}</n-descriptions-item>
-                  <n-descriptions-item label="组类型">{{ groupInfo?.type === 'public' ? '公开' : '私有' }}</n-descriptions-item>
-                  <n-descriptions-item label="描述" :span="2">{{ groupInfo?.group_desc || '暂无描述' }}</n-descriptions-item>
+                  <n-descriptions-item label="组名称">{{
+                    groupInfo?.group_name
+                  }}</n-descriptions-item>
+                  <n-descriptions-item label="组类型">{{
+                    groupInfo?.type === "public" ? "公开" : "私有"
+                  }}</n-descriptions-item>
+                  <n-descriptions-item label="描述" :span="2">{{
+                    groupInfo?.group_desc || "暂无描述"
+                  }}</n-descriptions-item>
                 </n-descriptions>
               </n-space>
             </n-card>
 
-            <n-card title="项目列表" :bordered="false" style="margin-top: 16px;">
+            <n-card title="项目列表" :bordered="false" style="margin-top: 16px">
               <project-list :group-id="groupId" />
             </n-card>
           </div>
@@ -37,44 +43,47 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { useGroupStore } from '@/store/group'
-import ProjectList from '../Project/ProjectList/ProjectList.vue'
+import { ref, computed, onMounted, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { useGroupStore } from "@/store/group";
+import ProjectList from "../Project/ProjectList/ProjectList.vue";
 
-const route = useRoute()
-const router = useRouter()
-const groupStore = useGroupStore()
+const route = useRoute();
+const router = useRouter();
+const groupStore = useGroupStore();
 
-const groupId = computed(() => route.params.id)
-const groupInfo = ref(null)
-const activeTab = ref('home')
+const groupId = computed(() => route.params.id);
+const groupInfo = ref(null);
+const activeTab = ref("home");
 
-const showContent = computed(() => activeTab.value === 'home')
+const showContent = computed(() => activeTab.value === "home");
 
 const loadGroup = async () => {
   try {
-    const data = await groupStore.fetchGroup(groupId.value)
+    const data = await groupStore.fetchGroup(groupId.value);
     if (data) {
-      groupInfo.value = data
+      groupInfo.value = data;
     }
   } catch (error) {
-    console.error('加载失败:', error)
+    console.error("加载失败:", error);
   }
-}
+};
 
 onMounted(() => {
-  loadGroup()
-})
+  loadGroup();
+});
 
-watch(() => route.params.id, () => {
-  loadGroup()
-})
+watch(
+  () => route.params.id,
+  () => {
+    loadGroup();
+  },
+);
 
 const handleTabChange = (tab) => {
-  activeTab.value = tab
-  router.push(`/group/${groupId.value}/${tab}`)
-}
+  activeTab.value = tab;
+  router.push(`/group/${groupId.value}/${tab}`);
+};
 </script>
 
 <style scoped lang="scss">

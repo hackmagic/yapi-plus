@@ -1,25 +1,25 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
 // 定义要删除的文件和目录
 const filesAndDirsToDelete = [
-  'debug_start.log',
-  'server.log',
-  'server_full.log',
-  'yapi_stderr.log',
-  'yapi_stdout.log',
-  'test_output.txt',
-  'config.json.backup',
-  'init.lock',
-  'mongo-data',
-  'release'
+  "debug_start.log",
+  "server.log",
+  "server_full.log",
+  "yapi_stderr.log",
+  "yapi_stdout.log",
+  "test_output.txt",
+  "config.json.backup",
+  "init.lock",
+  "mongo-data",
+  "release",
 ];
 
-console.log('开始清理垃圾文件...');
+console.log("开始清理垃圾文件...");
 
-filesAndDirsToDelete.forEach(item => {
+filesAndDirsToDelete.forEach((item) => {
   const fullPath = path.join(__dirname, item);
-  
+
   if (fs.existsSync(fullPath)) {
     try {
       if (fs.lstatSync(fullPath).isDirectory()) {
@@ -39,4 +39,4 @@ filesAndDirsToDelete.forEach(item => {
   }
 });
 
-console.log('清理完成！');
+console.log("清理完成！");

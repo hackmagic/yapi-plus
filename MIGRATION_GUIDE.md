@@ -19,86 +19,86 @@
 /**
  * Interface Store - 接口管理状态
  */
-import { defineStore } from 'pinia'
-import axios from 'axios'
+import { defineStore } from "pinia";
+import axios from "axios";
 
-export const useInterfaceStore = defineStore('interface', {
+export const useInterfaceStore = defineStore("interface", {
   state: () => ({
     interfaceList: [],
     interfaceDetail: null,
     categories: [],
-    loading: false
+    loading: false,
   }),
 
   getters: {
     getInterfaceById: (state) => (id) => {
-      return state.interfaceList.find(item => item._id === id)
-    }
+      return state.interfaceList.find((item) => item._id === id);
+    },
   },
 
   actions: {
     async fetchInterfaceList(projectId, params = {}) {
-      this.loading = true
+      this.loading = true;
       try {
-        const res = await axios.get(`/api/interface/list/${projectId}`, { params })
+        const res = await axios.get(`/api/interface/list/${projectId}`, { params });
         if (res.data.errcode === 0) {
-          this.interfaceList = res.data.data.list
-          this.categories = res.data.data.categories
-          return res.data.data
+          this.interfaceList = res.data.data.list;
+          this.categories = res.data.data.categories;
+          return res.data.data;
         }
-        return null
+        return null;
       } catch (error) {
-        console.error('获取接口列表失败:', error)
-        return null
+        console.error("获取接口列表失败:", error);
+        return null;
       } finally {
-        this.loading = false
+        this.loading = false;
       }
     },
 
     async fetchInterfaceDetail(id) {
-      this.loading = true
+      this.loading = true;
       try {
-        const res = await axios.get(`/api/interface/get?id=${id}`)
+        const res = await axios.get(`/api/interface/get?id=${id}`);
         if (res.data.errcode === 0) {
-          this.interfaceDetail = res.data.data
-          return res.data.data
+          this.interfaceDetail = res.data.data;
+          return res.data.data;
         }
-        return null
+        return null;
       } catch (error) {
-        console.error('获取接口详情失败:', error)
-        return null
+        console.error("获取接口详情失败:", error);
+        return null;
       } finally {
-        this.loading = false
+        this.loading = false;
       }
     },
 
     async saveInterface(data) {
       try {
-        const res = await axios.post('/api/interface/save', data)
+        const res = await axios.post("/api/interface/save", data);
         if (res.data.errcode === 0) {
-          return res.data.data
+          return res.data.data;
         }
-        return null
+        return null;
       } catch (error) {
-        console.error('保存接口失败:', error)
-        return null
+        console.error("保存接口失败:", error);
+        return null;
       }
     },
 
     async deleteInterface(id) {
       try {
-        const res = await axios.post(`/api/interface/del?id=${id}`)
+        const res = await axios.post(`/api/interface/del?id=${id}`);
         if (res.data.errcode === 0) {
-          return true
+          return true;
         }
-        return false
+        return false;
       } catch (error) {
-        console.error('删除接口失败:', error)
-        return false
+        console.error("删除接口失败:", error);
+        return false;
       }
-    }
-  }
-})
+    },
+  },
+});
 ```
 
 #### 2. client/store/project.js
@@ -107,104 +107,104 @@ export const useInterfaceStore = defineStore('interface', {
 /**
  * Project Store - 项目管理状态
  */
-import { defineStore } from 'pinia'
-import axios from 'axios'
+import { defineStore } from "pinia";
+import axios from "axios";
 
-export const useProjectStore = defineStore('project', {
+export const useProjectStore = defineStore("project", {
   state: () => ({
     projectDetail: null,
     projectList: [],
     members: [],
     envList: [],
-    loading: false
+    loading: false,
   }),
 
   getters: {
-    currentProject: (state) => state.projectDetail
+    currentProject: (state) => state.projectDetail,
   },
 
   actions: {
     async fetchProjectDetail(id) {
-      this.loading = true
+      this.loading = true;
       try {
-        const res = await axios.get(`/api/project/get?id=${id}`)
+        const res = await axios.get(`/api/project/get?id=${id}`);
         if (res.data.errcode === 0) {
-          this.projectDetail = res.data.data
-          return res.data.data
+          this.projectDetail = res.data.data;
+          return res.data.data;
         }
-        return null
+        return null;
       } catch (error) {
-        console.error('获取项目详情失败:', error)
-        return null
+        console.error("获取项目详情失败:", error);
+        return null;
       } finally {
-        this.loading = false
+        this.loading = false;
       }
     },
 
     async updateProject(id, data) {
       try {
-        const res = await axios.post(`/api/project/up?id=${id}`, data)
+        const res = await axios.post(`/api/project/up?id=${id}`, data);
         if (res.data.errcode === 0) {
-          await this.fetchProjectDetail(id)
-          return true
+          await this.fetchProjectDetail(id);
+          return true;
         }
-        return false
+        return false;
       } catch (error) {
-        console.error('更新项目失败:', error)
-        return false
+        console.error("更新项目失败:", error);
+        return false;
       }
     },
 
     async fetchProjectMembers(projectId) {
       try {
-        const res = await axios.get(`/api/project/get_member_list?project_id=${projectId}`)
+        const res = await axios.get(`/api/project/get_member_list?project_id=${projectId}`);
         if (res.data.errcode === 0) {
-          this.members = res.data.data
-          return res.data.data
+          this.members = res.data.data;
+          return res.data.data;
         }
-        return []
+        return [];
       } catch (error) {
-        console.error('获取项目成员失败:', error)
-        return []
+        console.error("获取项目成员失败:", error);
+        return [];
       }
     },
 
     async addMember(projectId, email, role) {
       try {
-        const res = await axios.post('/api/project/add_member', {
+        const res = await axios.post("/api/project/add_member", {
           project_id: projectId,
           email,
-          role
-        })
+          role,
+        });
         if (res.data.errcode === 0) {
-          await this.fetchProjectMembers(projectId)
-          return true
+          await this.fetchProjectMembers(projectId);
+          return true;
         }
-        return false
+        return false;
       } catch (error) {
-        console.error('添加成员失败:', error)
-        return false
+        console.error("添加成员失败:", error);
+        return false;
       }
     },
 
     async deleteMember(projectId, memberId) {
       try {
-        const res = await axios.post('/api/project/del_member', {
+        const res = await axios.post("/api/project/del_member", {
           project_id: projectId,
-          member_id: memberId
-        })
+          member_id: memberId,
+        });
         if (res.data.errcode === 0) {
-          await this.fetchProjectMembers(projectId)
-          return true
+          await this.fetchProjectMembers(projectId);
+          return true;
         }
-        return false
+        return false;
       } catch (error) {
-        console.error('删除成员失败:', error)
-        return false
+        console.error("删除成员失败:", error);
+        return false;
       }
-    }
-  }
-})
+    },
+  },
+});
 ```
 
 ---
@@ -214,20 +214,18 @@ export const useProjectStore = defineStore('project', {
 ### 模板 1：简单列表页面
 
 **React 版本**：
-```javascript
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { Table, Button } from 'antd';
 
-@connect(
-  state => ({ list: state.interface.list }),
-  { fetchList }
-)
+```javascript
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { Table, Button } from "antd";
+
+@connect((state) => ({ list: state.interface.list }), { fetchList })
 class ListPage extends Component {
   componentDidMount() {
     this.props.fetchList();
   }
-  
+
   render() {
     return (
       <div>
@@ -240,6 +238,7 @@ class ListPage extends Component {
 ```
 
 **Vue 3 版本**：
+
 ```vue
 <template>
   <div>
@@ -249,49 +248,49 @@ class ListPage extends Component {
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { useMessage } from 'naive-ui'
-import { useInterfaceStore } from '@/store/interface'
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { useMessage } from "naive-ui";
+import { useInterfaceStore } from "@/store/interface";
 
-const router = useRouter()
-const message = useMessage()
-const interfaceStore = useInterfaceStore()
+const router = useRouter();
+const message = useMessage();
+const interfaceStore = useInterfaceStore();
 
-const list = ref([])
+const list = ref([]);
 const columns = ref([
-  { title: '名称', key: 'name' },
-  { title: '路径', key: 'path' },
+  { title: "名称", key: "name" },
+  { title: "路径", key: "path" },
   {
-    title: '操作',
-    key: 'actions',
+    title: "操作",
+    key: "actions",
     render: (row) => {
       return [
-        h('button', { onClick: () => handleEdit(row) }, '编辑'),
-        h('button', { onClick: () => handleDelete(row) }, '删除')
-      ]
-    }
-  }
-])
+        h("button", { onClick: () => handleEdit(row) }, "编辑"),
+        h("button", { onClick: () => handleDelete(row) }, "删除"),
+      ];
+    },
+  },
+]);
 
 onMounted(async () => {
-  const data = await interfaceStore.fetchInterfaceList()
-  list.value = data || []
-})
+  const data = await interfaceStore.fetchInterfaceList();
+  list.value = data || [];
+});
 
 const handleAdd = () => {
-  router.push('/add')
-}
+  router.push("/add");
+};
 
 const handleEdit = (row) => {
-  router.push(`/edit/${row._id}`)
-}
+  router.push(`/edit/${row._id}`);
+};
 
 const handleDelete = async (row) => {
-  await interfaceStore.deleteInterface(row._id)
-  message.success('删除成功')
-  list.value = await interfaceStore.fetchInterfaceList()
-}
+  await interfaceStore.deleteInterface(row._id);
+  message.success("删除成功");
+  list.value = await interfaceStore.fetchInterfaceList();
+};
 </script>
 ```
 
@@ -300,9 +299,10 @@ const handleDelete = async (row) => {
 ### 模板 2：表单页面
 
 **React 版本**：
+
 ```javascript
-import React, { Component } from 'react';
-import { Form, Input, Button } from 'antd';
+import React, { Component } from "react";
+import { Form, Input, Button } from "antd";
 
 class FormPage extends Component {
   handleSubmit = async (values) => {
@@ -316,7 +316,9 @@ class FormPage extends Component {
         <Form.Item name="name" label="名称">
           <Input />
         </Form.Item>
-        <Button type="primary" htmlType="submit">保存</Button>
+        <Button type="primary" htmlType="submit">
+          保存
+        </Button>
       </Form>
     );
   }
@@ -324,6 +326,7 @@ class FormPage extends Component {
 ```
 
 **Vue 3 版本**：
+
 ```vue
 <template>
   <n-form ref="formRef" :model="formData" :rules="rules" @submit="handleSubmit">
@@ -335,37 +338,37 @@ class FormPage extends Component {
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import { useMessage } from 'naive-ui'
-import { useInterfaceStore } from '@/store/interface'
+import { ref } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import { useMessage } from "naive-ui";
+import { useInterfaceStore } from "@/store/interface";
 
-const router = useRouter()
-const route = useRoute()
-const message = useMessage()
-const interfaceStore = useInterfaceStore()
+const router = useRouter();
+const route = useRoute();
+const message = useMessage();
+const interfaceStore = useInterfaceStore();
 
-const formRef = ref(null)
+const formRef = ref(null);
 const formData = ref({
-  name: ''
-})
+  name: "",
+});
 
 const rules = {
-  name: { required: true, message: '请输入名称', trigger: 'blur' }
-}
+  name: { required: true, message: "请输入名称", trigger: "blur" },
+};
 
 const handleSubmit = async (e) => {
-  e.preventDefault()
-  await formRef.value?.validate()
-  
+  e.preventDefault();
+  await formRef.value?.validate();
+
   await interfaceStore.saveInterface({
     ...formData.value,
-    id: route.params.id
-  })
-  
-  message.success('保存成功')
-  router.back()
-}
+    id: route.params.id,
+  });
+
+  message.success("保存成功");
+  router.back();
+};
 </script>
 ```
 
@@ -374,14 +377,12 @@ const handleSubmit = async (e) => {
 ### 模板 3：详情页面
 
 **React 版本**：
-```javascript
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
 
-@connect(
-  state => ({ detail: state.interface.detail }),
-  { fetchDetail }
-)
+```javascript
+import React, { Component } from "react";
+import { connect } from "react-redux";
+
+@connect((state) => ({ detail: state.interface.detail }), { fetchDetail })
 class DetailPage extends Component {
   componentDidMount() {
     this.props.fetchDetail(this.props.match.params.id);
@@ -400,6 +401,7 @@ class DetailPage extends Component {
 ```
 
 **Vue 3 版本**：
+
 ```vue
 <template>
   <div v-if="detail">
@@ -409,17 +411,17 @@ class DetailPage extends Component {
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
-import { useInterfaceStore } from '@/store/interface'
+import { ref, onMounted } from "vue";
+import { useRoute } from "vue-router";
+import { useInterfaceStore } from "@/store/interface";
 
-const route = useRoute()
-const interfaceStore = useInterfaceStore()
-const detail = ref(null)
+const route = useRoute();
+const interfaceStore = useInterfaceStore();
+const detail = ref(null);
 
 onMounted(async () => {
-  detail.value = await interfaceStore.fetchInterfaceDetail(route.params.id)
-})
+  detail.value = await interfaceStore.fetchInterfaceDetail(route.params.id);
+});
 </script>
 ```
 
@@ -429,28 +431,28 @@ onMounted(async () => {
 
 ### 🔴 P0 - 核心功能（必须迁移）
 
-| # | 文件 | 类型 | 难度 | 预计时间 |
-|---|------|------|------|---------|
-| 1 | `InterfaceEditForm.js` | 表单 | ⭐⭐⭐ | 30 分钟 |
-| 2 | `InterfaceMenu.js` | 列表 | ⭐⭐ | 20 分钟 |
-| 3 | `ProjectMessage.js` | 表单 | ⭐⭐⭐ | 30 分钟 |
-| 4 | `ProjectEnv.js` | 表单 | ⭐⭐⭐ | 30 分钟 |
-| 5 | `ProjectMember.js` | 列表+表单 | ⭐⭐⭐ | 40 分钟 |
+| #   | 文件                   | 类型      | 难度   | 预计时间 |
+| --- | ---------------------- | --------- | ------ | -------- |
+| 1   | `InterfaceEditForm.js` | 表单      | ⭐⭐⭐ | 30 分钟  |
+| 2   | `InterfaceMenu.js`     | 列表      | ⭐⭐   | 20 分钟  |
+| 3   | `ProjectMessage.js`    | 表单      | ⭐⭐⭐ | 30 分钟  |
+| 4   | `ProjectEnv.js`        | 表单      | ⭐⭐⭐ | 30 分钟  |
+| 5   | `ProjectMember.js`     | 列表+表单 | ⭐⭐⭐ | 40 分钟  |
 
 ### 🟡 P1 - 重要功能（应该迁移）
 
-| # | 文件 | 类型 | 难度 | 预计时间 |
-|---|------|------|------|---------|
-| 6 | `ProjectToken.js` | 列表 | ⭐⭐ | 20 分钟 |
-| 7 | `ProjectData.js` | 操作页 | ⭐⭐ | 20 分钟 |
-| 8 | `ProjectMock.js` | 表单 | ⭐⭐⭐ | 30 分钟 |
-| 9 | `ProjectRequest.js` | 表单 | ⭐⭐⭐ | 30 分钟 |
-| 10 | `Setting.js` | 布局 | ⭐ | 15 分钟 |
+| #   | 文件                | 类型   | 难度   | 预计时间 |
+| --- | ------------------- | ------ | ------ | -------- |
+| 6   | `ProjectToken.js`   | 列表   | ⭐⭐   | 20 分钟  |
+| 7   | `ProjectData.js`    | 操作页 | ⭐⭐   | 20 分钟  |
+| 8   | `ProjectMock.js`    | 表单   | ⭐⭐⭐ | 30 分钟  |
+| 9   | `ProjectRequest.js` | 表单   | ⭐⭐⭐ | 30 分钟  |
+| 10  | `Setting.js`        | 布局   | ⭐     | 15 分钟  |
 
 ### 🟢 P2 - 辅助功能（可以迁移）
 
-| # | 文件 | 类型 | 难度 | 预计时间 |
-|---|------|------|------|---------|
+| #     | 文件     | 类型 | 难度    | 预计时间      |
+| ----- | -------- | ---- | ------- | ------------- |
 | 11-28 | 其他文件 | 各种 | ⭐-⭐⭐ | 15-20 分钟/个 |
 
 ---
@@ -465,6 +467,7 @@ cat client/containers/xxx/xxx.js
 ```
 
 识别：
+
 - Props → defineProps
 - State → ref/reactive
 - Methods → const functions
@@ -479,36 +482,37 @@ touch client/containers/xxx/xxx.vue
 ```
 
 使用模板：
+
 ```vue
 <template>
   <!-- 模板内容 -->
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { useMessage } from 'naive-ui'
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { useMessage } from "naive-ui";
 
 // Props
 const props = defineProps({
   // ...
-})
+});
 
 // Emits
-const emit = defineEmits(['update', 'delete'])
+const emit = defineEmits(["update", "delete"]);
 
 // State
-const data = ref(null)
+const data = ref(null);
 
 // Methods
 const handleAction = async () => {
   // ...
-}
+};
 
 // Lifecycle
 onMounted(async () => {
   // ...
-})
+});
 </script>
 
 <style scoped lang="scss">
@@ -520,21 +524,21 @@ onMounted(async () => {
 
 **对照表**：
 
-| React | Vue 3 |
-|-------|-------|
-| `this.state` | `ref()` / `reactive()` |
-| `this.props` | `defineProps()` |
-| `this.setState()` | 直接修改 `.value` |
-| `componentDidMount` | `onMounted()` |
-| `componentWillUnmount` | `onUnmounted()` |
-| `connect()` | `useStore()` |
-| `this.props.history.push()` | `router.push()` |
-| `this.props.match.params` | `route.params` |
-| `<Table>` | `<n-data-table>` |
-| `<Modal>` | `<n-modal>` |
-| `<Form>` | `<n-form>` |
-| `<Button>` | `<n-button>` |
-| `<Input>` | `<n-input>` |
+| React                       | Vue 3                  |
+| --------------------------- | ---------------------- |
+| `this.state`                | `ref()` / `reactive()` |
+| `this.props`                | `defineProps()`        |
+| `this.setState()`           | 直接修改 `.value`      |
+| `componentDidMount`         | `onMounted()`          |
+| `componentWillUnmount`      | `onUnmounted()`        |
+| `connect()`                 | `useStore()`           |
+| `this.props.history.push()` | `router.push()`        |
+| `this.props.match.params`   | `route.params`         |
+| `<Table>`                   | `<n-data-table>`       |
+| `<Modal>`                   | `<n-modal>`            |
+| `<Form>`                    | `<n-form>`             |
+| `<Button>`                  | `<n-button>`           |
+| `<Input>`                   | `<n-input>`            |
 
 ### Step 4: 更新路由
 
@@ -542,7 +546,7 @@ onMounted(async () => {
 
 ```javascript
 // 从 .js 改为 .vue
-const Interface = () => import('@/containers/Project/Interface/Interface.vue')
+const Interface = () => import("@/containers/Project/Interface/Interface.vue");
 ```
 
 ### Step 5: 测试
@@ -577,6 +581,7 @@ npm run dev
 ### 2. 批量处理
 
 按模块分批迁移：
+
 1. 先迁移接口管理（3 个文件）
 2. 再迁移项目设置（5 个文件）
 3. 最后迁移辅助组件
@@ -584,6 +589,7 @@ npm run dev
 ### 3. 测试每个文件
 
 每迁移一个文件，立即测试：
+
 - 页面能否正常加载
 - 功能是否正常
 - 有无报错
@@ -631,17 +637,19 @@ npm run dev
 ### Q1: 如何处理高阶组件（HOC）？
 
 **React**:
+
 ```javascript
 @connect(mapStateToProps, mapDispatchToProps)
 class Component extends React.Component {}
 ```
 
 **Vue 3**:
+
 ```vue
 <script setup>
-import { useStore } from 'pinia'
+import { useStore } from "pinia";
 
-const store = useStore()
+const store = useStore();
 // 直接使用 store 的 state 和 actions
 </script>
 ```
@@ -649,23 +657,26 @@ const store = useStore()
 ### Q2: 如何处理路由参数？
 
 **React**:
+
 ```javascript
 const { id } = this.props.match.params;
 ```
 
 **Vue 3**:
+
 ```vue
 <script setup>
-import { useRoute } from 'vue-router'
+import { useRoute } from "vue-router";
 
-const route = useRoute()
-const id = route.params.id
+const route = useRoute();
+const id = route.params.id;
 </script>
 ```
 
 ### Q3: 如何处理表单？
 
 **React (Ant Design)**:
+
 ```javascript
 <Form onFinish={handleSubmit}>
   <Form.Item name="name">
@@ -675,6 +686,7 @@ const id = route.params.id
 ```
 
 **Vue 3 (Naive UI)**:
+
 ```vue
 <n-form @submit="handleSubmit">
   <n-form-item path="name">

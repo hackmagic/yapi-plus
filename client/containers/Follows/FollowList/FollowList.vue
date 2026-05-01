@@ -13,14 +13,12 @@
               <router-link :to="item.link">{{ item.name }}</router-link>
             </n-text>
             <n-text depth="3">{{ item.desc }}</n-text>
-            <n-text depth="3" style="font-size: 12px;">
+            <n-text depth="3" style="font-size: 12px">
               更新于 {{ formatDate(item.up_time) }}
             </n-text>
           </n-space>
           <template #suffix>
-            <n-button text type="error" @click="handleUnfollow(item)">
-              取消关注
-            </n-button>
+            <n-button text type="error" @click="handleUnfollow(item)"> 取消关注 </n-button>
           </template>
         </n-list-item>
       </n-list>
@@ -30,46 +28,46 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useMessage } from 'naive-ui'
-import axios from 'axios'
+import { ref, onMounted } from "vue";
+import { useMessage } from "naive-ui";
+import axios from "axios";
 
-const message = useMessage()
-const follows = ref([])
+const message = useMessage();
+const follows = ref([]);
 
 const formatDate = (timestamp) => {
-  if (!timestamp) return '-'
-  return new Date(timestamp).toLocaleString()
-}
+  if (!timestamp) return "-";
+  return new Date(timestamp).toLocaleString();
+};
 
 const fetchFollows = async () => {
   try {
-    const res = await axios.get('/api/follow/list')
+    const res = await axios.get("/api/follow/list");
     if (res.data.errcode === 0) {
-      follows.value = res.data.data.list
+      follows.value = res.data.data.list;
     }
   } catch (error) {
-    message.error('获取关注列表失败')
+    message.error("获取关注列表失败");
   }
-}
+};
 
 const handleUnfollow = async (item) => {
   try {
-    const res = await axios.delete(`/api/follow/del?id=${item._id}`)
+    const res = await axios.delete(`/api/follow/del?id=${item._id}`);
     if (res.data.errcode === 0) {
-      message.success('取消关注成功')
-      fetchFollows()
+      message.success("取消关注成功");
+      fetchFollows();
     } else {
-      message.error(res.data.errmsg || '取消关注失败')
+      message.error(res.data.errmsg || "取消关注失败");
     }
   } catch (error) {
-    message.error('取消关注失败')
+    message.error("取消关注失败");
   }
-}
+};
 
 onMounted(() => {
-  fetchFollows()
-})
+  fetchFollows();
+});
 </script>
 
 <style scoped>

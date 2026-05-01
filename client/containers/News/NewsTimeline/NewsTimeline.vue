@@ -17,28 +17,28 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import axios from 'axios'
+import { ref, onMounted } from "vue";
+import axios from "axios";
 
-const newsList = ref([])
+const newsList = ref([]);
 
 const getNewsType = (type) => {
-  const typeMap = { project: 'info', interface: 'success', user: 'warning' }
-  return typeMap[type] || 'default'
-}
+  const typeMap = { project: "info", interface: "success", user: "warning" };
+  return typeMap[type] || "default";
+};
 
 const formatTime = (time) => {
-  return new Date(time).toLocaleString('zh-CN')
-}
+  return new Date(time).toLocaleString("zh-CN");
+};
 
 const loadNews = async () => {
   try {
-    const res = await axios.get('/api/log/list')
-    if (res.data.errcode === 0) newsList.value = res.data.data
+    const res = await axios.get("/api/log/list");
+    if (res.data.errcode === 0) newsList.value = res.data.data;
   } catch (error) {
-    console.error('加载失败:', error)
+    console.error("加载失败:", error);
   }
-}
+};
 
-onMounted(() => loadNews())
+onMounted(() => loadNews());
 </script>

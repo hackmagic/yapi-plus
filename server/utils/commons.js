@@ -1,39 +1,37 @@
-const fs = require('fs-extra');
-const path = require('path');
-const yapi = require('../yapi.js');
-const sha1 = require('sha1');
-const logModel = require('../models/log.js');
-const projectModel = require('../models/project.js');
-const interfaceColModel = require('../models/interfaceCol.js');
-const interfaceCaseModel = require('../models/interfaceCase.js');
-const interfaceModel = require('../models/interface.js');
-const userModel = require('../models/user.js');
-const followModel = require('../models/follow.js');
-const json5 = require('json5');
-const _ = require('underscore');
-const Ajv = require('ajv');
-const Mock = require('mockjs');
-const sandboxFn = require('./sandbox')
+const fs = require("fs-extra");
+const path = require("path");
+const yapi = require("../yapi.js");
+const sha1 = require("sha1");
+const logModel = require("../models/log.js");
+const projectModel = require("../models/project.js");
+const interfaceColModel = require("../models/interfaceCol.js");
+const interfaceCaseModel = require("../models/interfaceCase.js");
+const interfaceModel = require("../models/interface.js");
+const userModel = require("../models/user.js");
+const followModel = require("../models/follow.js");
+const json5 = require("json5");
+const _ = require("underscore");
+const Ajv = require("ajv");
+const Mock = require("mockjs");
+const sandboxFn = require("./sandbox");
 
+const ejs = require("easy-json-schema");
 
+const jsf = require("json-schema-faker");
+const { schemaValidator } = require("../../common/utils");
+const http = require("http");
 
-const ejs = require('easy-json-schema');
-
-const jsf = require('json-schema-faker');
-const { schemaValidator } = require('../../common/utils');
-const http = require('http');
-
-jsf.extend('mock', function () {
+jsf.extend("mock", function () {
   return {
     mock: function (xx) {
       return Mock.mock(xx);
-    }
+    },
   };
 });
 
 const defaultOptions = {
   failOnInvalidTypes: false,
-  failOnInvalidFormat: false
+  failOnInvalidFormat: false,
 };
 
 // formats.forEach(item => {
@@ -70,7 +68,7 @@ exports.errcode = {
   NO_PERMISSION: 406,
   BUSINESS_ERROR: 407,
   NEED_LOGIN: 40011,
-  INVALID_TOKEN: 40012
+  INVALID_TOKEN: 40012,
 };
 
 exports.resReturn = (data, num, errmsg) => {
@@ -78,8 +76,8 @@ exports.resReturn = (data, num, errmsg) => {
 
   return {
     errcode: num,
-    errmsg: errmsg || '成功！',
-    data: data
+    errmsg: errmsg || "成功！",
+    data: data,
   };
 };
 
@@ -88,18 +86,18 @@ exports.log = (msg, type) => {
     return;
   }
 
-  type = type || 'log';
+  type = type || "log";
 
   let f;
 
   switch (type) {
-    case 'log':
+    case "log":
       f = console.log;
       break;
-    case 'warn':
+    case "warn":
       f = console.warn;
       break;
-    case 'error':
+    case "error":
       f = console.error;
       break;
     default:
@@ -107,27 +105,27 @@ exports.log = (msg, type) => {
       break;
   }
 
-  f(type + ':', msg);
+  f(type + ":", msg);
 
   let date = new Date();
   let year = date.getFullYear();
   let month = date.getMonth() + 1;
 
-  let logfile = path.join(yapi.WEBROOT_LOG, year + '-' + month + '.log');
+  let logfile = path.join(yapi.WEBROOT_LOG, year + "-" + month + ".log");
 
-  if (typeof msg === 'object') {
+  if (typeof msg === "object") {
     if (msg instanceof Error) msg = msg.message;
     else msg = JSON.stringify(msg);
   }
 
   let data = `[ ${new Date().toLocaleString()} ] [ ${type} ] ${msg}\n`;
 
-  fs.writeFile(logfile, data, { flag: 'a' }, err => {
-    if (err) console.error('Async log write failed:', err);
+  fs.writeFile(logfile, data, { flag: "a" }, (err) => {
+    if (err) console.error("Async log write failed:", err);
   });
 };
 
-exports.fileExist = filePath => {
+exports.fileExist = (filePath) => {
   try {
     return fs.statSync(filePath).isFile();
   } catch (err) {
@@ -146,8 +144,8 @@ exports.fieldSelect = (data, field) => {
 
   var arr = {};
 
-  field.forEach(f => {
-    typeof data[f] !== 'undefined' && (arr[f] = data[f]);
+  field.forEach((f) => {
+    typeof data[f] !== "undefined" && (arr[f] = data[f]);
   });
 
   return arr;
@@ -157,7 +155,7 @@ exports.rand = (min, max) => {
   return Math.floor(Math.random() * (max - min) + min);
 };
 
-exports.json_parse = json => {
+exports.json_parse = (json) => {
   try {
     return json5.parse(json);
   } catch (e) {
@@ -166,14 +164,12 @@ exports.json_parse = json => {
 };
 
 exports.randStr = () => {
-  return Math.random()
-    .toString(36)
-    .substr(2);
+  return Math.random().toString(36).substr(2);
 };
-exports.getIp = ctx => {
+exports.getIp = (ctx) => {
   let ip;
   try {
-    ip = ctx.ip.match(/\d+.\d+.\d+.\d+/) ? ctx.ip.match(/\d+.\d+.\d+.\d+/)[0] : 'localhost';
+    ip = ctx.ip.match(/\d+.\d+.\d+.\d+/) ? ctx.ip.match(/\d+.\d+.\d+.\d+/)[0] : "localhost";
   } catch (e) {
     ip = null;
   }
@@ -184,7 +180,7 @@ exports.generatePassword = (password, passsalt) => {
   return sha1(password + sha1(passsalt));
 };
 
-exports.expireDate = day => {
+exports.expireDate = (day) => {
   let date = new Date();
   date.setTime(date.getTime() + day * 86400000);
   return date;
@@ -192,15 +188,15 @@ exports.expireDate = day => {
 
 exports.sendMail = (options, cb) => {
   if (!yapi.mail) return false;
-  options.subject = options.subject ? options.subject + '-YApi 平台' : 'YApi 平台';
+  options.subject = options.subject ? options.subject + "-YApi 平台" : "YApi 平台";
 
   cb =
     cb ||
     function (err) {
       if (err) {
-        yapi.commons.log('send mail ' + options.to + ' error,' + err.message, 'error');
+        yapi.commons.log("send mail " + options.to + " error," + err.message, "error");
       } else {
-        yapi.commons.log('send mail ' + options.to + ' success');
+        yapi.commons.log("send mail " + options.to + " success");
       }
     };
 
@@ -210,17 +206,17 @@ exports.sendMail = (options, cb) => {
         from: yapi.WEBCONFIG.mail.from,
         to: options.to,
         subject: options.subject,
-        html: options.contents
+        html: options.contents,
       },
-      cb
+      cb,
     );
   } catch (e) {
-    yapi.commons.log(e.message, 'error');
+    yapi.commons.log(e.message, "error");
     console.error(e.message); // eslint-disable-line
   }
 };
 
-exports.validateSearchKeyword = keyword => {
+exports.validateSearchKeyword = (keyword) => {
   if (/^\*|\?|\+|\$|\^|\\|\.$/.test(keyword)) {
     return false;
   }
@@ -229,13 +225,13 @@ exports.validateSearchKeyword = keyword => {
 };
 
 exports.filterRes = (list, rules) => {
-  return list.map(item => {
+  return list.map((item) => {
     let filteredRes = {};
 
-    rules.forEach(rule => {
-      if (typeof rule == 'string') {
+    rules.forEach((rule) => {
+      if (typeof rule == "string") {
         filteredRes[rule] = item[rule];
-      } else if (typeof rule == 'object') {
+      } else if (typeof rule == "object") {
         filteredRes[rule.alias] = item[rule.key];
       }
     });
@@ -249,18 +245,18 @@ exports.handleVarPath = (pathname, params) => {
     if (!_.find(params, { name: name })) {
       params.push({
         name: name,
-        desc: ''
+        desc: "",
       });
     }
   }
 
   if (!pathname) return;
-  if (pathname.indexOf(':') !== -1) {
-    let paths = pathname.split('/'),
+  if (pathname.indexOf(":") !== -1) {
+    let paths = pathname.split("/"),
       name,
       i;
     for (i = 1; i < paths.length; i++) {
-      if (paths[i] && paths[i][0] === ':') {
+      if (paths[i] && paths[i][0] === ":") {
         name = paths[i].substr(1);
         insertParams(name);
       }
@@ -275,7 +271,7 @@ exports.handleVarPath = (pathname, params) => {
  * 验证一个 path 是否合法
  * path第一位必需为 /, path 只允许由 字母数字-/_:.{}= 组成
  */
-exports.verifyPath = path => {
+exports.verifyPath = (path) => {
   // if (/^\/[a-zA-Z0-9\-\/_:!\.\{\}\=]*$/.test(path)) {
   //   return true;
   // } else {
@@ -295,16 +291,16 @@ exports.verifyPath = path => {
  */
 exports.sandbox = (sandbox, script) => {
   try {
-    const vm = require('vm');
-    sandbox = sandbox || {};	
-    script = new vm.Script(script);	
-    const context = new vm.createContext(sandbox);	
-    script.runInContext(context, {	
-      timeout: 3000	
-    });	      
-    return sandbox
+    const vm = require("vm");
+    sandbox = sandbox || {};
+    script = new vm.Script(script);
+    const context = new vm.createContext(sandbox);
+    script.runInContext(context, {
+      timeout: 3000,
+    });
+    return sandbox;
   } catch (err) {
-    throw err
+    throw err;
   }
 };
 
@@ -313,9 +309,9 @@ function trim(str) {
     return str;
   }
 
-  str = str + '';
+  str = str + "";
 
-  return str.replace(/(^\s*)|(\s*$)/g, '');
+  return str.replace(/(^\s*)|(\s*$)/g, "");
 }
 
 function ltrim(str) {
@@ -323,9 +319,9 @@ function ltrim(str) {
     return str;
   }
 
-  str = str + '';
+  str = str + "";
 
-  return str.replace(/(^\s*)/g, '');
+  return str.replace(/(^\s*)/g, "");
 }
 
 function rtrim(str) {
@@ -333,9 +329,9 @@ function rtrim(str) {
     return str;
   }
 
-  str = str + '';
+  str = str + "";
 
-  return str.replace(/(\s*$)/g, '');
+  return str.replace(/(\s*$)/g, "");
 }
 
 exports.trim = trim;
@@ -349,7 +345,7 @@ exports.rtrim = rtrim;
  * @return Object {a: 'ab', b: 123}
  */
 exports.handleParams = (params, keys) => {
-  if (!params || typeof params !== 'object' || !keys || typeof keys !== 'object') {
+  if (!params || typeof params !== "object" || !keys || typeof keys !== "object") {
     return false;
   }
 
@@ -357,14 +353,14 @@ exports.handleParams = (params, keys) => {
     var filter = keys[key];
     if (params[key]) {
       switch (filter) {
-        case 'string':
-          params[key] = trim(params[key] + '');
+        case "string":
+          params[key] = trim(params[key] + "");
           break;
-        case 'number':
+        case "number":
           params[key] = !isNaN(params[key]) ? parseInt(params[key], 10) : 0;
           break;
         default:
-          params[key] = trim(params + '');
+          params[key] = trim(params + "");
       }
     }
   }
@@ -378,10 +374,10 @@ exports.validateParams = (schema2, params) => {
     allErrors: true,
     coerceTypes: true,
     useDefaults: true,
-    removeAdditional: flag ? false : true
+    removeAdditional: flag ? false : true,
   });
 
-  var localize = require('ajv-i18n');
+  var localize = require("ajv-i18n");
   delete schema2.closeRemoveAdditional;
 
   const schema = ejs(schema2);
@@ -390,19 +386,19 @@ exports.validateParams = (schema2, params) => {
   const validate = ajv.compile(schema);
   let valid = validate(params);
 
-  let message = '请求参数 ';
+  let message = "请求参数 ";
   if (!valid) {
     localize.zh(validate.errors);
-    message += ajv.errorsText(validate.errors, { separator: '\n' });
+    message += ajv.errorsText(validate.errors, { separator: "\n" });
   }
 
   return {
     valid: valid,
-    message: message
+    message: message,
   };
 };
 
-exports.saveLog = logData => {
+exports.saveLog = (logData) => {
   try {
     let logInst = yapi.getInst(logModel);
     let data = {
@@ -411,12 +407,12 @@ exports.saveLog = logData => {
       uid: logData.uid,
       username: logData.username,
       typeid: logData.typeid,
-      data: logData.data
+      data: logData.data,
     };
 
     logInst.save(data).then();
   } catch (e) {
-    yapi.commons.log(e, 'error'); // eslint-disable-line
+    yapi.commons.log(e, "error"); // eslint-disable-line
   }
 };
 
@@ -431,13 +427,12 @@ exports.saveLog = logData => {
  * @param {*} ws enable ws
  */
 exports.createAction = (router, baseurl, routerController, action, path, method, ws) => {
-  router[method](baseurl + path, async ctx => {
+  router[method](baseurl + path, async (ctx) => {
     let inst = new routerController(ctx);
     try {
       await inst.init(ctx);
       ctx.params = Object.assign({}, ctx.request.query, ctx.request.body, ctx.params);
-      if (inst.schemaMap && typeof inst.schemaMap === 'object' && inst.schemaMap[action]) {
-
+      if (inst.schemaMap && typeof inst.schemaMap === "object" && inst.schemaMap[action]) {
         let validResult = yapi.commons.validateParams(inst.schemaMap[action], ctx.params);
 
         if (!validResult.valid) {
@@ -448,14 +443,14 @@ exports.createAction = (router, baseurl, routerController, action, path, method,
         await inst[action].call(inst, ctx);
       } else {
         if (ws === true) {
-          ctx.ws.send('请登录...');
+          ctx.ws.send("请登录...");
         } else {
-          ctx.body = yapi.commons.resReturn(null, 40011, '请登录...');
+          ctx.body = yapi.commons.resReturn(null, 40011, "请登录...");
         }
       }
     } catch (err) {
-      ctx.body = yapi.commons.resReturn(null, 40011, '服务器出错...');
-      yapi.commons.log(err, 'error');
+      ctx.body = yapi.commons.resReturn(null, 40011, "服务器出错...");
+      yapi.commons.log(err, "error");
     }
   });
 };
@@ -469,15 +464,15 @@ function handleParamsValue(params, val) {
   let value = {};
   try {
     params = params.toObject();
-  } catch (e) { }
+  } catch (e) {}
   if (params.length === 0 || val.length === 0) {
     return params;
   }
-  val.forEach(item => {
+  val.forEach((item) => {
     value[item.name] = item;
   });
   params.forEach((item, index) => {
-    if (!value[item.name] || typeof value[item.name] !== 'object') return null;
+    if (!value[item.name] || typeof value[item.name] !== "object") return null;
     params[index].value = value[item.name].value;
     if (!_.isUndefined(value[item.name].enable)) {
       params[index].enable = value[item.name].enable;
@@ -494,7 +489,7 @@ exports.getCaseList = async function getCaseList(id) {
   const projectInst = yapi.getInst(projectModel);
   const interfaceInst = yapi.getInst(interfaceModel);
 
-  let resultList = await caseInst.list(id, 'all');
+  let resultList = await caseInst.list(id, "all");
   let colData = await colInst.get(id);
   for (let index = 0; index < resultList.length; index++) {
     let result = resultList[index].toObject();
@@ -525,48 +520,48 @@ exports.getCaseList = async function getCaseList(id) {
 
 function convertString(variable) {
   if (variable instanceof Error) {
-    return variable.name + ': ' + variable.message;
+    return variable.name + ": " + variable.message;
   }
   try {
-    if (variable && typeof variable === 'string') {
+    if (variable && typeof variable === "string") {
       return variable;
     }
-    return JSON.stringify(variable, null, '   ');
+    return JSON.stringify(variable, null, "   ");
   } catch (err) {
-    return variable || '';
+    return variable || "";
   }
 }
-
 
 exports.runCaseScript = async function runCaseScript(params, colId, interfaceId) {
   const colInst = yapi.getInst(interfaceColModel);
   let colData = await colInst.get(colId);
   const logs = [];
   const context = {
-    assert: require('assert'),
+    assert: require("assert"),
     status: params.response.status,
     body: params.response.body,
     header: params.response.header,
     records: params.records,
     params: params.params,
-    log: msg => {
-      logs.push('log: ' + convertString(msg));
-    }
+    log: (msg) => {
+      logs.push("log: " + convertString(msg));
+    },
   };
 
   let result = {};
   try {
-
     if (colData.checkHttpCodeIs200) {
       let status = +params.response.status;
       if (status !== 200) {
-        throw ('Http status code 不是 200，请检查(该规则来源于于 [测试集->通用规则配置] )')
+        throw "Http status code 不是 200，请检查(该规则来源于于 [测试集->通用规则配置] )";
       }
     }
 
     if (colData.checkResponseField.enable) {
-      if (params.response.body[colData.checkResponseField.name] != colData.checkResponseField.value) {
-        throw (`返回json ${colData.checkResponseField.name} 值不是${colData.checkResponseField.value}，请检查(该规则来源于于 [测试集->通用规则配置] )`)
+      if (
+        params.response.body[colData.checkResponseField.name] != colData.checkResponseField.value
+      ) {
+        throw `返回json ${colData.checkResponseField.name} 值不是${colData.checkResponseField.value}，请检查(该规则来源于于 [测试集->通用规则配置] )`;
       }
     }
 
@@ -575,11 +570,11 @@ exports.runCaseScript = async function runCaseScript(params, colId, interfaceId)
       let interfaceData = await interfaceInst.get(interfaceId);
       if (interfaceData.res_body_is_json_schema && interfaceData.res_body) {
         let schema = JSON.parse(interfaceData.res_body);
-        let result = schemaValidator(schema, context.body)
+        let result = schemaValidator(schema, context.body);
         if (!result.valid) {
-          throw (`返回Json 不符合 response 定义的数据结构,原因: ${result.message}
+          throw `返回Json 不符合 response 定义的数据结构,原因: ${result.message}
 数据结构如下：
-${JSON.stringify(schema, null, 2)}`)
+${JSON.stringify(schema, null, 2)}`;
         }
       }
     }
@@ -588,16 +583,15 @@ ${JSON.stringify(schema, null, 2)}`)
       let globalScript = colData.checkScript.content;
       // script 是断言
       if (globalScript) {
-        logs.push('执行脚本：' + globalScript)
+        logs.push("执行脚本：" + globalScript);
         result = await sandboxFn(context, globalScript);
       }
     }
 
-
     let script = params.script;
     // script 是断言
     if (script) {
-      logs.push('执行脚本:' + script)
+      logs.push("执行脚本:" + script);
       result = await sandboxFn(context, script);
     }
     result.logs = logs;
@@ -605,12 +599,12 @@ ${JSON.stringify(schema, null, 2)}`)
   } catch (err) {
     logs.push(convertString(err));
     result.logs = logs;
-    return yapi.commons.resReturn(result, 400, err.name + ': ' + err.message);
+    return yapi.commons.resReturn(result, 400, err.name + ": " + err.message);
   }
 };
 
 exports.getUserdata = async function getUserdata(uid, role) {
-  role = role || 'dev';
+  role = role || "dev";
   let userInst = yapi.getInst(userModel);
   let userData = await userInst.findById(uid);
   if (!userData) {
@@ -620,7 +614,7 @@ exports.getUserdata = async function getUserdata(uid, role) {
     role: role,
     uid: userData._id,
     username: userData.username,
-    email: userData.email
+    email: userData.email,
   };
 };
 
@@ -635,14 +629,14 @@ exports.handleMockScript = async function (script, context) {
     resHeader: context.resHeader,
     httpCode: context.httpCode,
     delay: context.httpCode,
-    Random: Mock.Random
+    Random: Mock.Random,
   };
   sandbox.cookie = {};
 
   context.ctx.header.cookie &&
-    context.ctx.header.cookie.split(';').forEach(function (Cookie) {
-      var parts = Cookie.split('=');
-      sandbox.cookie[parts[0].trim()] = (parts[1] || '').trim();
+    context.ctx.header.cookie.split(";").forEach(function (Cookie) {
+      var parts = Cookie.split("=");
+      sandbox.cookie[parts[0].trim()] = (parts[1] || "").trim();
     });
   sandbox = await sandboxFn(sandbox, script);
   sandbox.delay = isNaN(sandbox.delay) ? 0 : +sandbox.delay;
@@ -653,39 +647,36 @@ exports.handleMockScript = async function (script, context) {
   context.delay = sandbox.delay;
 };
 
-
-
 exports.createWebAPIRequest = function (ops) {
   return new Promise(function (resolve, reject) {
-    let req = '';
+    let req = "";
     let http_client = http.request(
       {
         host: ops.hostname,
-        method: 'GET',
+        method: "GET",
         port: ops.port,
-        path: ops.path
+        path: ops.path,
       },
       function (res) {
-        res.on('error', function (err) {
+        res.on("error", function (err) {
           reject(err);
         });
-        res.setEncoding('utf8');
+        res.setEncoding("utf8");
         if (res.statusCode != 200) {
-          reject({ message: 'statusCode != 200' });
+          reject({ message: "statusCode != 200" });
         } else {
-          res.on('data', function (chunk) {
+          res.on("data", function (chunk) {
             req += chunk;
           });
-          res.on('end', function () {
+          res.on("end", function () {
             resolve(req);
           });
         }
-      }
+      },
     );
-    http_client.on('error', (e) => {
+    http_client.on("error", (e) => {
       reject({ message: `request error: ${e.message}` });
     });
     http_client.end();
   });
-}
-
+};

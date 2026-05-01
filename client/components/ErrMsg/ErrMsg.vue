@@ -7,22 +7,22 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed } from "vue";
 
 const props = defineProps({
   type: {
     type: String,
-    default: 'error' // error, warning, info, success
+    default: "error", // error, warning, info, success
   },
   title: {
     type: String,
-    default: ''
+    default: "",
   },
   message: {
     type: String,
-    default: ''
-  }
-})
+    default: "",
+  },
+});
 </script>
 
 <style scoped>

@@ -1,8 +1,8 @@
-const baseModel = require('./base.js');
+const baseModel = require("./base.js");
 
 class followModel extends baseModel {
   getName() {
-    return 'follow';
+    return "follow";
   }
 
   getSchema() {
@@ -11,7 +11,7 @@ class followModel extends baseModel {
       projectid: { type: Number, required: true },
       projectname: { type: String, required: true },
       icon: String,
-      color: String
+      color: String,
     };
   }
 
@@ -29,7 +29,7 @@ class followModel extends baseModel {
       projectid: data.projectid,
       projectname: data.projectname,
       icon: data.icon,
-      color: data.color
+      color: data.color,
     };
     let follow = new this.model(saveData);
     return follow.save();
@@ -38,20 +38,20 @@ class followModel extends baseModel {
   del(projectid, uid) {
     return this.model.remove({
       projectid: projectid,
-      uid: uid
+      uid: uid,
     });
   }
 
-  delByProjectId(projectid){
+  delByProjectId(projectid) {
     return this.model.remove({
-      projectid: projectid
-    })
+      projectid: projectid,
+    });
   }
 
   list(uid) {
     return this.model
       .find({
-        uid: uid
+        uid: uid,
       })
       .exec();
   }
@@ -59,7 +59,7 @@ class followModel extends baseModel {
   listWithPaging(uid, page, limit) {
     return this.model
       .find({
-        uid: uid
+        uid: uid,
       })
       .skip((page - 1) * limit)
       .limit(limit)
@@ -68,20 +68,20 @@ class followModel extends baseModel {
 
   listCount(uid) {
     return this.model.countDocuments({
-      uid: uid
+      uid: uid,
     });
   }
 
   listByProjectId(projectid) {
     return this.model.find({
-      projectid: projectid
+      projectid: projectid,
     });
   }
 
   checkProjectRepeat(uid, projectid) {
     return this.model.countDocuments({
       uid: uid,
-      projectid: projectid
+      projectid: projectid,
     });
   }
 
@@ -89,10 +89,10 @@ class followModel extends baseModel {
     return this.model.update(
       {
         uid: id,
-        projectid: typeid
+        projectid: typeid,
       },
       data,
-      { runValidators: true }
+      { runValidators: true },
     );
   }
 }

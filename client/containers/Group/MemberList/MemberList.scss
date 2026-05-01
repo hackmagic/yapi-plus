@@ -1,6 +1,6 @@
-@import '../../../styles/mixin.scss';
+@import "../../../styles/mixin.scss";
 
-.m-panel{
+.m-panel {
   background-color: #fff;
   padding: 24px;
   min-height: 4.68rem;
@@ -19,7 +19,7 @@
 .modal-input {
   display: flex;
   align-items: center;
-  margin-bottom: .24rem;
+  margin-bottom: 0.24rem;
   .label {
     text-align: right;
   }
@@ -34,7 +34,7 @@
     width: 1.2rem;
   }
   .btn-danger {
-    margin-left: .08rem;
+    margin-left: 0.08rem;
     // background-color: transparent;
     border-color: transparent;
   }
@@ -44,15 +44,15 @@
   display: flex;
   align-items: center;
   .m-user-img {
-    width: .32rem;
-    height: .32rem;
-    border-radius: .04rem;
+    width: 0.32rem;
+    height: 0.32rem;
+    border-radius: 0.04rem;
   }
   .m-user-name {
     margin-left: 8px;
   }
-  
 }
-.usernamelabel,.usernameauth{
+.usernamelabel,
+.usernameauth {
   line-height: 36px;
 }

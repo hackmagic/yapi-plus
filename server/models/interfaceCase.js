@@ -1,11 +1,11 @@
-const yapi = require('../yapi.js');
-const baseModel = require('./base.js');
-var mongoose = require('mongoose');
+const yapi = require("../yapi.js");
+const baseModel = require("./base.js");
+var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
 class interfaceCase extends baseModel {
   getName() {
-    return 'interface_case';
+    return "interface_case";
   }
 
   getSchema() {
@@ -22,37 +22,37 @@ class interfaceCase extends baseModel {
       req_params: [
         {
           name: String,
-          value: String
-        }
+          value: String,
+        },
       ],
       req_headers: [
         {
           name: String,
-          value: String
-        }
+          value: String,
+        },
       ],
       req_query: [
         {
           name: String,
           value: String,
-          enable: { type: Boolean, default: true }
-        }
+          enable: { type: Boolean, default: true },
+        },
       ],
 
       req_body_form: [
         {
           name: String,
           value: String,
-          enable: { type: Boolean, default: true }
-        }
+          enable: { type: Boolean, default: true },
+        },
       ],
       req_body_other: String,
       test_res_body: String,
-      test_status: { type: String, enum: ['ok', 'invalid', 'error', ''] },
+      test_status: { type: String, enum: ["ok", "invalid", "error", ""] },
       test_res_header: Schema.Types.Mixed,
       mock_verify: { type: Boolean, default: false },
       enable_script: { type: Boolean, default: false },
-      test_script: String
+      test_script: String,
     };
   }
 
@@ -69,23 +69,23 @@ class interfaceCase extends baseModel {
   get(id) {
     return this.model
       .findOne({
-        _id: id
+        _id: id,
       })
       .exec();
   }
 
   list(col_id, select) {
-    select = select || 'casename uid col_id _id index interface_id project_id';
-    if (select === 'all') {
+    select = select || "casename uid col_id _id index interface_id project_id";
+    if (select === "all") {
       return this.model
         .find({
-          col_id: col_id
+          col_id: col_id,
         })
         .exec();
     }
     return this.model
       .find({
-        col_id: col_id
+        col_id: col_id,
       })
       .select(select)
       .exec();
@@ -95,31 +95,31 @@ class interfaceCase extends baseModel {
     if (!colIds || colIds.length === 0) return Promise.resolve([]);
     return this.model
       .find({ col_id: { $in: colIds } })
-      .select('casename uid col_id _id index interface_id project_id')
+      .select("casename uid col_id _id index interface_id project_id")
       .exec();
   }
 
   del(id) {
     return this.model.remove({
-      _id: id
+      _id: id,
     });
   }
 
   delByProjectId(id) {
     return this.model.remove({
-      project_id: id
+      project_id: id,
     });
   }
 
   delByInterfaceId(id) {
     return this.model.remove({
-      interface_id: id
+      interface_id: id,
     });
   }
 
   delByCol(id) {
     return this.model.remove({
-      col_id: id
+      col_id: id,
     });
   }
 
@@ -131,11 +131,11 @@ class interfaceCase extends baseModel {
   upCaseIndex(id, index) {
     return this.model.update(
       {
-        _id: id
+        _id: id,
       },
       {
-        index: index
-      }
+        index: index,
+      },
     );
   }
 }

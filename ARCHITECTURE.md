@@ -43,12 +43,14 @@ YAPI Plus 采用**前后端分离但可统一启动**的架构设计。
 ### 1. 开发模式（分离启动）
 
 **架构特点**：
+
 - 前端和后端**独立进程**运行
 - 前端通过**代理**转发 API 请求到后端
 - 支持**热更新**（HMR）
 - 前后端可以**独立调试**
 
 **启动方式**：
+
 ```bash
 # 一键启动（推荐）
 npm run dev
@@ -59,6 +61,7 @@ npm run dev
 ```
 
 **工作流程**：
+
 ```
 浏览器请求
   ↓
@@ -72,6 +75,7 @@ MongoDB
 ```
 
 **优势**：
+
 - ✅ 前端修改即时生效（HMR）
 - ✅ 后端修改自动重启（nodemon）
 - ✅ 前后端独立开发调试
@@ -82,12 +86,14 @@ MongoDB
 ### 2. 生产模式（合并启动）
 
 **架构特点**：
+
 - 前端**构建为静态文件**
 - 后端**直接提供静态文件服务**
 - **单一端口**访问
 - **性能最优**
 
 **启动方式**：
+
 ```bash
 # 1. 构建前端
 npm run build
@@ -97,6 +103,7 @@ npm start
 ```
 
 **工作流程**：
+
 ```
 浏览器请求
   ↓
@@ -110,6 +117,7 @@ npm start
 ```
 
 **优势**：
+
 - ✅ 单一进程，资源占用少
 - ✅ 部署简单
 - ✅ 性能最优
@@ -137,18 +145,16 @@ static/prd/
 
 ```javascript
 // 生产环境提供静态文件服务
-const koaStatic = require('koa-static');
+const koaStatic = require("koa-static");
 
 // 静态文件目录
-app.use(koaStatic(path.join(__dirname, '../static/prd')));
+app.use(koaStatic(path.join(__dirname, "../static/prd")));
 
 // 所有非 API 请求返回 index.html
 app.use(async (ctx, next) => {
-  if (!ctx.path.startsWith('/api')) {
-    ctx.type = 'html';
-    ctx.body = fs.readFileSync(
-      path.join(__dirname, '../static/prd/index.html')
-    );
+  if (!ctx.path.startsWith("/api")) {
+    ctx.type = "html";
+    ctx.body = fs.readFileSync(path.join(__dirname, "../static/prd/index.html"));
   }
   await next();
 });
@@ -167,16 +173,17 @@ export default defineConfig({
   server: {
     port: 4000,
     proxy: {
-      '/api': {
-        target: 'http://localhost:3000',
-        changeOrigin: true
-      }
-    }
-  }
-})
+      "/api": {
+        target: "http://localhost:3000",
+        changeOrigin: true,
+      },
+    },
+  },
+});
 ```
 
 **工作原理**：
+
 - 前端请求 `/api/user/login`
 - VitePlus 代理到 `http://localhost:3000/api/user/login`
 - 后端处理请求并返回结果
@@ -211,15 +218,15 @@ export default defineConfig({
 
 ## 🚀 启动方式对比
 
-| 特性 | 开发模式 | 生产模式 |
-|------|---------|---------|
-| **进程数** | 2 个（前后端分离） | 1 个（合并） |
-| **端口** | 4000 + 3000 | 3000 |
-| **热更新** | ✅ 支持 | ❌ 不支持 |
-| **性能** | 中等 | 最优 |
-| **调试** | 方便 | 一般 |
-| **部署** | 复杂 | 简单 |
-| **适用场景** | 开发调试 | 生产运行 |
+| 特性         | 开发模式           | 生产模式     |
+| ------------ | ------------------ | ------------ |
+| **进程数**   | 2 个（前后端分离） | 1 个（合并） |
+| **端口**     | 4000 + 3000        | 3000         |
+| **热更新**   | ✅ 支持            | ❌ 不支持    |
+| **性能**     | 中等               | 最优         |
+| **调试**     | 方便               | 一般         |
+| **部署**     | 复杂               | 简单         |
+| **适用场景** | 开发调试           | 生产运行     |
 
 ---
 
@@ -236,6 +243,7 @@ npm run dev:fast
 ```
 
 **适合场景**：
+
 - 日常开发
 - 功能调试
 - Bug 修复
@@ -255,6 +263,7 @@ start.bat
 ```
 
 **适合场景**：
+
 - 生产环境
 - 测试环境
 - 演示环境
@@ -266,6 +275,7 @@ start.bat
 ### 自定义端口
 
 **修改前端端口**（vite.config.js）：
+
 ```javascript
 server: {
   port: 4001,  // 改为 4001
@@ -273,9 +283,10 @@ server: {
 ```
 
 **修改后端端口**（config.json）：
+
 ```json
 {
-  "port": 3001  // 改为 3001
+  "port": 3001 // 改为 3001
 }
 ```
 
@@ -284,11 +295,13 @@ server: {
 如果前端和后端部署在不同服务器：
 
 **前端配置**（.env.production）：
+
 ```env
 VITE_API_URL=https://api.yourdomain.com
 ```
 
 **后端配置**：
+
 - 配置 CORS 允许前端域名
 - 提供 API 服务
 
@@ -298,19 +311,19 @@ VITE_API_URL=https://api.yourdomain.com
 
 ### 开发环境
 
-| 指标 | 数值 |
-|------|------|
-| 启动时间 | ~2-3 秒 |
+| 指标     | 数值        |
+| -------- | ----------- |
+| 启动时间 | ~2-3 秒     |
 | 内存占用 | ~200-300 MB |
-| HMR 更新 | <100ms |
+| HMR 更新 | <100ms      |
 
 ### 生产环境
 
-| 指标 | 数值 |
-|------|------|
-| 启动时间 | <1 秒 |
+| 指标     | 数值        |
+| -------- | ----------- |
+| 启动时间 | <1 秒       |
 | 内存占用 | ~100-150 MB |
-| 首屏加载 | ~500ms |
+| 首屏加载 | ~500ms      |
 
 ---
 

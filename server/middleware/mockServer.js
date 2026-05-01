@@ -1,21 +1,21 @@
-const yapi = require('../yapi.js');
-const projectModel = require('../models/project.js');
-const interfaceModel = require('../models/interface.js');
-const mockExtra = require('../../common/mock-extra.js');
-const { schemaValidator } = require('../../common/utils.js');
-const _ = require('underscore');
-const Mock = require('mockjs');
-const variable = require('../../client/constants/variable.js')
+const yapi = require("../yapi.js");
+const projectModel = require("../models/project.js");
+const interfaceModel = require("../models/interface.js");
+const mockExtra = require("../../common/mock-extra.js");
+const { schemaValidator } = require("../../common/utils.js");
+const _ = require("underscore");
+const Mock = require("mockjs");
+const variable = require("../../client/constants/variable.js");
 /**
  *
  * @param {*} apiPath /user/tom
  * @param {*} apiRule /user/:username
  */
 function matchApi(apiPath, apiRule) {
-  let apiRules = apiRule.split('/');
-  let apiPaths = apiPath.split('/');
+  let apiRules = apiRule.split("/");
+  let apiPaths = apiPath.split("/");
   let pathParams = {
-    __weight: 0
+    __weight: 0,
   };
 
   if (apiPaths.length !== apiRules.length) {
@@ -29,21 +29,21 @@ function matchApi(apiPath, apiRule) {
     }
     if (
       apiRules[i].length > 2 &&
-      apiRules[i][0] === '{' &&
-      apiRules[i][apiRules[i].length - 1] === '}'
+      apiRules[i][0] === "{" &&
+      apiRules[i][apiRules[i].length - 1] === "}"
     ) {
       pathParams[apiRules[i].substr(1, apiRules[i].length - 2)] = apiPaths[i];
-    } else if (apiRules[i].indexOf(':') === 0) {
+    } else if (apiRules[i].indexOf(":") === 0) {
       pathParams[apiRules[i].substr(1)] = apiPaths[i];
     } else if (
       apiRules[i].length > 2 &&
-      apiRules[i].indexOf('{') > -1 &&
-      apiRules[i].indexOf('}') > -1
+      apiRules[i].indexOf("{") > -1 &&
+      apiRules[i].indexOf("}") > -1
     ) {
       let params = [];
-      apiRules[i] = apiRules[i].replace(/\{(.+?)\}/g, function(src, match) {
+      apiRules[i] = apiRules[i].replace(/\{(.+?)\}/g, function (src, match) {
         params.push(match);
-        return '([^\\/\\s]+)';
+        return "([^\\/\\s]+)";
       });
       apiRules[i] = new RegExp(apiRules[i]);
       if (!apiRules[i].test(apiPaths[i])) {
@@ -58,7 +58,7 @@ function matchApi(apiPath, apiRule) {
     } else {
       if (apiRules[i] !== apiPaths[i]) {
         return false;
-      }else{
+      } else {
         pathParams.__weight++;
       }
     }
@@ -67,24 +67,24 @@ function matchApi(apiPath, apiRule) {
 }
 
 function parseCookie(str) {
-  if (!str || typeof str !== 'string') {
+  if (!str || typeof str !== "string") {
     return str;
   }
-  if (str.split(';')[0]) {
-    let c = str.split(';')[0].split('=');
-    return { name: c[0], value: c[1] || '' };
+  if (str.split(";")[0]) {
+    let c = str.split(";")[0].split("=");
+    return { name: c[0], value: c[1] || "" };
   }
   return null;
 }
 
 function handleCorsRequest(ctx) {
   let header = ctx.request.header;
-  ctx.set('Access-Control-Allow-Origin', header.origin);
-  ctx.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, HEADER, PATCH, OPTIONS');
-  ctx.set('Access-Control-Allow-Headers', header['access-control-request-headers']);
-  ctx.set('Access-Control-Allow-Credentials', true);
-  ctx.set('Access-Control-Max-Age', 1728000);
-  ctx.body = 'ok';
+  ctx.set("Access-Control-Allow-Origin", header.origin);
+  ctx.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, HEADER, PATCH, OPTIONS");
+  ctx.set("Access-Control-Allow-Headers", header["access-control-request-headers"]);
+  ctx.set("Access-Control-Allow-Credentials", true);
+  ctx.set("Access-Control-Max-Age", 1728000);
+  ctx.body = "ok";
 }
 // 必填字段是否填写好
 function mockValidator(interfaceData, ctx) {
@@ -93,21 +93,21 @@ function mockValidator(interfaceData, ctx) {
     l,
     len,
     noRequiredArr = [];
-  let method = interfaceData.method.toUpperCase() || 'GET';
+  let method = interfaceData.method.toUpperCase() || "GET";
   // query 判断
   for (i = 0, l = interfaceData.req_query.length; i < l; i++) {
     let curQuery = interfaceData.req_query[i];
-    if (curQuery && typeof curQuery === 'object' && curQuery.required === '1') {
+    if (curQuery && typeof curQuery === "object" && curQuery.required === "1") {
       if (!ctx.query[curQuery.name]) {
         noRequiredArr.push(curQuery.name);
       }
     }
   }
   // form 表单判断
-  if (variable.HTTP_METHOD[method].request_body && interfaceData.req_body_type === 'form') {
+  if (variable.HTTP_METHOD[method].request_body && interfaceData.req_body_type === "form") {
     for (j = 0, len = interfaceData.req_body_form.length; j < len; j++) {
       let curForm = interfaceData.req_body_form[j];
-      if (curForm && typeof curForm === 'object' && curForm.required === '1') {
+      if (curForm && typeof curForm === "object" && curForm.required === "1") {
         if (
           ctx.request.body[curForm.name] ||
           (ctx.request.body.fields && ctx.request.body.fields[curForm.name]) ||
@@ -122,19 +122,24 @@ function mockValidator(interfaceData, ctx) {
   }
   let validResult;
   // json schema 判断
-  if (variable.HTTP_METHOD[method].request_body  && interfaceData.req_body_type === 'json' && interfaceData.req_body_is_json_schema === true) {
+  if (
+    variable.HTTP_METHOD[method].request_body &&
+    interfaceData.req_body_type === "json" &&
+    interfaceData.req_body_is_json_schema === true
+  ) {
     const schema = yapi.commons.json_parse(interfaceData.req_body_other);
     const params = yapi.commons.json_parse(ctx.request.body);
     validResult = schemaValidator(schema, params);
   }
   if (noRequiredArr.length > 0 || (validResult && !validResult.valid)) {
     let message = `错误信息：`;
-    message += noRequiredArr.length > 0 ? `缺少必须字段 ${noRequiredArr.join(',')}  ` : '';
-    message += validResult && !validResult.valid ? `schema 验证请求参数 ${validResult.message}` : '';
+    message += noRequiredArr.length > 0 ? `缺少必须字段 ${noRequiredArr.join(",")}  ` : "";
+    message +=
+      validResult && !validResult.valid ? `schema 验证请求参数 ${validResult.message}` : "";
 
     return {
       valid: false,
-      message
+      message,
     };
   }
 
@@ -148,23 +153,23 @@ module.exports = async (ctx, next) => {
   let path = ctx.path;
   let header = ctx.request.header;
 
-  if (path.indexOf('/mock/') !== 0) {
+  if (path.indexOf("/mock/") !== 0) {
     if (next) await next();
     return true;
   }
 
-  let paths = path.split('/');
+  let paths = path.split("/");
   let projectId = paths[2];
   paths.splice(0, 3);
-  path = '/' + paths.join('/');
+  path = "/" + paths.join("/");
 
-  ctx.set('Access-Control-Allow-Origin', header.origin);
-  ctx.set('Access-Control-Allow-Credentials', true);
+  ctx.set("Access-Control-Allow-Origin", header.origin);
+  ctx.set("Access-Control-Allow-Credentials", true);
 
   // ctx.set('Access-Control-Allow-Origin', '*');
 
   if (!projectId) {
-    return (ctx.body = yapi.commons.resReturn(null, 400, 'projectId不能为空'));
+    return (ctx.body = yapi.commons.resReturn(null, 400, "projectId不能为空"));
   }
 
   let projectInst = yapi.getInst(projectModel),
@@ -176,7 +181,7 @@ module.exports = async (ctx, next) => {
   }
 
   if (!project) {
-    return (ctx.body = yapi.commons.resReturn(null, 400, '不存在的项目'));
+    return (ctx.body = yapi.commons.resReturn(null, 400, "不存在的项目"));
   }
 
   let interfaceData, newpath;
@@ -185,10 +190,13 @@ module.exports = async (ctx, next) => {
   try {
     newpath = path.substr(project.basepath.length);
     interfaceData = await interfaceInst.getByPath(project._id, newpath, ctx.method);
-    let queryPathInterfaceData = await interfaceInst.getByQueryPath(project._id, newpath, ctx.method);
+    let queryPathInterfaceData = await interfaceInst.getByQueryPath(
+      project._id,
+      newpath,
+      ctx.method,
+    );
     //处理query_path情况  url 中有 ?params=xxx
     if (!interfaceData || interfaceData.length != queryPathInterfaceData.length) {
-
       let i,
         l,
         j,
@@ -199,7 +207,7 @@ module.exports = async (ctx, next) => {
         match = false;
         let currentInterfaceData = queryPathInterfaceData[i];
         curQuery = currentInterfaceData.query_path;
-        if (!curQuery || typeof curQuery !== 'object' || !curQuery.path) {
+        if (!curQuery || typeof curQuery !== "object" || !curQuery.path) {
           continue;
         }
         for (j = 0, len = curQuery.params.length; j < len; j++) {
@@ -218,7 +226,6 @@ module.exports = async (ctx, next) => {
         // if (i === l - 1) {
         //   interfaceData = [];
         // }
-
       }
     }
 
@@ -228,10 +235,10 @@ module.exports = async (ctx, next) => {
 
       let findInterface;
       let weight = 0;
-      _.each(newData, item => {
+      _.each(newData, (item) => {
         let m = matchApi(newpath, item.path);
         if (m !== false) {
-          if(m.__weight >= weight){
+          if (m.__weight >= weight) {
             findInterface = item;
           }
           delete m.__weight;
@@ -243,7 +250,7 @@ module.exports = async (ctx, next) => {
 
       if (!findInterface) {
         //非正常跨域预检请求回应
-        if (ctx.method === 'OPTIONS' && ctx.request.header['access-control-request-method']) {
+        if (ctx.method === "OPTIONS" && ctx.request.header["access-control-request-method"]) {
           return handleCorsRequest(ctx);
         }
 
@@ -252,14 +259,14 @@ module.exports = async (ctx, next) => {
           404,
           `不存在的api, 当前请求path为 ${newpath}， 请求方法为 ${
             ctx.method
-          } ，请确认是否定义此请求。`
+          } ，请确认是否定义此请求。`,
         ));
       }
       interfaceData = [await interfaceInst.get(findInterface._id)];
     }
 
     if (interfaceData.length > 1) {
-      return (ctx.body = yapi.commons.resReturn(null, 405, '存在多个api，请检查数据库'));
+      return (ctx.body = yapi.commons.resReturn(null, 405, "存在多个api，请检查数据库"));
     } else {
       interfaceData = interfaceData[0];
     }
@@ -271,7 +278,7 @@ module.exports = async (ctx, next) => {
         return (ctx.body = yapi.commons.resReturn(
           null,
           404,
-          `接口字段验证不通过, ${validResult.message}`
+          `接口字段验证不通过, ${validResult.message}`,
         ));
       }
     }
@@ -280,20 +287,20 @@ module.exports = async (ctx, next) => {
     // mock 返回值处理
     res = interfaceData.res_body;
     try {
-      if (interfaceData.res_body_type === 'json') {
+      if (interfaceData.res_body_type === "json") {
         if (interfaceData.res_body_is_json_schema === true) {
           //json-schema
           const schema = yapi.commons.json_parse(interfaceData.res_body);
           res = yapi.commons.schemaToJson(schema, {
-            alwaysFakeOptionals: true
+            alwaysFakeOptionals: true,
           });
         } else {
           // console.log('header', ctx.request.header['content-type'].indexOf('multipart/form-data'))
           // 处理 format-data
 
           if (
-            _.isString(ctx.request.header['content-type']) &&
-            ctx.request.header['content-type'].indexOf('multipart/form-data') > -1
+            _.isString(ctx.request.header["content-type"]) &&
+            ctx.request.header["content-type"].indexOf("multipart/form-data") > -1
           ) {
             ctx.request.body = ctx.request.body.fields;
           }
@@ -302,7 +309,7 @@ module.exports = async (ctx, next) => {
           res = mockExtra(yapi.commons.json_parse(interfaceData.res_body), {
             query: ctx.request.query,
             body: ctx.request.body,
-            params: Object.assign({}, ctx.request.query, ctx.request.body)
+            params: Object.assign({}, ctx.request.query, ctx.request.body),
           });
           // console.log('res',res)
         }
@@ -310,8 +317,8 @@ module.exports = async (ctx, next) => {
         try {
           res = Mock.mock(res);
         } catch (e) {
-          console.log('err', e.message);
-          yapi.commons.log(e, 'error');
+          console.log("err", e.message);
+          yapi.commons.log(e, "error");
         }
       }
 
@@ -322,7 +329,7 @@ module.exports = async (ctx, next) => {
         mockJson: res,
         resHeader: {},
         httpCode: 200,
-        delay: 0
+        delay: 0,
       };
 
       if (project.is_mock_open && project.project_mock_script) {
@@ -331,33 +338,33 @@ module.exports = async (ctx, next) => {
         await yapi.commons.handleMockScript(script, context);
       }
 
-      await yapi.emitHook('mock_after', context);
+      await yapi.emitHook("mock_after", context);
 
-      let handleMock = new Promise(resolve => {
+      let handleMock = new Promise((resolve) => {
         setTimeout(() => {
           resolve(true);
         }, context.delay);
       });
       await handleMock;
-      if (context.resHeader && typeof context.resHeader === 'object') {
+      if (context.resHeader && typeof context.resHeader === "object") {
         for (let i in context.resHeader) {
           let cookie;
-          if (i === 'Set-Cookie') {
-            if (context.resHeader[i] && typeof context.resHeader[i] === 'string') {
+          if (i === "Set-Cookie") {
+            if (context.resHeader[i] && typeof context.resHeader[i] === "string") {
               cookie = parseCookie(context.resHeader[i]);
-              if (cookie && typeof cookie === 'object') {
+              if (cookie && typeof cookie === "object") {
                 ctx.cookies.set(cookie.name, cookie.value, {
                   maxAge: 864000000,
-                  httpOnly: false
+                  httpOnly: false,
                 });
               }
             } else if (context.resHeader[i] && Array.isArray(context.resHeader[i])) {
-              context.resHeader[i].forEach(item => {
+              context.resHeader[i].forEach((item) => {
                 cookie = parseCookie(item);
-                if (cookie && typeof cookie === 'object') {
+                if (cookie && typeof cookie === "object") {
                   ctx.cookies.set(cookie.name, cookie.value, {
                     maxAge: 864000000,
-                    httpOnly: false
+                    httpOnly: false,
                   });
                 }
               });
@@ -370,17 +377,17 @@ module.exports = async (ctx, next) => {
 
       ctx.status = context.httpCode;
       ctx.body = context.mockJson;
-      return;  
+      return;
     } catch (e) {
-      yapi.commons.log(e, 'error');
+      yapi.commons.log(e, "error");
       return (ctx.body = {
         errcode: 400,
-        errmsg: '解析出错，请检查。Error: ' + e.message,
-        data: null
+        errmsg: "解析出错，请检查。Error: " + e.message,
+        data: null,
       });
     }
   } catch (e) {
-    yapi.commons.log(e, 'error');
+    yapi.commons.log(e, "error");
     return (ctx.body = yapi.commons.resReturn(null, 409, e.message));
   }
 };

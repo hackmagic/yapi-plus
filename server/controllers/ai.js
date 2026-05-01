@@ -1,78 +1,78 @@
-const yapi = require('../yapi.js');
-const baseController = require('./base.js');
-const axios = require('axios');
+const yapi = require("../yapi.js");
+const baseController = require("./base.js");
+const axios = require("axios");
 
 class aiController extends baseController {
   constructor(ctx) {
     super(ctx);
-    this.model = yapi.getModel('ai');
+    this.model = yapi.getModel("ai");
   }
 
   /**
-    * 获取 AI 助手列表
-    */
-   async getAiAgents(ctx) {
-     if (this.$auth !== true) {
-       return (ctx.body = yapi.commons.resReturn(null, 40011, '请登录...'));
-     }
-     try {
-       const agents = await this.model.getList();
-       ctx.body = yapi.commons.resSuccess(agents);
-     } catch (err) {
-       ctx.body = yapi.commons.resError(err.message);
-     }
-   }
+   * 获取 AI 助手列表
+   */
+  async getAiAgents(ctx) {
+    if (this.$auth !== true) {
+      return (ctx.body = yapi.commons.resReturn(null, 40011, "请登录..."));
+    }
+    try {
+      const agents = await this.model.getList();
+      ctx.body = yapi.commons.resSuccess(agents);
+    } catch (err) {
+      ctx.body = yapi.commons.resError(err.message);
+    }
+  }
 
   /**
-    * 创建 AI 助手
-    */
-   async addAiAgent(ctx) {
-     if (this.$auth !== true) {
-       return (ctx.body = yapi.commons.resReturn(null, 40011, '请登录...'));
-     }
-     try {
-       const params = ctx.request.body;
-       if (!params.baseURL) {
-         params.baseURL = 'https://api.deepseek.com';
-       }
-       const agent = await this.model.save(params);
-       ctx.body = yapi.commons.resSuccess(agent);
-     } catch (err) {
-       ctx.body = yapi.commons.resError(err.message);
-     }
-   }
+   * 创建 AI 助手
+   */
+  async addAiAgent(ctx) {
+    if (this.$auth !== true) {
+      return (ctx.body = yapi.commons.resReturn(null, 40011, "请登录..."));
+    }
+    try {
+      const params = ctx.request.body;
+      if (!params.baseURL) {
+        params.baseURL = "https://api.deepseek.com";
+      }
+      const agent = await this.model.save(params);
+      ctx.body = yapi.commons.resSuccess(agent);
+    } catch (err) {
+      ctx.body = yapi.commons.resError(err.message);
+    }
+  }
 
   /**
-    * 更新 AI 助手
-    */
-   async updateAiAgent(ctx) {
-     if (this.$auth !== true) {
-       return (ctx.body = yapi.commons.resReturn(null, 40011, '请登录...'));
-     }
-     try {
-       const params = ctx.request.body;
-       const agent = await this.model.update(params);
-       ctx.body = yapi.commons.resSuccess(agent);
-     } catch (err) {
-       ctx.body = yapi.commons.resError(err.message);
-     }
-   }
+   * 更新 AI 助手
+   */
+  async updateAiAgent(ctx) {
+    if (this.$auth !== true) {
+      return (ctx.body = yapi.commons.resReturn(null, 40011, "请登录..."));
+    }
+    try {
+      const params = ctx.request.body;
+      const agent = await this.model.update(params);
+      ctx.body = yapi.commons.resSuccess(agent);
+    } catch (err) {
+      ctx.body = yapi.commons.resError(err.message);
+    }
+  }
 
   /**
-    * 删除 AI 助手
-    */
-   async deleteAiAgent(ctx) {
-     if (this.$auth !== true) {
-       return (ctx.body = yapi.commons.resReturn(null, 40011, '请登录...'));
-     }
-     try {
-       const id = ctx.request.body.id;
-       await this.model.remove(id);
-       ctx.body = yapi.commons.resSuccess({});
-     } catch (err) {
-       ctx.body = yapi.commons.resError(err.message);
-     }
-   }
+   * 删除 AI 助手
+   */
+  async deleteAiAgent(ctx) {
+    if (this.$auth !== true) {
+      return (ctx.body = yapi.commons.resReturn(null, 40011, "请登录..."));
+    }
+    try {
+      const id = ctx.request.body.id;
+      await this.model.remove(id);
+      ctx.body = yapi.commons.resSuccess({});
+    } catch (err) {
+      ctx.body = yapi.commons.resError(err.message);
+    }
+  }
 
   /**
    * 调用 AI API
@@ -80,58 +80,58 @@ class aiController extends baseController {
   async callAiApi(agent, messages) {
     const { type, apiKey, model, baseURL } = agent;
     const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${apiKey}`,
     };
 
-    let apiUrl = baseURL || 'https://api.deepseek.com';
+    let apiUrl = baseURL || "https://api.deepseek.com";
     let requestBody = {};
 
     switch (type) {
-      case 'deepseek':
+      case "deepseek":
         apiUrl = `${apiUrl}/v1/chat/completions`;
         requestBody = {
-          model: model || 'deepseek-chat',
+          model: model || "deepseek-chat",
           messages: messages,
           temperature: agent.temperature || 0.7,
-          max_tokens: agent.maxTokens || 1000
+          max_tokens: agent.maxTokens || 1000,
         };
         break;
-      case 'openai':
+      case "openai":
         apiUrl = `${apiUrl}/v1/chat/completions`;
         requestBody = {
-          model: model || 'gpt-3.5-turbo',
+          model: model || "gpt-3.5-turbo",
           messages: messages,
           temperature: agent.temperature || 0.7,
-          max_tokens: agent.maxTokens || 1000
+          max_tokens: agent.maxTokens || 1000,
         };
         break;
-      case 'claude':
+      case "claude":
         apiUrl = `${apiUrl}/v1/messages`;
         requestBody = {
-          model: model || 'claude-3-opus-20240229',
+          model: model || "claude-3-opus-20240229",
           messages: messages,
           temperature: agent.temperature || 0.7,
-          max_tokens: agent.maxTokens || 1000
+          max_tokens: agent.maxTokens || 1000,
         };
         break;
-      case 'gemini':
-        apiUrl = `${apiUrl}/v1beta/models/${model || 'gemini-pro'}:generateContent`;
+      case "gemini":
+        apiUrl = `${apiUrl}/v1beta/models/${model || "gemini-pro"}:generateContent`;
         requestBody = {
           contents: messages,
           generationConfig: {
             temperature: agent.temperature || 0.7,
-            maxOutputTokens: agent.maxTokens || 1000
-          }
+            maxOutputTokens: agent.maxTokens || 1000,
+          },
         };
         break;
       default:
         apiUrl = `${apiUrl}/v1/chat/completions`;
         requestBody = {
-          model: model || 'deepseek-chat',
+          model: model || "deepseek-chat",
           messages: messages,
           temperature: agent.temperature || 0.7,
-          max_tokens: agent.maxTokens || 1000
+          max_tokens: agent.maxTokens || 1000,
         };
     }
 
@@ -140,32 +140,32 @@ class aiController extends baseController {
   }
 
   /**
-    * 与 AI 助手对话
-    */
-   async chatWithAiAgent(ctx) {
-     if (this.$auth !== true) {
-       return (ctx.body = yapi.commons.resReturn(null, 40011, '请登录...'));
-     }
-     try {
+   * 与 AI 助手对话
+   */
+  async chatWithAiAgent(ctx) {
+    if (this.$auth !== true) {
+      return (ctx.body = yapi.commons.resReturn(null, 40011, "请登录..."));
+    }
+    try {
       const params = ctx.request.body;
       const { agentId, message } = params;
 
       const agents = await this.model.getList();
-      const agent = agents.find(a => a._id.toString() === agentId);
+      const agent = agents.find((a) => a._id.toString() === agentId);
 
       if (!agent) {
-        ctx.body = yapi.commons.resError('AI 助手不存在');
+        ctx.body = yapi.commons.resError("AI 助手不存在");
         return;
       }
 
       const messages = [
-        { role: 'system', content: '你是一个专业的 API 助手，帮助开发者管理 API 接口。' },
-        { role: 'user', content: message }
+        { role: "system", content: "你是一个专业的 API 助手，帮助开发者管理 API 接口。" },
+        { role: "user", content: message },
       ];
 
       const result = await this.callAiApi(agent, messages);
 
-      let reply = '';
+      let reply = "";
       if (result.choices && result.choices[0]) {
         reply = result.choices[0].message.content;
       } else if (result.content) {
@@ -177,7 +177,7 @@ class aiController extends baseController {
       const response = {
         id: Date.now().toString(),
         message: reply,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
 
       ctx.body = yapi.commons.resSuccess(response);
@@ -187,33 +187,33 @@ class aiController extends baseController {
   }
 
   /**
-    * 生成 API 文档
-    */
-   async generateApiDoc(ctx) {
-     if (this.$auth !== true) {
-       return (ctx.body = yapi.commons.resReturn(null, 40011, '请登录...'));
-     }
-     try {
+   * 生成 API 文档
+   */
+  async generateApiDoc(ctx) {
+    if (this.$auth !== true) {
+      return (ctx.body = yapi.commons.resReturn(null, 40011, "请登录..."));
+    }
+    try {
       const params = ctx.request.body;
       const { projectId, interfaceId, agentId } = params;
 
       if (!agentId) {
-        ctx.body = yapi.commons.resError('请选择 AI 助手');
+        ctx.body = yapi.commons.resError("请选择 AI 助手");
         return;
       }
 
-      const interfaceModel = yapi.getModel('interface');
+      const interfaceModel = yapi.getModel("interface");
       const interfaceData = await interfaceModel.get(interfaceId);
       if (!interfaceData) {
-        ctx.body = yapi.commons.resError('接口不存在');
+        ctx.body = yapi.commons.resError("接口不存在");
         return;
       }
 
       const agents = await this.model.getList();
-      const agent = agents.find(a => a._id.toString() === agentId);
+      const agent = agents.find((a) => a._id.toString() === agentId);
 
       if (!agent) {
-        ctx.body = yapi.commons.resError('AI 助手不存在');
+        ctx.body = yapi.commons.resError("AI 助手不存在");
         return;
       }
 
@@ -229,13 +229,16 @@ class aiController extends baseController {
 响应体：${interfaceData.res_body}`;
 
       const messages = [
-        { role: 'system', content: '你是一个专业的 API 文档生成助手，擅长生成清晰、易读的 API 文档。' },
-        { role: 'user', content: prompt }
+        {
+          role: "system",
+          content: "你是一个专业的 API 文档生成助手，擅长生成清晰、易读的 API 文档。",
+        },
+        { role: "user", content: prompt },
       ];
 
       const result = await this.callAiApi(agent, messages);
 
-      let content = '';
+      let content = "";
       if (result.choices && result.choices[0]) {
         content = result.choices[0].message.content;
       } else if (result.content) {
@@ -246,8 +249,8 @@ class aiController extends baseController {
         id: Date.now().toString(),
         projectId,
         interfaceId,
-        content: content || '# API 文档\n\n生成失败',
-        generatedAt: new Date().toISOString()
+        content: content || "# API 文档\n\n生成失败",
+        generatedAt: new Date().toISOString(),
       };
 
       ctx.body = yapi.commons.resSuccess(doc);
@@ -257,33 +260,33 @@ class aiController extends baseController {
   }
 
   /**
-    * 生成测试用例
-    */
-   async generateTestCase(ctx) {
-     if (this.$auth !== true) {
-       return (ctx.body = yapi.commons.resReturn(null, 40011, '请登录...'));
-     }
-     try {
+   * 生成测试用例
+   */
+  async generateTestCase(ctx) {
+    if (this.$auth !== true) {
+      return (ctx.body = yapi.commons.resReturn(null, 40011, "请登录..."));
+    }
+    try {
       const params = ctx.request.body;
       const { projectId, interfaceId, agentId } = params;
 
       if (!agentId) {
-        ctx.body = yapi.commons.resError('请选择 AI 助手');
+        ctx.body = yapi.commons.resError("请选择 AI 助手");
         return;
       }
 
-      const interfaceModel = yapi.getModel('interface');
+      const interfaceModel = yapi.getModel("interface");
       const interfaceData = await interfaceModel.get(interfaceId);
       if (!interfaceData) {
-        ctx.body = yapi.commons.resError('接口不存在');
+        ctx.body = yapi.commons.resError("接口不存在");
         return;
       }
 
       const agents = await this.model.getList();
-      const agent = agents.find(a => a._id.toString() === agentId);
+      const agent = agents.find((a) => a._id.toString() === agentId);
 
       if (!agent) {
-        ctx.body = yapi.commons.resError('AI 助手不存在');
+        ctx.body = yapi.commons.resError("AI 助手不存在");
         return;
       }
 
@@ -298,13 +301,13 @@ class aiController extends baseController {
 响应体：${interfaceData.res_body}`;
 
       const messages = [
-        { role: 'system', content: '你是一个专业的测试工程师，擅长生成高质量的测试用例代码。' },
-        { role: 'user', content: prompt }
+        { role: "system", content: "你是一个专业的测试工程师，擅长生成高质量的测试用例代码。" },
+        { role: "user", content: prompt },
       ];
 
       const result = await this.callAiApi(agent, messages);
 
-      let content = '';
+      let content = "";
       if (result.choices && result.choices[0]) {
         content = result.choices[0].message.content;
       } else if (result.content) {
@@ -315,8 +318,8 @@ class aiController extends baseController {
         id: Date.now().toString(),
         projectId,
         interfaceId,
-        content: content || '# 测试用例\n\n生成失败',
-        generatedAt: new Date().toISOString()
+        content: content || "# 测试用例\n\n生成失败",
+        generatedAt: new Date().toISOString(),
       };
 
       ctx.body = yapi.commons.resSuccess(testCase);

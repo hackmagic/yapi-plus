@@ -12,13 +12,20 @@
       <template #prefix>
         <n-icon>
           <svg viewBox="64 64 896 896" width="16" height="16" fill="currentColor">
-            <path d="M909.6 854.5L649.9 594.8C690.2 542.7 712 479 712 412c0-80.2-31.3-155.4-87.9-212.1-56.6-56.7-132-87.9-212.1-87.9s-155.5 31.3-212.1 87.9C143.2 256.5 112 331.8 112 412c0 80.1 31.3 155.5 87.9 212.1C256.5 680.8 331.8 712 412 712c67 0 130.6-21.8 182.7-62l259.7 259.6a8.2 8.2 0 0011.6 0l43.6-43.5a8.2 8.2 0 000-11.6zM570.4 570.4C528 612.7 471.8 636 412 636s-116-23.3-158.4-65.6C211.3 528 188 471.8 188 412s23.3-116.1 65.6-158.4C296 211.3 352.2 188 412 188s116.1 23.2 158.4 65.6S636 352.2 636 412s-23.3 116.1-65.6 158.4z" />
+            <path
+              d="M909.6 854.5L649.9 594.8C690.2 542.7 712 479 712 412c0-80.2-31.3-155.4-87.9-212.1-56.6-56.7-132-87.9-212.1-87.9s-155.5 31.3-212.1 87.9C143.2 256.5 112 331.8 112 412c0 80.1 31.3 155.5 87.9 212.1C256.5 680.8 331.8 712 412 712c67 0 130.6-21.8 182.7-62l259.7 259.6a8.2 8.2 0 0011.6 0l43.6-43.5a8.2 8.2 0 000-11.6zM570.4 570.4C528 612.7 471.8 636 412 636s-116-23.3-158.4-65.6C211.3 528 188 471.8 188 412s23.3-116.1 65.6-158.4C296 211.3 352.2 188 412 188s116.1 23.2 158.4 65.6S636 352.2 636 412s-23.3 116.1-65.6 158.4z"
+            />
           </svg>
         </n-icon>
       </template>
     </n-input>
 
-    <div class="search-dropdown" v-if="showDropdown && (searchResults.interfaces.length > 0 || searchResults.projects.length > 0)">
+    <div
+      class="search-dropdown"
+      v-if="
+        showDropdown && (searchResults.interfaces.length > 0 || searchResults.projects.length > 0)
+      "
+    >
       <div class="result-section" v-if="searchResults.interfaces.length > 0">
         <div class="section-title">接口</div>
         <div
@@ -43,101 +50,99 @@
           <span class="item-title">{{ item.name }}</span>
         </div>
       </div>
-      <div class="view-all" v-if="searchValue" @click="handleViewAll">
-        查看全部结果 >
-      </div>
+      <div class="view-all" v-if="searchValue" @click="handleViewAll">查看全部结果 ></div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, watch } from 'vue'
-import { useRouter } from 'vue-router'
-import { useMessage } from 'naive-ui'
-import axios from 'axios'
+import { ref, reactive, watch } from "vue";
+import { useRouter } from "vue-router";
+import { useMessage } from "naive-ui";
+import axios from "axios";
 
-const router = useRouter()
-const message = useMessage()
+const router = useRouter();
+const message = useMessage();
 
-const searchValue = ref('')
-const showDropdown = ref(false)
-const searching = ref(false)
+const searchValue = ref("");
+const showDropdown = ref(false);
+const searching = ref(false);
 
 const searchResults = reactive({
   interfaces: [],
-  projects: []
-})
+  projects: [],
+});
 
-let searchTimer = null
+let searchTimer = null;
 
 watch(searchValue, (newValue) => {
   if (searchTimer) {
-    clearTimeout(searchTimer)
+    clearTimeout(searchTimer);
   }
   if (!newValue || newValue.trim().length < 2) {
-    searchResults.interfaces = []
-    searchResults.projects = []
-    return
+    searchResults.interfaces = [];
+    searchResults.projects = [];
+    return;
   }
   searchTimer = setTimeout(() => {
-    performSearch(newValue)
-  }, 300)
-})
+    performSearch(newValue);
+  }, 300);
+});
 
 const performSearch = async (keyword) => {
-  searching.value = true
+  searching.value = true;
   try {
-    const res = await axios.get('/api/project/search', { params: { q: keyword } })
+    const res = await axios.get("/api/project/search", { params: { q: keyword } });
     if (res.data.errcode === 0) {
-      searchResults.interfaces = (res.data.data.interfaceList || []).slice(0, 5)
-      searchResults.projects = (res.data.data.projectList || []).slice(0, 5)
+      searchResults.interfaces = (res.data.data.interfaceList || []).slice(0, 5);
+      searchResults.projects = (res.data.data.projectList || []).slice(0, 5);
     }
   } catch (e) {
-    console.error('搜索失败', e)
+    console.error("搜索失败", e);
   } finally {
-    searching.value = false
+    searching.value = false;
   }
-}
+};
 
 const getMethodType = (method) => {
   const typeMap = {
-    GET: 'info',
-    POST: 'success',
-    PUT: 'warning',
-    DELETE: 'error',
-    PATCH: 'warning'
-  }
-  return typeMap[method] || 'info'
-}
+    GET: "info",
+    POST: "success",
+    PUT: "warning",
+    DELETE: "error",
+    PATCH: "warning",
+  };
+  return typeMap[method] || "info";
+};
 
 const handleSearch = () => {
   if (searchValue.value.trim()) {
-    router.push({ path: '/search', query: { q: searchValue.value } })
+    router.push({ path: "/search", query: { q: searchValue.value } });
   }
-}
+};
 
 const handleClickInterface = (item) => {
-  router.push(`/project/${item.project_id}/interface/api/${item._id}`)
-  showDropdown.value = false
-  searchValue.value = ''
-}
+  router.push(`/project/${item.project_id}/interface/api/${item._id}`);
+  showDropdown.value = false;
+  searchValue.value = "";
+};
 
 const handleClickProject = (item) => {
-  router.push(`/project/${item._id}`)
-  showDropdown.value = false
-  searchValue.value = ''
-}
+  router.push(`/project/${item._id}`);
+  showDropdown.value = false;
+  searchValue.value = "";
+};
 
 const handleViewAll = () => {
-  router.push({ path: '/search', query: { q: searchValue.value } })
-  showDropdown.value = false
-}
+  router.push({ path: "/search", query: { q: searchValue.value } });
+  showDropdown.value = false;
+};
 
 const handleBlur = () => {
   setTimeout(() => {
-    showDropdown.value = false
-  }, 200)
-}
+    showDropdown.value = false;
+  }, 200);
+};
 </script>
 
 <style scoped lang="scss">

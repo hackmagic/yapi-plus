@@ -3,6 +3,7 @@
 ## 🎯 什么是 VitePlus？
 
 VitePlus (Vite+) 是一个统一的 Web 开发工具链，它整合了：
+
 - **Vite** - 快速的前端构建工具
 - **Rolldown** - 更快的生产构建（基于 Rust）
 - **Vitest** - 测试框架
@@ -13,6 +14,7 @@ VitePlus (Vite+) 是一个统一的 Web 开发工具链，它整合了：
 ## 📦 项目配置
 
 ### 技术栈
+
 - ✅ **框架**: Vue 3.4+
 - ✅ **构建工具**: VitePlus 0.1.19
 - ✅ **UI 库**: Naive UI 2.34+
@@ -22,6 +24,7 @@ VitePlus (Vite+) 是一个统一的 Web 开发工具链，它整合了：
 - ✅ **数据库**: MongoDB
 
 ### 配置文件
+
 - `vite.config.js` - Vite 配置（VitePlus 会自动使用）
 - `vite-plus.config.js` - VitePlus 额外配置
 - `package.json` - 脚本和依赖
@@ -112,21 +115,25 @@ yapi-plus/
 ## 🔧 VitePlus 优势
 
 ### 1. **更快的构建速度**
+
 - 开发服务器启动：瞬间启动
 - HMR（热模块替换）：即时更新
 - 生产构建：比 Webpack 快 40 倍
 
 ### 2. **统一的工具链**
+
 - 一个工具管理所有开发流程
 - 一致的命令和配置
 - 减少工具切换成本
 
 ### 3. **更好的开发体验**
+
 - 内置代码检查和格式化
 - 自动优化依赖
 - 智能缓存机制
 
 ### 4. **现代化技术栈**
+
 - 基于 Rust 的底层工具
 - 支持最新的 Web 标准
 - 活跃的开发社区
@@ -145,10 +152,10 @@ yapi-plus/
 <script setup>
 const themeOverrides = {
   common: {
-    primaryColor: '#2080f0',
-    primaryColorHover: '#4098fc',
+    primaryColor: "#2080f0",
+    primaryColorHover: "#4098fc",
   },
-}
+};
 </script>
 ```
 
@@ -163,6 +170,7 @@ npm run dev
 ```
 
 这会启动：
+
 - 后端服务：http://localhost:3000
 - 前端服务：http://localhost:4000
 
@@ -250,12 +258,14 @@ vp check
 ## 🚀 性能优化
 
 VitePlus 已自动优化：
+
 - ✅ 依赖预构建
 - ✅ 代码分割
 - ✅ 懒加载路由
 - ✅ 资源压缩
 
 手动优化建议：
+
 - 使用动态导入：`import('./MyComponent.vue')`
 - 合理使用 `computed` 和 `watch`
 - 避免在模板中使用复杂表达式

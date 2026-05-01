@@ -1,15 +1,15 @@
-const _ = require('underscore');
+const _ = require("underscore");
 
 function isObj(object) {
   return (
     object &&
-    typeof object == 'object' &&
-    Object.prototype.toString.call(object).toLowerCase() == '[object object]'
+    typeof object == "object" &&
+    Object.prototype.toString.call(object).toLowerCase() == "[object object]"
   );
 }
 
 function isArray(object) {
-  return object && typeof object == 'object' && object.constructor == Array;
+  return object && typeof object == "object" && object.constructor == Array;
 }
 
 function getLength(object) {
@@ -74,19 +74,18 @@ function CompareObj(objA, objB, flag) {
 
 exports.jsonEqual = Compare;
 
-exports.isDeepMatch = function(obj, properties) {
- 
-  if (!properties || typeof properties !== 'object' || Object.keys(properties).length === 0) {
+exports.isDeepMatch = function (obj, properties) {
+  if (!properties || typeof properties !== "object" || Object.keys(properties).length === 0) {
     return true;
   }
 
-  if (!obj || typeof obj !== 'object' || Object.keys(obj).length === 0) {
+  if (!obj || typeof obj !== "object" || Object.keys(obj).length === 0) {
     return false;
   }
 
   let match = true;
-  let keys = Object.keys(properties)
-  for (let index=0; index< keys.length; index++) {
+  let keys = Object.keys(properties);
+  for (let index = 0; index < keys.length; index++) {
     let i = keys[index];
     if (!Compare(obj[i], properties[i])) {
       match = false;

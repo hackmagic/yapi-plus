@@ -5,27 +5,19 @@
         <template #header>
           <n-space justify="space-between" align="center">
             <span>我的项目</span>
-            <n-button type="primary" @click="$router.push('/add-project')">
-              创建项目
-            </n-button>
+            <n-button type="primary" @click="$router.push('/add-project')"> 创建项目 </n-button>
           </n-space>
         </template>
-        
+
         <n-row :gutter="[16, 16]">
           <n-col :span="6" v-for="project in projectList" :key="project._id">
-            <ProjectCard 
-              :project-data="project"
-              @delete="handleDelete"
-              @edit="handleEdit"
-            />
+            <ProjectCard :project-data="project" @delete="handleDelete" @edit="handleEdit" />
           </n-col>
         </n-row>
-        
+
         <n-empty v-if="projectList.length === 0" description="暂无项目">
           <template #extra>
-            <n-button @click="$router.push('/add-project')">
-              创建第一个项目
-            </n-button>
+            <n-button @click="$router.push('/add-project')"> 创建第一个项目 </n-button>
           </template>
         </n-empty>
       </n-card>
@@ -34,44 +26,44 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useMessage } from 'naive-ui'
-import ProjectCard from '../../../components/ProjectCard/ProjectCard.vue'
-import axios from 'axios'
+import { ref, onMounted } from "vue";
+import { useMessage } from "naive-ui";
+import ProjectCard from "../../../components/ProjectCard/ProjectCard.vue";
+import axios from "axios";
 
 const props = defineProps({
   groupId: {
     type: String,
-    default: null
-  }
-})
+    default: null,
+  },
+});
 
-const message = useMessage()
-const projectList = ref([])
+const message = useMessage();
+const projectList = ref([]);
 
 const handleDelete = (projectId) => {
-  projectList.value = projectList.value.filter(p => p._id !== projectId)
-}
+  projectList.value = projectList.value.filter((p) => p._id !== projectId);
+};
 
 const handleEdit = (project) => {
-  message.info(`编辑项目: ${project.name}`)
-}
+  message.info(`编辑项目: ${project.name}`);
+};
 
 const fetchProjects = async () => {
   try {
-    const url = props.groupId ? `/api/project/list?group_id=${props.groupId}` : '/api/project/list'
-    const res = await axios.get(url)
+    const url = props.groupId ? `/api/project/list?group_id=${props.groupId}` : "/api/project/list";
+    const res = await axios.get(url);
     if (res.data.errcode === 0) {
-      projectList.value = res.data.data.list
+      projectList.value = res.data.data.list;
     }
   } catch (error) {
-    message.error('获取项目列表失败')
+    message.error("获取项目列表失败");
   }
-}
+};
 
 onMounted(() => {
-  fetchProjects()
-})
+  fetchProjects();
+});
 </script>
 
 <style scoped>

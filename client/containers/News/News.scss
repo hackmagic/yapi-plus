@@ -1,4 +1,4 @@
-@import '../../styles/mixin.scss';
+@import "../../styles/mixin.scss";
 
 .news-box {
   @include row-width-limit;
@@ -7,77 +7,76 @@
   -webkit-box-flex: 1;
   margin: 0px auto 0 auto;
   font-size: 0.14rem;
-  background: #FFF;
+  background: #fff;
   display: block;
 
-  .news-timeline{
+  .news-timeline {
     padding: 24px;
     padding-left: 125px;
     color: #6b6c6d;
-    .ant-timeline-item{
+    .ant-timeline-item {
       min-height: 60px;
     }
-    .ant-timeline-item-head{
+    .ant-timeline-item-head {
       width: 30px;
       height: 30px;
       left: -8px;
       top: -4px;
-      border-color:#e1e3e4;
+      border-color: #e1e3e4;
     }
-    .logusername{
+    .logusername {
       color: #4eaef3;
       padding: 0px 16px 0px 8px;
       cursor: pointer;
     }
-    .logtype{
+    .logtype {
       padding-right: 16px;
     }
-    .logtime{
+    .logtime {
       padding-right: 16px;
-
     }
-    .logcontent{
+    .logcontent {
       display: block;
       padding-left: 8px;
       line-height: 24px;
     }
-    .logoTimeago{
+    .logoTimeago {
       position: absolute;
       left: -80px;
       top: 5px;
       color: #c0c1c1;
     }
-    .logbidden{
+    .logbidden {
       color: #c0c1c1;
       cursor: default;
       line-height: 30px;
       padding-left: 30px;
     }
-    .loggetMore{
+    .loggetMore {
       line-height: 30px;
       padding-left: 30px;
       color: #4eaef3;
     }
   }
-  .logHead{
+  .logHead {
     height: 80px;
     width: 100%;
     border-bottom: 1px solid #e9e9e9;
     padding: 24px 0px;
     overflow: hidden;
-    .breadcrumb-container{
+    .breadcrumb-container {
       float: left;
-      min-width:100px;
+      min-width: 100px;
     }
-    .Mockurl{
+    .Mockurl {
       width: 500px;
       float: right;
       color: #7b7b7b;
-      >span{
+      > span {
         float: left;
         line-height: 30px;
       }
-      p{
+      p {
         width: 60%;
         display: inline-block;
         position: relative;
@@ -85,15 +84,15 @@
         height: 28px;
         cursor: text;
         font-size: 13px;
-        color: rgba(0,0,0,.65);
+        color: rgba(0, 0, 0, 0.65);
         background-color: #fff;
         background-image: none;
         border: 1px solid #d9d9d9;
-        -webkit-transition: all .3s;
-        transition: all .3s;
-        overflow-x:auto;
+        -webkit-transition: all 0.3s;
+        transition: all 0.3s;
+        overflow-x: auto;
       }
-      button{
+      button {
         float: right;
       }
     }

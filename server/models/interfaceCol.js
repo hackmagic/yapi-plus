@@ -1,9 +1,9 @@
-const yapi = require('../yapi.js');
-const baseModel = require('./base.js');
+const yapi = require("../yapi.js");
+const baseModel = require("./base.js");
 
 class interfaceCol extends baseModel {
   getName() {
-    return 'interface_col';
+    return "interface_col";
   }
 
   getSchema() {
@@ -15,40 +15,40 @@ class interfaceCol extends baseModel {
       add_time: Number,
       up_time: Number,
       index: { type: Number, default: 0 },
-      test_report: { type: String, default: '{}' },
+      test_report: { type: String, default: "{}" },
       checkHttpCodeIs200: {
-        type:Boolean,
-        default: false
+        type: Boolean,
+        default: false,
       },
       checkResponseSchema: {
-        type:Boolean,
-        default: false
+        type: Boolean,
+        default: false,
       },
       checkResponseField: {
         name: {
           type: String,
           required: true,
-          default: "code"
+          default: "code",
         },
         value: {
           type: String,
           required: true,
-          default: "0"
+          default: "0",
         },
         enable: {
           type: Boolean,
-          default: false
-        }
+          default: false,
+        },
       },
       checkScript: {
         content: {
-          type: String
+          type: String,
         },
         enable: {
           type: Boolean,
-          default: false
-        }
-      }
+          default: false,
+        },
+      },
     };
   }
 
@@ -60,38 +60,38 @@ class interfaceCol extends baseModel {
   get(id) {
     return this.model
       .findOne({
-        _id: id
+        _id: id,
       })
       .exec();
   }
 
   checkRepeat(name) {
     return this.model.countDocuments({
-      name: name
+      name: name,
     });
   }
 
   list(project_id) {
     return this.model
       .find({
-        project_id: project_id
+        project_id: project_id,
       })
-      .select('name uid project_id desc add_time up_time, index')
+      .select("name uid project_id desc add_time up_time, index")
       .exec();
   }
 
   listCount(project_id) {
     return this.model.countDocuments({
-      project_id: project_id
+      project_id: project_id,
     });
   }
 
   listWithPaging(project_id, page, limit) {
     return this.model
       .find({
-        project_id: project_id
+        project_id: project_id,
       })
-      .select('name uid project_id desc add_time up_time index')
+      .select("name uid project_id desc add_time up_time index")
       .skip((page - 1) * limit)
       .limit(limit)
       .exec();
@@ -99,13 +99,13 @@ class interfaceCol extends baseModel {
 
   del(id) {
     return this.model.remove({
-      _id: id
+      _id: id,
     });
   }
 
   delByProjectId(id) {
     return this.model.remove({
-      project_id: id
+      project_id: id,
     });
   }
 
@@ -113,20 +113,20 @@ class interfaceCol extends baseModel {
     data.up_time = yapi.commons.time();
     return this.model.update(
       {
-        _id: id
+        _id: id,
       },
-      data
+      data,
     );
   }
 
   upColIndex(id, index) {
     return this.model.update(
       {
-        _id: id
+        _id: id,
       },
       {
-        index: index
-      }
+        index: index,
+      },
     );
   }
 }

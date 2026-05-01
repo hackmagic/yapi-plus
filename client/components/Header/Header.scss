@@ -1,4 +1,4 @@
-@import '../../styles/mixin.scss';
+@import "../../styles/mixin.scss";
 
 .nav-tooltip {
   color: red;
@@ -14,20 +14,20 @@
 
 /* .header-box.css */
 .header-box {
-  height: .56rem;
-  line-height: .56rem;
+  height: 0.56rem;
+  line-height: 0.56rem;
   padding: 0;
   .logo {
     position: relative;
     float: left;
-    line-height: .56rem;
-    height: .56rem;
+    line-height: 0.56rem;
+    height: 0.56rem;
     width: 56px;
     border-right: 1px solid #55616d;
     border-left: 1px solid #55616d;
     background-color: inherit;
-    transition: all .2s;
-    &:hover{
+    transition: all 0.2s;
+    &:hover {
       background-color: #2395f1;
     }
     .href {
@@ -36,16 +36,16 @@
     }
     .logo-name {
       color: $color-white;
-      font-size: .24rem;
+      font-size: 0.24rem;
       font-weight: 300;
-      margin-left: .38rem;
+      margin-left: 0.38rem;
     }
     .img {
       position: absolute;
       left: 0;
       top: 50%;
       left: 50%;
-      transform: translate(-16px,-17px);
+      transform: translate(-16px, -17px);
     }
     .ui-badge {
       position: absolute;
@@ -78,41 +78,40 @@
   }
 
   .nav-toolbar {
-    font-size: .15rem;
+    font-size: 0.15rem;
     float: left;
-
   }
-  .user-menu{
+  .user-menu {
     margin-top: 20px;
   }
-  .user-toolbar{
+  .user-toolbar {
     float: right;
-    height: .54rem;
+    height: 0.54rem;
     display: flex;
     align-items: center;
     .item-search {
       width: 2rem;
     }
-    .toolbar-li{
+    .toolbar-li {
       float: left;
-      font-size: .14rem;
+      font-size: 0.14rem;
       cursor: pointer;
       color: #ccc;
-      margin-left: .16rem;
-      transition: color .2s;
+      margin-left: 0.16rem;
+      transition: color 0.2s;
       & a {
         color: #ccc;
       }
       .dropdown-link {
         color: #ccc;
-        transition: color .2s;
+        transition: color 0.2s;
         // .ant-avatar-image{
         //   margin-bottom: -10px;
         // }
         // .ant-avatar > img{
         //   height: auto;
         // }
-        .avatar-image{
+        .avatar-image {
           margin-bottom: -10px;
           display: inline-block;
           text-align: center;
@@ -127,23 +126,22 @@
           border-radius: 16px;
         }
 
-        .avatar-image > img{
+        .avatar-image > img {
           height: auto;
-          width:100%;
+          width: 100%;
           display: bloack;
         }
-
       }
       .anticon.active {
         color: #2395f1;
       }
-      &:hover{
+      &:hover {
         .dropdown-link {
           color: #2395f1;
         }
       }
       .name {
-        margin-left: .08rem;
+        margin-left: 0.08rem;
       }
     }
   }

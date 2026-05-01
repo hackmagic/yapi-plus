@@ -7,11 +7,11 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  .label:after{
+  .label:after {
     content: ":";
     margin: 0 8px 0 2px;
     position: relative;
-    top: -.5px;
+    top: -0.5px;
   }
   .label-name {
     overflow: hidden;

@@ -1,4 +1,5 @@
 # 接口设置
+
 进入项目页，可以看到项目下的所有接口，需要注意的是，YAPI Plus有 `接口集合` 和 `测试集合` 两个概念。
 
 - `接口集合` 将接口进行分类，使接口结构更清晰，一个接口只能属于一个集合，且不允许与其他接口重名。
@@ -23,7 +24,7 @@
 
 - Query参数： 接口 url 的查询字符串，点击『添加Query参数』按钮来添加参数，可以通过拖动来交换参数位置
 - 请求Body：http 请求 body 部分，如果http请求方式是 post, put 等请求方式时会有 req_body 部分。req_body_type 形式有4种，分别是 form, json, file 和 raw 。
-- Headers:  http 请求头字段，在 req_body 形式是 form 格式下会在 header 中自动生成 'Content-Type	application/x-www-form-urlencoded'，其他3种格式也会自动生成不同 header
+- Headers: http 请求头字段，在 req_body 形式是 form 格式下会在 header 中自动生成 'Content-Type application/x-www-form-urlencoded'，其他3种格式也会自动生成不同 header
 
 <img src="./images/requestSet.png" />
 
@@ -34,15 +35,14 @@
 
 <img src="./images/jsonSchema.png" />
 
-
-
 ### 备注 & 其他
+
 - 接口描述: 用简短的文字描述接口的作用。
 - 邮件通知：开启后将此次接口的改动以邮件的形式发送至项目组所有成员和关注该项目的成员（邮件默认情况下自动开启）
 - 开放接口：默认为关闭状态，用户可以在 数据导出 时选择只导出公开接口
 
-
 ## 接口运行
+
 接口运行功能，是用来测试真实接口的，类似『Postman』的功能。
 
 点击运行 tab ,可进入到接口测试页面，首先安装『chrome crossRequest』扩展，才可正常使用此功能。
@@ -58,7 +58,3 @@
 版本 v1.3.22 新增返回数据验证功能， 如果接口的返回数据格式为json schema 在接口运行时会对接口返回数据和定义数据格式进行校验
 
 <img src="./images/interface_run_valid.png"/>
-
-
-
-

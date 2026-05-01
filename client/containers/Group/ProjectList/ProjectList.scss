@@ -3,16 +3,15 @@
   margin-bottom: 0;
 }
 
-
-.m-panel{
+.m-panel {
   background-color: #fff;
   padding: 24px;
   min-height: 4.68rem;
   margin-top: 0;
 }
 
-.project-list{
-  .project-list-header{
+.project-list {
+  .project-list-header {
     background: #eee;
     height: 64px;
     line-height: 40px;
@@ -26,7 +25,7 @@
     color: rgba(39, 56, 72, 0.85);
     font-weight: 500;
   }
-  .owner-type{
+  .owner-type {
     // padding: 10px;
     font-size: 15px;
     // background-color: #eee;
@@ -39,8 +38,6 @@
   }
 }
 
-
-
 .ant-input-group-wrapper {
   width: 100%;
 }
@@ -51,7 +48,7 @@
   top: 4px;
   font-size: 24px;
   color: #999;
-  transition: all .3s;
+  transition: all 0.3s;
 }
 .dynamic-delete-button:hover {
   color: #777;

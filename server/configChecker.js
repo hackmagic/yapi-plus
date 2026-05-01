@@ -1,6 +1,6 @@
-const yapi = require('./yapi.js');
-const fs = require('fs-extra');
-const mongoose = require('mongoose');
+const yapi = require("./yapi.js");
+const fs = require("fs-extra");
+const mongoose = require("mongoose");
 
 /**
  * 检查配置状态
@@ -8,31 +8,31 @@ const mongoose = require('mongoose');
  */
 async function checkConfigStatus() {
   const missing = [];
-  
+
   // 检查 init.lock 文件
-  const lockFileExists = fs.existsSync(yapi.path.join(yapi.WEBROOT_RUNTIME, 'init.lock'));
-  
+  const lockFileExists = fs.existsSync(yapi.path.join(yapi.WEBROOT_RUNTIME, "init.lock"));
+
   if (!lockFileExists) {
-    missing.push('init_lock');
+    missing.push("init_lock");
   }
-  
+
   // 检查数据库配置
   const dbConfig = yapi.WEBCONFIG.db;
   if (!dbConfig || !dbConfig.servername || !dbConfig.DATABASE) {
     // 检查是否有连接字符串
     if (!dbConfig || !dbConfig.connectString) {
-      missing.push('database');
+      missing.push("database");
     }
   }
-  
+
   // 检查管理员账号配置
   if (!yapi.WEBCONFIG.adminAccount) {
-    missing.push('admin_account');
+    missing.push("admin_account");
   }
-  
+
   return {
     configured: missing.length === 0,
-    missing: missing
+    missing: missing,
   };
 }
 
@@ -42,8 +42,8 @@ async function checkConfigStatus() {
  * @returns {Promise<{success: boolean, error?: string}>}
  */
 async function testDatabaseConnection(dbConfig) {
-  let connectString = '';
-  
+  let connectString = "";
+
   if (dbConfig.connectString) {
     connectString = dbConfig.connectString;
   } else {
@@ -52,26 +52,26 @@ async function testDatabaseConnection(dbConfig) {
       connectString += `?authSource=${dbConfig.authSource}`;
     }
   }
-  
+
   const options = {
     serverSelectionTimeoutMS: 5000,
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
   };
-  
+
   if (dbConfig.user) {
     options.user = dbConfig.user;
     options.pass = dbConfig.pass;
   }
-  
+
   try {
     const conn = await mongoose.connect(connectString, options);
     await mongoose.disconnect();
     return { success: true };
   } catch (err) {
-    return { 
-      success: false, 
-      error: err.message 
+    return {
+      success: false,
+      error: err.message,
     };
   }
 }
@@ -82,30 +82,30 @@ async function testDatabaseConnection(dbConfig) {
  */
 async function loadConfigFromDB() {
   try {
-    const mongoose = require('mongoose');
-    const SystemConfigModel = require('./models/systemConfig.js');
-    
+    const mongoose = require("mongoose");
+    const SystemConfigModel = require("./models/systemConfig.js");
+
     // 检查是否已注册模型
     let SystemConfig;
     if (mongoose.models.system_config) {
       SystemConfig = mongoose.models.system_config;
     } else {
-      SystemConfig = mongoose.model('system_config', new mongoose.Schema(SystemConfigModel.schema));
+      SystemConfig = mongoose.model("system_config", new mongoose.Schema(SystemConfigModel.schema));
     }
-    
+
     const configs = await SystemConfig.find({ isConfigured: true });
     if (!configs || configs.length === 0) {
       return null;
     }
-    
+
     const configMap = {};
-    configs.forEach(item => {
+    configs.forEach((item) => {
       configMap[item.configKey] = item.configValue;
     });
-    
+
     return configMap;
   } catch (err) {
-    console.error('从数据库加载配置失败:', err);
+    console.error("从数据库加载配置失败:", err);
     return null;
   }
 }
@@ -113,5 +113,5 @@ async function loadConfigFromDB() {
 module.exports = {
   checkConfigStatus,
   testDatabaseConnection,
-  loadConfigFromDB
+  loadConfigFromDB,
 };

@@ -30,12 +30,7 @@
             size="small"
             class="header-value-input"
           />
-          <n-button
-            text
-            type="error"
-            size="small"
-            @click="removeHeader(index)"
-          >
+          <n-button text type="error" size="small" @click="removeHeader(index)">
             <template #icon>
               <n-icon><CloseOutline /></n-icon>
             </template>
@@ -56,70 +51,77 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
-import { NCheckbox, NInput, NButton, NIcon } from 'naive-ui'
-import { CloseOutline, AddOutline } from '@vicons/ionicons5'
+import { ref, computed, watch } from "vue";
+import { NCheckbox, NInput, NButton, NIcon } from "naive-ui";
+import { CloseOutline, AddOutline } from "@vicons/ionicons5";
 
 const props = defineProps({
   modelValue: {
     type: Array,
-    default: () => []
-  }
-})
+    default: () => [],
+  },
+});
 
-const emit = defineEmits(['update:modelValue', 'change'])
+const emit = defineEmits(["update:modelValue", "change"]);
 
-const headerList = ref([])
+const headerList = ref([]);
 
 const initHeaders = () => {
   if (props.modelValue && Array.isArray(props.modelValue)) {
-    headerList.value = props.modelValue.map(h => ({
-      key: h.key || '',
-      value: h.value || '',
-      enabled: h.enabled !== false
-    }))
+    headerList.value = props.modelValue.map((h) => ({
+      key: h.key || "",
+      value: h.value || "",
+      enabled: h.enabled !== false,
+    }));
   } else {
-    headerList.value = []
+    headerList.value = [];
   }
-}
+};
 
-initHeaders()
+initHeaders();
 
-watch(() => props.modelValue, () => {
-  initHeaders()
-}, { deep: true })
+watch(
+  () => props.modelValue,
+  () => {
+    initHeaders();
+  },
+  { deep: true },
+);
 
 const allEnabled = computed({
-  get: () => headerList.value.every(h => h.enabled),
+  get: () => headerList.value.every((h) => h.enabled),
   set: (val) => {
-    headerList.value.forEach(h => h.enabled = val)
-    emitChange()
-  }
-})
+    headerList.value.forEach((h) => (h.enabled = val));
+    emitChange();
+  },
+});
 
 const emitChange = () => {
-  emit('update:modelValue', headerList.value.map(h => ({
-    key: h.key,
-    value: h.value,
-    enabled: h.enabled
-  })))
-  emit('change', headerList.value)
-}
+  emit(
+    "update:modelValue",
+    headerList.value.map((h) => ({
+      key: h.key,
+      value: h.value,
+      enabled: h.enabled,
+    })),
+  );
+  emit("change", headerList.value);
+};
 
 const handleToggleAll = (checked) => {
-  headerList.value.forEach(h => h.enabled = checked)
-  emitChange()
-}
+  headerList.value.forEach((h) => (h.enabled = checked));
+  emitChange();
+};
 
 const addHeader = () => {
-  headerList.value.push({ key: '', value: '', enabled: true })
-  emitChange()
-}
+  headerList.value.push({ key: "", value: "", enabled: true });
+  emitChange();
+};
 
 const removeHeader = (index) => {
-  headerList.value.splice(index, 1)
-  emitChange()
-}
+  headerList.value.splice(index, 1);
+  emitChange();
+};
 </script>
 
 <style scoped lang="scss">

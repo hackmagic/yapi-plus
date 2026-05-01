@@ -15,10 +15,10 @@
 
 ### 输出
 
-| 平台 | 命令 | 输出文件 |
-|------|------|---------|
-| 当前平台 | `npm run package` | `release/yapi-plus-v{version}-{platform}.zip` |
-| 指定平台 | `npm run package -- --platform=linux-x64` | `release/yapi-plus-v{version}-linux-x64.zip` |
+| 平台     | 命令                                       | 输出文件                                      |
+| -------- | ------------------------------------------ | --------------------------------------------- |
+| 当前平台 | `npm run package`                          | `release/yapi-plus-v{version}-{platform}.zip` |
+| 指定平台 | `npm run package -- --platform=linux-x64`  | `release/yapi-plus-v{version}-linux-x64.zip`  |
 | 指定平台 | `npm run package -- --platform=darwin-x64` | `release/yapi-plus-v{version}-darwin-x64.zip` |
 
 支持的平台：`win-x64`、`linux-x64`、`darwin-x64`
@@ -98,6 +98,7 @@ node server/app.js
 ```
 
 > **注意**：`server/yapi.js` 中配置文件的读取路径为 `../../config.json`，因此 `config.json` 需要放在解压目录的**父目录**中。目录结构如下：
+>
 > ```
 > /path/to/deploy/
 > ├── config.json          # 配置文件

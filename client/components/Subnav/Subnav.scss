@@ -1,20 +1,20 @@
-@import '../../styles/common.scss';
+@import "../../styles/common.scss";
 
 .m-subnav {
-  margin-bottom: .24rem;
+  margin-bottom: 0.24rem;
   background-color: #fff;
-  box-shadow: 0 0 .04rem rgba(0, 0, 0, .08);
-  font-size: .14rem;
+  box-shadow: 0 0 0.04rem rgba(0, 0, 0, 0.08);
+  font-size: 0.14rem;
   border: none;
   .ant-menu {
     font-size: unset;
-   }
+  }
   .m-subnav-menu {
     border: none;
-    padding: 0 .24rem;
+    padding: 0 0.24rem;
     .item {
-      line-height: .54rem;
-      padding: 0 .36rem;
+      line-height: 0.54rem;
+      padding: 0 0.36rem;
       font-weight: normal;
     }
   }

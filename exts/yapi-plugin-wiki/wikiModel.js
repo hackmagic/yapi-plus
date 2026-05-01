@@ -1,9 +1,9 @@
-const yapi = require('yapi.js');
-const baseModel = require('models/base.js');
+const yapi = require("yapi.js");
+const baseModel = require("models/base.js");
 
 class statisMockModel extends baseModel {
   getName() {
-    return 'wiki';
+    return "wiki";
   }
 
   getSchema() {
@@ -15,7 +15,7 @@ class statisMockModel extends baseModel {
       desc: String,
       markdown: String,
       add_time: Number,
-      up_time: Number
+      up_time: Number,
     };
   }
 
@@ -27,7 +27,7 @@ class statisMockModel extends baseModel {
   get(project_id) {
     return this.model
       .findOne({
-        project_id: project_id
+        project_id: project_id,
       })
       .exec();
   }
@@ -35,20 +35,20 @@ class statisMockModel extends baseModel {
   up(id, data) {
     return this.model.update(
       {
-        _id: id
+        _id: id,
       },
       data,
-      { runValidators: true }
+      { runValidators: true },
     );
   }
 
   upEditUid(id, uid) {
     return this.model.update(
       {
-        _id: id
+        _id: id,
       },
       { edit_uid: uid },
-      { runValidators: true }
+      { runValidators: true },
     );
   }
 }

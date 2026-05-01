@@ -1,13 +1,8 @@
 <template>
   <div class="interface-menu">
     <div class="menu-header">
-      <n-input
-        v-model:value="searchKey"
-        placeholder="搜索接口"
-        clearable
-        @input="handleSearch"
-      />
-      <n-button type="primary" @click="showAddCatModal" style="margin-top: 12px; width: 100%;">
+      <n-input v-model:value="searchKey" placeholder="搜索接口" clearable @input="handleSearch" />
+      <n-button type="primary" @click="showAddCatModal" style="margin-top: 12px; width: 100%">
         <template #icon>
           <n-icon><AddCircleOutline /></n-icon>
         </template>
@@ -103,183 +98,186 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, watch, h } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import { useMessage } from 'naive-ui'
-import { AddCircleOutline, AddOutline, CreateOutline, TrashOutline } from '@vicons/ionicons5'
-import axios from 'axios'
+import { ref, reactive, onMounted, watch, h } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import { useMessage } from "naive-ui";
+import { AddCircleOutline, AddOutline, CreateOutline, TrashOutline } from "@vicons/ionicons5";
+import axios from "axios";
 
 const props = defineProps({
   projectId: {
     type: [Number, String],
-    required: true
+    required: true,
   },
   selectedId: {
     type: String,
-    default: null
-  }
-})
+    default: null,
+  },
+});
 
-const emit = defineEmits(['select'])
+const emit = defineEmits(["select"]);
 
-const router = useRouter()
-const route = useRoute()
-const message = useMessage()
+const router = useRouter();
+const route = useRoute();
+const message = useMessage();
 
-const searchKey = ref('')
-const treeData = ref([])
-const expandedKeys = ref([])
-const selectedKeys = ref([])
+const searchKey = ref("");
+const treeData = ref([]);
+const expandedKeys = ref([]);
+const selectedKeys = ref([]);
 
 // 分类弹窗
-const showCatModal = ref(false)
-const catModalTitle = ref('添加分类')
+const showCatModal = ref(false);
+const catModalTitle = ref("添加分类");
 const catForm = reactive({
   _id: null,
-  name: '',
-  desc: ''
-})
+  name: "",
+  desc: "",
+});
 
 // 接口弹窗
-const showInterfaceModal = ref(false)
+const showInterfaceModal = ref(false);
 const interfaceForm = reactive({
-  title: '',
-  path: '',
-  method: 'GET'
-})
+  title: "",
+  path: "",
+  method: "GET",
+});
 
 const methodOptions = [
-  { label: 'GET', value: 'GET' },
-  { label: 'POST', value: 'POST' },
-  { label: 'PUT', value: 'PUT' },
-  { label: 'DELETE', value: 'DELETE' }
-]
+  { label: "GET", value: "GET" },
+  { label: "POST", value: "POST" },
+  { label: "PUT", value: "PUT" },
+  { label: "DELETE", value: "DELETE" },
+];
 
 // 加载接口列表
 const loadInterfaceList = async () => {
   try {
-    const res = await axios.get(`/api/interface/list_menu?project_id=${props.projectId}`)
+    const res = await axios.get(`/api/interface/list_menu?project_id=${props.projectId}`);
     if (res.data.errcode === 0) {
-      treeData.value = transformToTree(res.data.data)
+      treeData.value = transformToTree(res.data.data);
     }
   } catch (error) {
-    message.error('加载接口列表失败')
+    message.error("加载接口列表失败");
   }
-}
+};
 
 // 转换为树形数据
 const transformToTree = (data) => {
-  return data.map(cat => ({
+  return data.map((cat) => ({
     key: `cat_${cat._id}`,
     label: cat.name,
-    type: 'cat',
+    type: "cat",
     data: cat,
-    children: cat.list.map(inter => ({
+    children: cat.list.map((inter) => ({
       key: String(inter._id),
       label: `${inter.title} (${inter.path})`,
-      type: 'interface',
-      data: inter
-    }))
-  }))
-}
+      type: "interface",
+      data: inter,
+    })),
+  }));
+};
 
 const handleSelect = (keys) => {
-  selectedKeys.value = keys
+  selectedKeys.value = keys;
   if (keys.length > 0) {
-    const key = keys[0]
-    if (!key.startsWith('cat_')) {
-      emit('select', key)
+    const key = keys[0];
+    if (!key.startsWith("cat_")) {
+      emit("select", key);
     }
   }
-}
+};
 
 const handleExpand = (keys) => {
-  expandedKeys.value = keys
-}
+  expandedKeys.value = keys;
+};
 
 const handleSearch = (value) => {
   // 搜索逻辑
-}
+};
 
 const showAddCatModal = () => {
-  catModalTitle.value = '添加分类'
-  catForm._id = null
-  catForm.name = ''
-  catForm.desc = ''
-  showCatModal.value = true
-}
+  catModalTitle.value = "添加分类";
+  catForm._id = null;
+  catForm.name = "";
+  catForm.desc = "";
+  showCatModal.value = true;
+};
 
 const showEditCatModal = (data) => {
-  catModalTitle.value = '编辑分类'
-  catForm._id = data.data._id
-  catForm.name = data.data.name
-  catForm.desc = data.data.desc
-  showCatModal.value = true
-}
+  catModalTitle.value = "编辑分类";
+  catForm._id = data.data._id;
+  catForm.name = data.data.name;
+  catForm.desc = data.data.desc;
+  showCatModal.value = true;
+};
 
 const handleSaveCat = async () => {
   try {
-    const url = catForm._id ? '/api/interface/up_cat' : '/api/interface/add_cat'
+    const url = catForm._id ? "/api/interface/up_cat" : "/api/interface/add_cat";
     const res = await axios.post(url, {
       ...catForm,
-      project_id: props.projectId
-    })
+      project_id: props.projectId,
+    });
     if (res.data.errcode === 0) {
-      message.success('保存成功')
-      showCatModal.value = false
-      await loadInterfaceList()
+      message.success("保存成功");
+      showCatModal.value = false;
+      await loadInterfaceList();
     }
   } catch (error) {
-    message.error('保存失败')
+    message.error("保存失败");
   }
-}
+};
 
 const showAddInterfaceModal = (catData) => {
-  interfaceForm.title = ''
-  interfaceForm.path = ''
-  interfaceForm.method = 'GET'
-  interfaceForm.catid = catData.data._id
-  showInterfaceModal.value = true
-}
+  interfaceForm.title = "";
+  interfaceForm.path = "";
+  interfaceForm.method = "GET";
+  interfaceForm.catid = catData.data._id;
+  showInterfaceModal.value = true;
+};
 
 const handleAddInterface = async () => {
   try {
-    const res = await axios.post('/api/interface/add', {
+    const res = await axios.post("/api/interface/add", {
       ...interfaceForm,
-      project_id: props.projectId
-    })
+      project_id: props.projectId,
+    });
     if (res.data.errcode === 0) {
-      message.success('添加成功')
-      showInterfaceModal.value = false
-      await loadInterfaceList()
-      router.push(`/project/${props.projectId}/interface/api/${res.data.data._id}`)
+      message.success("添加成功");
+      showInterfaceModal.value = false;
+      await loadInterfaceList();
+      router.push(`/project/${props.projectId}/interface/api/${res.data.data._id}`);
     }
   } catch (error) {
-    message.error('添加失败')
+    message.error("添加失败");
   }
-}
+};
 
 const handleDeleteInterface = async (data) => {
   try {
-    const res = await axios.post(`/api/interface/del?id=${data.data._id}`)
+    const res = await axios.post(`/api/interface/del?id=${data.data._id}`);
     if (res.data.errcode === 0) {
-      message.success('删除成功')
-      await loadInterfaceList()
+      message.success("删除成功");
+      await loadInterfaceList();
     }
   } catch (error) {
-    message.error('删除失败')
+    message.error("删除失败");
   }
-}
+};
 
-watch(() => props.selectedId, (newId) => {
-  if (newId) {
-    selectedKeys.value = [newId]
-  }
-})
+watch(
+  () => props.selectedId,
+  (newId) => {
+    if (newId) {
+      selectedKeys.value = [newId];
+    }
+  },
+);
 
 onMounted(() => {
-  loadInterfaceList()
-})
+  loadInterfaceList();
+});
 </script>
 
 <style scoped lang="scss">

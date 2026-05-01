@@ -2,9 +2,9 @@
 
 在数据管理可快速导入其他格式的接口数据，方便快速添加接口。YAPI Plus 目前支持 postman, swagger, har 数据导入。
 
-v1.3.23+ 增加数据导入的3种同步方式  normal, good, mergin
+v1.3.23+ 增加数据导入的3种同步方式 normal, good, mergin
 
-1. 普通模式(normal)：不导入已存在的接口；   
+1. 普通模式(normal)：不导入已存在的接口；
 2. 智能合并(good)：已存在的接口，将合并返回数据的 response，适用于导入了 swagger 数据，保留对数据结构的改动；例如，用户对字段code 添加了mock信息, 当再次数据导入的时候 mock 字段将不会被覆盖
 3. 完全覆盖(mergin)：不保留旧数据，完全使用新数据，适用于接口定义完全交给后端定义， 默认为 normal
 
@@ -95,9 +95,10 @@ npm install -g yapi-cli
 
 `file` 是 swagger 接口文档文件，可使用绝对路径或 url
 
-`merge` 有三种导入方式(v1.3.23+支持) normal, good, mergin  
-1. 普通模式(normal)：不导入已存在的接口；   
-2. 智能合并(good)：已存在的接口，将合并返回数据的 response，适用于导入了 swagger 数据，保留对数据结构的改动；  
+`merge` 有三种导入方式(v1.3.23+支持) normal, good, mergin
+
+1. 普通模式(normal)：不导入已存在的接口；
+2. 智能合并(good)：已存在的接口，将合并返回数据的 response，适用于导入了 swagger 数据，保留对数据结构的改动；
 3. 完全覆盖(mergin)：不保留旧数据，完全使用新数据，适用于接口定义完全交给后端定义， 默认为 normal
 
 `server` 是 yapi 服务器地址

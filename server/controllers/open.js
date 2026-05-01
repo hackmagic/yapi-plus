@@ -1,24 +1,24 @@
-﻿const projectModel = require('../models/project.js');
-const interfaceColModel = require('../models/interfaceCol.js');
-const interfaceCaseModel = require('../models/interfaceCase.js');
-const interfaceModel = require('../models/interface.js');
-const interfaceCatModel = require('../models/interfaceCat.js');
-const followModel = require('../models/follow.js');
-const userModel = require('../models/user.js');
-const yapi = require('../yapi.js');
-const baseController = require('./base.js');
+﻿const projectModel = require("../models/project.js");
+const interfaceColModel = require("../models/interfaceCol.js");
+const interfaceCaseModel = require("../models/interfaceCase.js");
+const interfaceModel = require("../models/interface.js");
+const interfaceCatModel = require("../models/interfaceCat.js");
+const followModel = require("../models/follow.js");
+const userModel = require("../models/user.js");
+const yapi = require("../yapi.js");
+const baseController = require("./base.js");
 const {
   handleParams,
   crossRequest,
   handleCurrDomain,
-  checkNameIsExistInArray
-} = require('../../common/postmanLib');
-const { handleParamsValue, ArrayToObject } = require('../../common/utils.js');
-const renderToHtml = require('../utils/reportHtml');
-const HanldeImportData = require('../../common/HandleImportData');
-const _ = require('underscore');
-const createContex = require('../../common/createContext')
-const { fetchSafeJson } = require('../utils/security');
+  checkNameIsExistInArray,
+} = require("../../common/postmanLib");
+const { handleParamsValue, ArrayToObject } = require("../../common/utils.js");
+const renderToHtml = require("../utils/reportHtml");
+const HanldeImportData = require("../../common/HandleImportData");
+const _ = require("underscore");
+const createContex = require("../../common/createContext");
+const { fetchSafeJson } = require("../utils/security");
 
 /**
  * {
@@ -26,7 +26,7 @@ const { fetchSafeJson } = require('../utils/security');
  * }
  */
 const importDataModule = {};
-yapi.emitHook('import_data', importDataModule);
+yapi.emitHook("import_data", importDataModule);
 
 class openController extends baseController {
   constructor(ctx) {
@@ -41,34 +41,34 @@ class openController extends baseController {
     this.handleValue = this.handleValue.bind(this);
     this.schemaMap = {
       runAutoTest: {
-        '*id': 'number',
-        project_id: 'string',
-        token: 'string',
+        "*id": "number",
+        project_id: "string",
+        token: "string",
         mode: {
-          type: 'string',
-          default: 'html'
+          type: "string",
+          default: "html",
         },
         email: {
-          type: 'boolean',
-          default: false
+          type: "boolean",
+          default: false,
         },
         download: {
-          type: 'boolean',
-          default: false
+          type: "boolean",
+          default: false,
         },
-        closeRemoveAdditional: true
+        closeRemoveAdditional: true,
       },
       importData: {
-        '*type': 'string',
-        url: 'string',
-        '*token': 'string',
-        json: 'string',
-        project_id: 'string',
+        "*type": "string",
+        url: "string",
+        "*token": "string",
+        json: "string",
+        project_id: "string",
         merge: {
-          type: 'string',
-          default: 'normal'
-        }
-      }
+          type: "string",
+          default: "normal",
+        },
+      },
     };
   }
 
@@ -78,44 +78,44 @@ class openController extends baseController {
     let project_id = ctx.params.project_id;
     let dataSync = ctx.params.merge;
 
-    let warnMessage = ''
+    let warnMessage = "";
 
     /**
      * 因为以前接口文档写错了，做下兼容
      */
-    try{
-      if(!dataSync &&ctx.params.dataSync){
-        warnMessage = 'importData Api 已废弃 dataSync 传参，请联系管理员将 dataSync 改为 merge.'
-        dataSync = ctx.params.dataSync
+    try {
+      if (!dataSync && ctx.params.dataSync) {
+        warnMessage = "importData Api 已废弃 dataSync 传参，请联系管理员将 dataSync 改为 merge.";
+        dataSync = ctx.params.dataSync;
       }
-    }catch(e){}
+    } catch (e) {}
 
     let token = ctx.params.token;
     if (!type || !importDataModule[type]) {
-      return (ctx.body = yapi.commons.resReturn(null, 40022, '不存在的导入方式'));
+      return (ctx.body = yapi.commons.resReturn(null, 40022, "不存在的导入方式"));
     }
 
     if (!content && !ctx.params.url) {
-      return (ctx.body = yapi.commons.resReturn(null, 40022, 'json 或者 url 参数，不能都为空'));
+      return (ctx.body = yapi.commons.resReturn(null, 40022, "json 或者 url 参数，不能都为空"));
     }
     try {
       if (ctx.params.url) {
         content = await fetchSafeJson(ctx.params.url, {
           timeout: 5000,
           maxBytes: 1024 * 1024,
-          maxRedirects: 2
+          maxRedirects: 2,
         });
-      } else if (content.indexOf('http://') === 0 || content.indexOf('https://') === 0) {
+      } else if (content.indexOf("http://") === 0 || content.indexOf("https://") === 0) {
         content = await fetchSafeJson(content, {
           timeout: 5000,
           maxBytes: 1024 * 1024,
-          maxRedirects: 2
+          maxRedirects: 2,
         });
       } else {
         content = JSON.parse(content);
       }
     } catch (e) {
-      return (ctx.body = yapi.commons.resReturn(null, 40022, 'json 格式有误:' + e));
+      return (ctx.body = yapi.commons.resReturn(null, 40022, "json 格式有误:" + e));
     }
 
     let menuList = await this.interfaceCatModel.list(project_id);
@@ -126,12 +126,12 @@ class openController extends baseController {
     if (menuList.length === 0) {
       const catInst = yapi.getInst(interfaceCatModel);
       const menu = await catInst.save({
-        name: '默认分类',
+        name: "默认分类",
         project_id: project_id,
-        desc: '默认分类',
+        desc: "默认分类",
         uid: this.getUid(),
         add_time: yapi.commons.time(),
-        up_time: yapi.commons.time()
+        up_time: yapi.commons.time(),
       });
       menuList.push(menu);
     }
@@ -148,39 +148,39 @@ class openController extends baseController {
       menuList,
       projectData.basePath,
       dataSync,
-      err => {
+      (err) => {
         errorMessage.push(err);
       },
-      msg => {
+      (msg) => {
         successMessage = msg;
       },
       () => {},
       token,
-      yapi.WEBCONFIG.port
+      yapi.WEBCONFIG.port,
     );
 
     if (errorMessage.length > 0) {
-      return (ctx.body = yapi.commons.resReturn(null, 404, errorMessage.join('\n')));
+      return (ctx.body = yapi.commons.resReturn(null, 404, errorMessage.join("\n")));
     }
     ctx.body = yapi.commons.resReturn(null, 0, successMessage + warnMessage);
   }
 
   async projectInterfaceData(ctx) {
-    ctx.body = 'projectInterfaceData';
+    ctx.body = "projectInterfaceData";
   }
 
   handleValue(val, global) {
     let globalValue = ArrayToObject(global);
-    let context = Object.assign({}, {global: globalValue}, this.records);
+    let context = Object.assign({}, { global: globalValue }, this.records);
     return handleParamsValue(val, context);
   }
 
   handleEvnParams(params) {
     let result = [];
-    Object.keys(params).map(item => {
+    Object.keys(params).map((item) => {
       if (/env_/gi.test(item)) {
         let curEnv = yapi.commons.trim(params[item]);
-        let value = { curEnv, project_id: item.split('_')[1] };
+        let value = { curEnv, project_id: item.split("_")[1] };
         result.push(value);
       }
     });
@@ -188,7 +188,7 @@ class openController extends baseController {
   }
   async runAutoTest(ctx) {
     if (!this.$tokenAuth) {
-      return (ctx.body = yapi.commons.resReturn(null, 40022, 'token 验证失败'));
+      return (ctx.body = yapi.commons.resReturn(null, 40022, "token 验证失败"));
     }
     // console.log(1231312)
     const token = ctx.query.token;
@@ -203,7 +203,7 @@ class openController extends baseController {
 
     let colData = await this.interfaceColModel.get(id);
     if (!colData) {
-      return (ctx.body = yapi.commons.resReturn(null, 40022, 'id值不存在'));
+      return (ctx.body = yapi.commons.resReturn(null, 40022, "id值不存在"));
     }
 
     let projectData = await this.projectModel.get(projectId);
@@ -218,7 +218,7 @@ class openController extends baseController {
       let projectEvn = await this.projectModel.getByEnv(item.project_id);
 
       item.id = item._id;
-      let curEnvItem = _.find(curEnvList, key => {
+      let curEnvItem = _.find(curEnvList, (key) => {
         return key.project_id == item.project_id;
       });
 
@@ -238,7 +238,7 @@ class openController extends baseController {
       reports[item.id] = result;
       records[item.id] = {
         params: result.params,
-        body: result.res_body
+        body: result.res_body,
       };
       testList.push(result);
     }
@@ -247,13 +247,12 @@ class openController extends baseController {
       let successNum = 0,
         failedNum = 0,
         len = 0,
-        msg = '';
-      testList.forEach(item => {
+        msg = "";
+      testList.forEach((item) => {
         len++;
         if (item.code === 0) {
           successNum++;
-        }
-        else {
+        } else {
           failedNum++;
         }
       });
@@ -271,9 +270,9 @@ class openController extends baseController {
 
     let reportsResult = {
       message: getMessage(testList),
-      runTime: executionTime + 's',
+      runTime: executionTime + "s",
       numbs: testList.length,
-      list: testList
+      list: testList,
     };
 
     if (ctx.params.email === true && reportsResult.message.failedNum !== 0) {
@@ -295,14 +294,14 @@ class openController extends baseController {
         <p>${autoTestUrl}</p>
         </div>
         </body>
-        </html>`
+        </html>`,
       });
     }
-    let mode = ctx.params.mode || 'html';
-    if(ctx.params.download === true) {
-      ctx.set('Content-Disposition', `attachment; filename=test.${mode}`);
+    let mode = ctx.params.mode || "html";
+    if (ctx.params.download === true) {
+      ctx.set("Content-Disposition", `attachment; filename=test.${mode}`);
     }
-    if (ctx.params.mode === 'json') {
+    if (ctx.params.mode === "json") {
       return (ctx.body = reportsResult);
     } else {
       return (ctx.body = renderToHtml(reportsResult));
@@ -318,15 +317,16 @@ class openController extends baseController {
       name: interfaceData.casename,
       path: interfaceData.path,
       code: 400,
-      validRes: []
+      validRes: [],
     };
     try {
       options.taskId = this.getUid();
-      let data = await crossRequest(options, interfaceData.pre_script, interfaceData.after_script,createContex(
-        this.getUid(),
-        interfaceData.project_id,
-        interfaceData.interface_id
-      ));
+      let data = await crossRequest(
+        options,
+        interfaceData.pre_script,
+        interfaceData.after_script,
+        createContex(this.getUid(), interfaceData.project_id, interfaceData.interface_id),
+      );
       let res = data.res;
 
       result = Object.assign(result, {
@@ -337,9 +337,9 @@ class openController extends baseController {
         data: data.req.data,
         headers: data.req.headers,
         res_header: res.header,
-        res_body: res.body
+        res_body: res.body,
       });
-      if (options.data && typeof options.data === 'object') {
+      if (options.data && typeof options.data === "object") {
         requestParams = Object.assign(requestParams, options.data);
       }
 
@@ -351,15 +351,15 @@ class openController extends baseController {
           status: res.status,
           body: res.body,
           header: res.header,
-          statusText: res.statusText
-        }
+          statusText: res.statusText,
+        },
       );
 
       await this.handleScriptTest(interfaceData, responseData, validRes, requestParams);
       result.params = requestParams;
       if (validRes.length === 0) {
         result.code = 0;
-        result.validRes = [{ message: '验证通过' }];
+        result.validRes = [{ message: "验证通过" }];
       } else if (validRes.length > 0) {
         result.code = 1;
         result.validRes = validRes;
@@ -370,7 +370,7 @@ class openController extends baseController {
         res_body: data.body || data.message,
         status: null,
         statusText: data.message,
-        code: 400
+        code: 400,
       });
     }
 
@@ -378,24 +378,28 @@ class openController extends baseController {
   }
 
   async handleScriptTest(interfaceData, response, validRes, requestParams) {
-    
     try {
-      let test = await yapi.commons.runCaseScript({
-        response: response,
-        records: this.records,
-        script: interfaceData.test_script,
-        params: requestParams
-      }, interfaceData.col_id, interfaceData.interface_id, this.getUid());
+      let test = await yapi.commons.runCaseScript(
+        {
+          response: response,
+          records: this.records,
+          script: interfaceData.test_script,
+          params: requestParams,
+        },
+        interfaceData.col_id,
+        interfaceData.interface_id,
+        this.getUid(),
+      );
       if (test.errcode !== 0) {
-        test.data.logs.forEach(item => {
+        test.data.logs.forEach((item) => {
           validRes.push({
-            message: item
+            message: item,
           });
         });
       }
     } catch (err) {
       validRes.push({
-        message: 'Error: ' + err.message
+        message: "Error: " + err.message,
       });
     }
   }
@@ -404,14 +408,14 @@ class openController extends baseController {
     let currDomain = handleCurrDomain(envData, curEnvName);
 
     let header = currDomain.header;
-    header.forEach(item => {
+    header.forEach((item) => {
       if (!checkNameIsExistInArray(item.name, req_header)) {
         item.abled = true;
         req_header.push(item);
       }
     });
-    req_header = req_header.filter(item => {
-      return item && typeof item === 'object';
+    req_header = req_header.filter((item) => {
+      return item && typeof item === "object";
     });
     return req_header;
   }

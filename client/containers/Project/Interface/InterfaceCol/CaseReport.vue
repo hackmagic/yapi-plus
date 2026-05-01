@@ -53,16 +53,12 @@
             <n-data-table
               :columns="columns"
               :data="reportData.resultList || []"
-              :row-key="row => row.id"
+              :row-key="(row) => row.id"
               :pagination="false"
             />
           </n-tab-pane>
           <n-tab-pane name="log" tab="执行日志">
-            <n-log
-              :log="logContent"
-              :rows="20"
-              style="background: #1a1a1a; color: #ccc;"
-            />
+            <n-log :log="logContent" :rows="20" style="background: #1a1a1a; color: #ccc" />
           </n-tab-pane>
         </n-tabs>
       </n-card>
@@ -73,151 +69,151 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, h } from 'vue'
-import { useRoute } from 'vue-router'
-import { useMessage, NTag, NButton, NIcon } from 'naive-ui'
-import axios from 'axios'
-import { RefreshOutline, DownloadOutline } from '@vicons/ionicons5'
+import { ref, computed, onMounted, h } from "vue";
+import { useRoute } from "vue-router";
+import { useMessage, NTag, NButton, NIcon } from "naive-ui";
+import axios from "axios";
+import { RefreshOutline, DownloadOutline } from "@vicons/ionicons5";
 
 const props = defineProps({
   colId: {
     type: [Number, String],
-    required: true
-  }
-})
+    required: true,
+  },
+});
 
-const route = useRoute()
-const message = useMessage()
+const route = useRoute();
+const message = useMessage();
 
-const loading = ref(false)
-const running = ref(false)
-const reportData = ref(null)
+const loading = ref(false);
+const running = ref(false);
+const reportData = ref(null);
 
 const totalCases = computed(() => {
-  if (!reportData.value) return 0
-  return (reportData.value.resultList || []).length
-})
+  if (!reportData.value) return 0;
+  return (reportData.value.resultList || []).length;
+});
 
 const successCount = computed(() => {
-  if (!reportData.value) return 0
-  return (reportData.value.resultList || []).filter(r => r.status === 'ok').length
-})
+  if (!reportData.value) return 0;
+  return (reportData.value.resultList || []).filter((r) => r.status === "ok").length;
+});
 
 const failCount = computed(() => {
-  if (!reportData.value) return 0
-  return (reportData.value.resultList || []).filter(r => r.status === 'failed').length
-})
+  if (!reportData.value) return 0;
+  return (reportData.value.resultList || []).filter((r) => r.status === "failed").length;
+});
 
 const passRate = computed(() => {
-  if (totalCases.value === 0) return 0
-  return Math.round((successCount.value / totalCases.value) * 100)
-})
+  if (totalCases.value === 0) return 0;
+  return Math.round((successCount.value / totalCases.value) * 100);
+});
 
 const logContent = computed(() => {
-  if (!reportData.value || !reportData.value.log) return ''
-  return reportData.value.log.join('\n')
-})
+  if (!reportData.value || !reportData.value.log) return "";
+  return reportData.value.log.join("\n");
+});
 
 const columns = [
   {
-    title: '用例名称',
-    key: 'name'
+    title: "用例名称",
+    key: "name",
   },
   {
-    title: '接口路径',
-    key: 'path'
+    title: "接口路径",
+    key: "path",
   },
   {
-    title: '方法',
-    key: 'method',
+    title: "方法",
+    key: "method",
     width: 80,
     render(row) {
       const typeMap = {
-        GET: 'info',
-        POST: 'success',
-        PUT: 'warning',
-        DELETE: 'error'
-      }
-      return h(NTag, { type: typeMap[row.method] || 'info' }, () => row.method)
-    }
+        GET: "info",
+        POST: "success",
+        PUT: "warning",
+        DELETE: "error",
+      };
+      return h(NTag, { type: typeMap[row.method] || "info" }, () => row.method);
+    },
   },
   {
-    title: '状态',
-    key: 'status',
+    title: "状态",
+    key: "status",
     width: 100,
     render(row) {
-      return h(NTag, { type: row.status === 'ok' ? 'success' : 'error' }, () => 
-        row.status === 'ok' ? '通过' : '失败'
-      )
-    }
+      return h(NTag, { type: row.status === "ok" ? "success" : "error" }, () =>
+        row.status === "ok" ? "通过" : "失败",
+      );
+    },
   },
   {
-    title: '响应时间',
-    key: 'res_time',
+    title: "响应时间",
+    key: "res_time",
     width: 100,
     render(row) {
-      return `${row.res_time || 0} ms`
-    }
+      return `${row.res_time || 0} ms`;
+    },
   },
   {
-    title: '状态码',
-    key: 'httpCode',
-    width: 100
+    title: "状态码",
+    key: "httpCode",
+    width: 100,
   },
   {
-    title: '详情',
-    key: 'message',
+    title: "详情",
+    key: "message",
     render(row) {
-      return row.message || '-'
-    }
-  }
-]
+      return row.message || "-";
+    },
+  },
+];
 
 const loadReport = async () => {
-  loading.value = true
+  loading.value = true;
   try {
-    const res = await axios.get('/api/interfaceCol/run', { params: { col_id: props.colId } })
+    const res = await axios.get("/api/interfaceCol/run", { params: { col_id: props.colId } });
     if (res.data.errcode === 0) {
-      reportData.value = res.data.data
+      reportData.value = res.data.data;
     }
   } catch (e) {
-    message.error('加载报告失败')
+    message.error("加载报告失败");
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 const handleRunReport = async () => {
-  running.value = true
+  running.value = true;
   try {
-    const res = await axios.post('/api/interfaceCol/run', { col_id: props.colId })
+    const res = await axios.post("/api/interfaceCol/run", { col_id: props.colId });
     if (res.data.errcode === 0) {
-      reportData.value = res.data.data
-      message.success('运行完成')
+      reportData.value = res.data.data;
+      message.success("运行完成");
     }
   } catch (e) {
-    message.error('运行失败')
+    message.error("运行失败");
   } finally {
-    running.value = false
+    running.value = false;
   }
-}
+};
 
 const handleExport = () => {
-  if (!reportData.value) return
-  const content = JSON.stringify(reportData.value, null, 2)
-  const blob = new Blob([content], { type: 'application/json' })
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = `test-report-${Date.now()}.json`
-  a.click()
-  URL.revokeObjectURL(url)
-  message.success('导出成功')
-}
+  if (!reportData.value) return;
+  const content = JSON.stringify(reportData.value, null, 2);
+  const blob = new Blob([content], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `test-report-${Date.now()}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  message.success("导出成功");
+};
 
 onMounted(() => {
-  loadReport()
-})
+  loadReport();
+});
 </script>
 
 <style scoped lang="scss">

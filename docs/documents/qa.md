@@ -7,10 +7,11 @@
 ## Q1 怎样联系组长？
 
 组长分为 `分组组长` 和 `项目组长`:
+
 - 分组组长：选择首页左侧的分组，点击右侧面板的 `成员列表`，成员右侧显示着 `组长/开发者` 的权限信息。
-<img src="./images/usage/manage_find_manager.png" />
+  <img src="./images/usage/manage_find_manager.png" />
 - 项目组长: 点击项目页的 `设置` - `成员列表`，成员右侧显示着 `组长/开发者` 的权限信息。
-<img src="./images/usage/manage_find_project_owner.png" />
+  <img src="./images/usage/manage_find_project_owner.png" />
 
 ## Q2 怎么快速迁移旧项目？
 
@@ -51,4 +52,4 @@
 
 ## Q7 部署YAPI Plus遇到 mongodb 认证问题？
 
-* <a href="http://blog.csdn.net/ll657418802/article/details/50846313?locationNum=7" _blank="target">mongodb3.03以上开启认证,解决程序认证连接报错以及第三方客户端无法认证问题</a>
+- <a href="http://blog.csdn.net/ll657418802/article/details/50846313?locationNum=7" _blank="target">mongodb3.03以上开启认证,解决程序认证连接报错以及第三方客户端无法认证问题</a>

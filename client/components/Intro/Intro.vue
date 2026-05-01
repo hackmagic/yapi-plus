@@ -2,12 +2,12 @@
   <div class="intro-container">
     <n-card title="欢迎使用 YAPI Plus">
       <n-space vertical :size="24">
-        <n-text style="font-size: 16px;">
+        <n-text style="font-size: 16px">
           YAPI Plus 是一个强大的 API 管理平台，基于 Vue 3 + VitePlus + Naive UI 构建。
         </n-text>
-        
+
         <n-divider />
-        
+
         <n-space vertical>
           <n-text strong>主要功能：</n-text>
           <n-ul>
@@ -18,16 +18,12 @@
             <li>数据导入导出 - 支持多种格式</li>
           </n-ul>
         </n-space>
-        
+
         <n-divider />
-        
+
         <n-space justify="center">
-          <n-button type="primary" @click="$router.push('/login')">
-            开始使用
-          </n-button>
-          <n-button @click="$router.push('/reg')">
-            注册账号
-          </n-button>
+          <n-button type="primary" @click="$router.push('/login')"> 开始使用 </n-button>
+          <n-button @click="$router.push('/reg')"> 注册账号 </n-button>
         </n-space>
       </n-space>
     </n-card>

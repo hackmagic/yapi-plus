@@ -1,7 +1,7 @@
-@import '../../styles/common.scss';
-@import '../../styles/mixin.scss';
+@import "../../styles/common.scss";
+@import "../../styles/mixin.scss";
 
-.footer-wrapper{
+.footer-wrapper {
   height: 2.4rem;
   width: 100%;
   background-color: $color-bg-dark;
@@ -10,56 +10,56 @@
   z-index: 0;
 }
 
-.footer-container{
+.footer-container {
   margin: 0 auto !important;
-  padding: .48rem .24rem;
+  padding: 0.48rem 0.24rem;
   max-width: 12.2rem;
   .icon {
-    font-size: .16rem;
-    margin-right: .08rem;
+    font-size: 0.16rem;
+    margin-right: 0.08rem;
   }
   .title {
     color: #8898aa;
-    font-size: .14rem;
-    margin-bottom: .08rem;
+    font-size: 0.14rem;
+    margin-bottom: 0.08rem;
   }
   .link {
-    font-size: .14rem;
+    font-size: 0.14rem;
     font-weight: 200;
     color: #8898aa;
-    line-height: .3rem;
-    transition: color .2s;
+    line-height: 0.3rem;
+    transition: color 0.2s;
     &:hover {
       color: $color-bg-gray;
     }
   }
 }
-.footItem{
+.footItem {
   padding: 24px 2%;
   width: 25%;
   float: left;
-  div{
+  div {
     margin: 6px 0;
   }
-  a{
+  a {
     font-weight: 200;
     color: #b3bdc1;
-    &:hover{
+    &:hover {
       color: white;
     }
   }
 }
-.copyRight{
-    padding: 24px 2%;
-    width: 25%;
-    float: left;
-    font-size: 13px;
-    text-indent: 1em;
-    h4{
-        font-size: 14px;
-        margin: 0 auto 13px;
-        font-weight: 500;
-        position: relative;
-        text-indent: 0;
-    }
+.copyRight {
+  padding: 24px 2%;
+  width: 25%;
+  float: left;
+  font-size: 13px;
+  text-indent: 1em;
+  h4 {
+    font-size: 14px;
+    margin: 0 auto 13px;
+    font-weight: 500;
+    position: relative;
+    text-indent: 0;
+  }
 }

@@ -29,9 +29,7 @@
         </n-form-item>
 
         <n-form-item>
-          <n-button type="primary" @click="handleSave" :loading="saving">
-            保存设置
-          </n-button>
+          <n-button type="primary" @click="handleSave" :loading="saving"> 保存设置 </n-button>
         </n-form-item>
       </n-form>
     </n-card>
@@ -39,58 +37,58 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
-import { useMessage } from 'naive-ui'
-import { useGroupStore } from '@/store/group'
+import { ref, computed, onMounted } from "vue";
+import { useRoute } from "vue-router";
+import { useMessage } from "naive-ui";
+import { useGroupStore } from "@/store/group";
 
-const route = useRoute()
-const message = useMessage()
-const groupStore = useGroupStore()
+const route = useRoute();
+const message = useMessage();
+const groupStore = useGroupStore();
 
-const groupId = computed(() => route.params.id)
-const formRef = ref(null)
-const saving = ref(false)
+const groupId = computed(() => route.params.id);
+const formRef = ref(null);
+const saving = ref(false);
 
 const formData = ref({
-  group_name: '',
-  type: 'public',
-  group_desc: ''
-})
+  group_name: "",
+  type: "public",
+  group_desc: "",
+});
 
 const rules = {
-  group_name: { required: true, message: '请输入组名称', trigger: 'blur' }
-}
+  group_name: { required: true, message: "请输入组名称", trigger: "blur" },
+};
 
 const loadGroup = async () => {
-  const data = await groupStore.fetchGroup(groupId.value)
+  const data = await groupStore.fetchGroup(groupId.value);
   if (data) {
     formData.value = {
       group_name: data.group_name,
-      type: data.type || 'public',
-      group_desc: data.group_desc || ''
-    }
+      type: data.type || "public",
+      group_desc: data.group_desc || "",
+    };
   }
-}
+};
 
 onMounted(() => {
-  loadGroup()
-})
+  loadGroup();
+});
 
 const handleSave = async () => {
   try {
-    await formRef.value?.validate()
-    saving.value = true
-    await groupStore.updateGroup(groupId.value, formData.value)
-    message.success('保存成功')
+    await formRef.value?.validate();
+    saving.value = true;
+    await groupStore.updateGroup(groupId.value, formData.value);
+    message.success("保存成功");
   } catch (e) {
     if (e.message) {
-      message.error(e.message)
+      message.error(e.message);
     }
   } finally {
-    saving.value = false
+    saving.value = false;
   }
-}
+};
 </script>
 
 <style scoped>

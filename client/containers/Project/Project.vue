@@ -1,6 +1,6 @@
 <template>
   <div class="project-page">
-    <n-layout has-sider style="min-height: calc(100vh - 60px);">
+    <n-layout has-sider style="min-height: calc(100vh - 60px)">
       <n-layout-sider
         bordered
         :width="200"
@@ -12,8 +12,8 @@
         @expand="collapsed = false"
       >
         <div class="project-info" v-if="!collapsed">
-          <h3>{{ projectInfo?.name || '加载中...' }}</h3>
-          <p class="project-desc">{{ projectInfo?.desc || '暂无描述' }}</p>
+          <h3>{{ projectInfo?.name || "加载中..." }}</h3>
+          <p class="project-desc">{{ projectInfo?.desc || "暂无描述" }}</p>
         </div>
 
         <n-menu
@@ -35,95 +35,95 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, h } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { NIcon } from 'naive-ui'
+import { ref, computed, onMounted, h } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { NIcon } from "naive-ui";
 import {
   AppsOutline,
   SettingsOutline,
   SpeedometerOutline,
   DocumentTextOutline,
-  LayersOutline
-} from '@vicons/ionicons5'
-import { useProjectStore } from '@/store/project'
+  LayersOutline,
+} from "@vicons/ionicons5";
+import { useProjectStore } from "@/store/project";
 
-const route = useRoute()
-const router = useRouter()
-const projectStore = useProjectStore()
+const route = useRoute();
+const router = useRouter();
+const projectStore = useProjectStore();
 
-const collapsed = ref(false)
-const projectId = computed(() => route.params.id)
-const projectInfo = computed(() => projectStore.currentProject)
-const activeMenu = computed(() => route.meta?.menuKey || 'interface')
+const collapsed = ref(false);
+const projectId = computed(() => route.params.id);
+const projectInfo = computed(() => projectStore.currentProject);
+const activeMenu = computed(() => route.meta?.menuKey || "interface");
 
 const renderIcon = (icon) => {
-  return () => h(NIcon, null, { default: () => h(icon) })
-}
+  return () => h(NIcon, null, { default: () => h(icon) });
+};
 
 const menuOptions = computed(() => [
   {
-    label: '接口',
-    key: 'interface',
-    icon: renderIcon(AppsOutline)
+    label: "接口",
+    key: "interface",
+    icon: renderIcon(AppsOutline),
   },
   {
-    label: '测试',
-    key: 'col',
-    icon: renderIcon(LayersOutline)
+    label: "测试",
+    key: "col",
+    icon: renderIcon(LayersOutline),
   },
   {
-    label: '设置',
-    key: 'setting',
+    label: "设置",
+    key: "setting",
     icon: renderIcon(SettingsOutline),
     children: [
       {
-        label: '基础设置',
-        key: 'setting/base',
-        icon: renderIcon(SettingsOutline)
+        label: "基础设置",
+        key: "setting/base",
+        icon: renderIcon(SettingsOutline),
       },
       {
-        label: '成员管理',
-        key: 'setting/member',
-        icon: renderIcon(SpeedometerOutline)
+        label: "成员管理",
+        key: "setting/member",
+        icon: renderIcon(SpeedometerOutline),
       },
       {
-        label: '环境配置',
-        key: 'setting/env',
-        icon: renderIcon(SpeedometerOutline)
+        label: "环境配置",
+        key: "setting/env",
+        icon: renderIcon(SpeedometerOutline),
       },
       {
-        label: 'Mock 设置',
-        key: 'setting/mock',
-        icon: renderIcon(DocumentTextOutline)
+        label: "Mock 设置",
+        key: "setting/mock",
+        icon: renderIcon(DocumentTextOutline),
       },
       {
-        label: '高级功能',
-        key: 'setting/advanced',
-        icon: renderIcon(SettingsOutline)
-      }
-    ]
-  }
-])
+        label: "高级功能",
+        key: "setting/advanced",
+        icon: renderIcon(SettingsOutline),
+      },
+    ],
+  },
+]);
 
 const loadProject = async () => {
   if (projectId.value) {
-    await projectStore.fetchProject(projectId.value)
+    await projectStore.fetchProject(projectId.value);
   }
-}
+};
 
 onMounted(() => {
-  loadProject()
-})
+  loadProject();
+});
 
 const handleMenuSelect = (key) => {
-  if (key === 'interface') {
-    router.push(`/project/${projectId.value}/interface`)
-  } else if (key === 'col') {
-    router.push(`/project/${projectId.value}/interface/col`)
-  } else if (key.startsWith('setting')) {
-    router.push(`/project/${projectId.value}/${key}`)
+  if (key === "interface") {
+    router.push(`/project/${projectId.value}/interface`);
+  } else if (key === "col") {
+    router.push(`/project/${projectId.value}/interface/col`);
+  } else if (key.startsWith("setting")) {
+    router.push(`/project/${projectId.value}/${key}`);
   }
-}
+};
 </script>
 
 <style scoped lang="scss">

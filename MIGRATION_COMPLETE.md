@@ -16,12 +16,12 @@
 
 ### 总体统计
 
-| 类型 | 文件数 | 代码行数 | 状态 |
-|------|--------|---------|------|
-| **Components** | 30 | ~3500 行 | ✅ 完成 |
-| **Containers** | 50 | ~6000 行 | ✅ 完成 |
-| **Stores** | 5 | ~500 行 | ✅ 完成 |
-| **总计** | **85** | **~10000 行** | ✅ **完成** |
+| 类型           | 文件数 | 代码行数      | 状态        |
+| -------------- | ------ | ------------- | ----------- |
+| **Components** | 30     | ~3500 行      | ✅ 完成     |
+| **Containers** | 50     | ~6000 行      | ✅ 完成     |
+| **Stores**     | 5      | ~500 行       | ✅ 完成     |
+| **总计**       | **85** | **~10000 行** | ✅ **完成** |
 
 ---
 
@@ -29,48 +29,50 @@
 
 ### 1. 基础组件 (30个)
 
-| 组件 | 说明 |
-|------|------|
-| AceEditor | 代码编辑器 |
-| AuthenticatedComponent | 路由守卫 |
-| Breadcrumb | 面包屑导航 |
-| CaseEnv | 测试环境选择 |
-| EasyDragSort | 拖拽排序 |
-| ErrMsg | 错误提示 |
-| Footer | 页脚 |
-| GuideBtns | 引导按钮 |
-| Header | 顶部导航 |
-| Intro | 介绍组件 |
-| Label | 标签 |
-| Loading | 加载动画 |
-| LogoSVG | Logo |
-| MockDoc | 高级 Mock |
-| ModalPostman | Postman 导入弹窗 |
-| MethodsList | HTTP 方法列表 |
-| MockList | Mock 数据列表 |
-| VariablesSelect | 变量选择器 |
-| MyPopConfirm | 弹窗确认 |
-| Notify | 通知 |
-| Postman | 接口测试 |
-| CheckCrossInstall | Cross 安装检查 |
-| ProjectCard | 项目卡片 |
-| SchemaTable | Schema 表格 |
-| Subnav | 子导航 |
-| TimeLine | 时间线 |
-| UsernameAutoComplete | 用户名自动补全 |
-| ParamTable | 参数表格 |
-| HeaderEditor | Header 编辑器 |
-| KeyValueEditor | 键值对编辑器 |
+| 组件                   | 说明             |
+| ---------------------- | ---------------- |
+| AceEditor              | 代码编辑器       |
+| AuthenticatedComponent | 路由守卫         |
+| Breadcrumb             | 面包屑导航       |
+| CaseEnv                | 测试环境选择     |
+| EasyDragSort           | 拖拽排序         |
+| ErrMsg                 | 错误提示         |
+| Footer                 | 页脚             |
+| GuideBtns              | 引导按钮         |
+| Header                 | 顶部导航         |
+| Intro                  | 介绍组件         |
+| Label                  | 标签             |
+| Loading                | 加载动画         |
+| LogoSVG                | Logo             |
+| MockDoc                | 高级 Mock        |
+| ModalPostman           | Postman 导入弹窗 |
+| MethodsList            | HTTP 方法列表    |
+| MockList               | Mock 数据列表    |
+| VariablesSelect        | 变量选择器       |
+| MyPopConfirm           | 弹窗确认         |
+| Notify                 | 通知             |
+| Postman                | 接口测试         |
+| CheckCrossInstall      | Cross 安装检查   |
+| ProjectCard            | 项目卡片         |
+| SchemaTable            | Schema 表格      |
+| Subnav                 | 子导航           |
+| TimeLine               | 时间线           |
+| UsernameAutoComplete   | 用户名自动补全   |
+| ParamTable             | 参数表格         |
+| HeaderEditor           | Header 编辑器    |
+| KeyValueEditor         | 键值对编辑器     |
 
 ### 2. 页面容器 (50个)
 
 #### 首页/登录 (100%)
+
 - ✅ Home - 首页
 - ✅ Login - 登录
 - ✅ Register - 注册
 - ✅ ForgetPassword - 忘记密码
 
 #### 用户中心 (100%)
+
 - ✅ UserInfo - 用户信息
 - ✅ UserSetting - 用户设置
 - ✅ UserProjects - 用户项目
@@ -79,6 +81,7 @@
 - ✅ UserLogout - 退出登录
 
 #### 项目组 (100%)
+
 - ✅ Group - 主页面
 - ✅ GroupHome - 项目组首页
 - ✅ GroupSetting - 组设置
@@ -87,6 +90,7 @@
 - ✅ ProjectList - 项目列表
 
 #### 项目管理 (100%)
+
 - ✅ ProjectList - 项目列表
 - ✅ ProjectSetting - 设置主页面
 - ✅ BaseSetting - 基本设置
@@ -110,25 +114,27 @@
 - ✅ Setting - 设置主页面
 
 #### 动态 (100%)
+
 - ✅ News - 动态主页
 - ✅ NewsTimeline - 动态时间线
 - ✅ NewsList - 动态列表
 - ✅ NewsItem - 动态项
 
 #### 其他 (100%)
+
 - ✅ Follows - 关注页
 - ✅ AddProject - 添加项目
 - ✅ DevTools - 开发工具
 
 ### 3. Pinia Stores (5个)
 
-| Store | 说明 |
-|-------|------|
-| user.js | 用户状态 |
-| project.js | 项目状态 |
-| interface.js | 接口状态 |
+| Store           | 说明         |
+| --------------- | ------------ |
+| user.js         | 用户状态     |
+| project.js      | 项目状态     |
+| interface.js    | 接口状态     |
 | interfaceCol.js | 接口集合状态 |
-| group.js | 项目组状态 |
+| group.js        | 项目组状态   |
 
 ---
 
@@ -136,24 +142,24 @@
 
 ### 前端技术栈
 
-| 技术 | 版本 | 说明 |
-|------|------|------|
-| **Vue 3** | 3.4+ | Composition API + `<script setup>` |
-| **VitePlus** | 0.1.19 | 现代化构建工具 |
-| **Naive UI** | 2.34+ | Vue 3 组件库 |
-| **Vue Router** | 4.x | 路由管理 |
-| **Pinia** | 2.x | 状态管理 |
-| **Axios** | 1.6+ | HTTP 客户端 |
-| **vuedraggable** | next | 拖拽排序 |
-| **ace-builds** | latest | 代码编辑器 |
+| 技术             | 版本   | 说明                               |
+| ---------------- | ------ | ---------------------------------- |
+| **Vue 3**        | 3.4+   | Composition API + `<script setup>` |
+| **VitePlus**     | 0.1.19 | 现代化构建工具                     |
+| **Naive UI**     | 2.34+  | Vue 3 组件库                       |
+| **Vue Router**   | 4.x    | 路由管理                           |
+| **Pinia**        | 2.x    | 状态管理                           |
+| **Axios**        | 1.6+   | HTTP 客户端                        |
+| **vuedraggable** | next   | 拖拽排序                           |
+| **ace-builds**   | latest | 代码编辑器                         |
 
 ### 后端技术栈（未变更）
 
-| 技术 | 版本 | 说明 |
-|------|------|------|
+| 技术        | 版本    | 说明     |
+| ----------- | ------- | -------- |
 | **Node.js** | 24.14.0 | 运行环境 |
-| **Koa** | 2.0.0 | Web 框架 |
-| **MongoDB** | 8.2.7 | 数据库 |
+| **Koa**     | 2.0.0   | Web 框架 |
+| **MongoDB** | 8.2.7   | 数据库   |
 
 ---
 
@@ -231,13 +237,13 @@ yapi-plus/
 
 ## 📈 性能提升
 
-| 指标 | React | Vue 3 | 提升 |
-|------|-------|-------|------|
-| **构建时间** | ~60s | ~8s | **7.5x** |
-| **首屏加载** | ~2.5s | ~1.2s | **2x** |
-| **HMR 更新** | ~3s | <0.5s | **6x** |
-| **包大小** | ~800KB | ~450KB | **44%** |
-| **内存占用** | ~250MB | ~150MB | **40%** |
+| 指标         | React  | Vue 3  | 提升     |
+| ------------ | ------ | ------ | -------- |
+| **构建时间** | ~60s   | ~8s    | **7.5x** |
+| **首屏加载** | ~2.5s  | ~1.2s  | **2x**   |
+| **HMR 更新** | ~3s    | <0.5s  | **6x**   |
+| **包大小**   | ~800KB | ~450KB | **44%**  |
+| **内存占用** | ~250MB | ~150MB | **40%**  |
 
 ---
 
@@ -269,15 +275,15 @@ yapi-plus/
 
 ### 已创建的文档
 
-| 文档 | 行数 | 说明 |
-|------|------|------|
-| **README.md** | 250+ | 项目说明（已更新） |
-| **START_GUIDE.md** | 363 | 启动指南 |
-| **ARCHITECTURE.md** | 331 | 架构说明 |
-| **MIGRATION_GUIDE.md** | 716 | 迁移指南 |
-| **VUE3_MIGRATION_STATUS.md** | 400 | 迁移状态 |
-| **MIGRATION_SUMMARY.md** | 321 | 迁移总结 |
-| **MIGRATION_COMPLETE.md** | 本文件 | 完成报告 |
+| 文档                         | 行数   | 说明               |
+| ---------------------------- | ------ | ------------------ |
+| **README.md**                | 250+   | 项目说明（已更新） |
+| **START_GUIDE.md**           | 363    | 启动指南           |
+| **ARCHITECTURE.md**          | 331    | 架构说明           |
+| **MIGRATION_GUIDE.md**       | 716    | 迁移指南           |
+| **VUE3_MIGRATION_STATUS.md** | 400    | 迁移状态           |
+| **MIGRATION_SUMMARY.md**     | 321    | 迁移总结           |
+| **MIGRATION_COMPLETE.md**    | 本文件 | 完成报告           |
 
 **总计**：超过 2400 行文档！
 
@@ -333,6 +339,7 @@ start-dev.bat
 ```
 
 **访问地址**：
+
 - 前端：http://localhost:4000
 - 后端：http://127.0.0.1:3000
 
@@ -350,6 +357,7 @@ start.bat
 ```
 
 **访问地址**：
+
 - 统一服务：http://127.0.0.1:3000
 
 ### 初始账号
@@ -438,17 +446,17 @@ start.bat
 
 ## 📊 对比总结
 
-| 特性 | React 版本 | Vue 3 版本 |
-|------|-----------|-----------|
-| **框架** | React 16 | Vue 3.4+ |
-| **构建工具** | Webpack | VitePlus |
-| **UI 库** | Ant Design | Naive UI |
-| **状态管理** | Redux | Pinia |
-| **组件语法** | Class/JSX | `<script setup>` |
-| **构建时间** | ~60s | ~8s |
-| **包大小** | ~800KB | ~450KB |
-| **HMR** | ~3s | <0.5s |
-| **内存** | ~250MB | ~150MB |
+| 特性         | React 版本 | Vue 3 版本       |
+| ------------ | ---------- | ---------------- |
+| **框架**     | React 16   | Vue 3.4+         |
+| **构建工具** | Webpack    | VitePlus         |
+| **UI 库**    | Ant Design | Naive UI         |
+| **状态管理** | Redux      | Pinia            |
+| **组件语法** | Class/JSX  | `<script setup>` |
+| **构建时间** | ~60s       | ~8s              |
+| **包大小**   | ~800KB     | ~450KB           |
+| **HMR**      | ~3s        | <0.5s            |
+| **内存**     | ~250MB     | ~150MB           |
 
 ---
 
@@ -491,7 +499,7 @@ start.bat
 **迁移完成日期**：2026-04-27  
 **总耗时**：约 2 天  
 **迁移文件数**：80+  
-**代码行数**：10000+  
+**代码行数**：10000+
 
 ---
 
