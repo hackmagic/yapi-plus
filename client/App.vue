@@ -21,7 +21,7 @@ import Footer from "./components/Footer/Footer.vue";
 
 const route = useRoute();
 
-const authPages = ["/login", "/reg", "/setup"];
+const authPages = ["/", "/login", "/reg", "/setup"];
 const isAuthPage = computed(() => authPages.includes(route.path));
 
 // Naive UI 主题配置
