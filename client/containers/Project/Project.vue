@@ -44,6 +44,8 @@ import {
   SpeedometerOutline,
   DocumentTextOutline,
   LayersOutline,
+  PulseOutline,
+  ServerOutline,
 } from "@vicons/ionicons5";
 import { useProjectStore } from "@/store/project";
 
@@ -54,7 +56,15 @@ const projectStore = useProjectStore();
 const collapsed = ref(false);
 const projectId = computed(() => route.params.id);
 const projectInfo = computed(() => projectStore.currentProject);
-const activeMenu = computed(() => route.meta?.menuKey || "interface");
+const activeMenu = computed(() => {
+  const metaKey = route.meta?.menuKey;
+  if (metaKey) return metaKey;
+  const path = route.path;
+  if (path.endsWith("/activity")) return "activity";
+  if (path.endsWith("/data")) return "data";
+  if (path.includes("/setting")) return "setting";
+  return "interface";
+});
 
 const renderIcon = (icon) => {
   return () => h(NIcon, null, { default: () => h(icon) });
@@ -70,6 +80,16 @@ const menuOptions = computed(() => [
     label: "测试",
     key: "col",
     icon: renderIcon(LayersOutline),
+  },
+  {
+    label: "动态",
+    key: "activity",
+    icon: renderIcon(PulseOutline),
+  },
+  {
+    label: "数据管理",
+    key: "data",
+    icon: renderIcon(ServerOutline),
   },
   {
     label: "设置",
@@ -120,6 +140,10 @@ const handleMenuSelect = (key) => {
     router.push(`/project/${projectId.value}/interface`);
   } else if (key === "col") {
     router.push(`/project/${projectId.value}/interface/col`);
+  } else if (key === "activity") {
+    router.push(`/project/${projectId.value}/activity`);
+  } else if (key === "data") {
+    router.push(`/project/${projectId.value}/data`);
   } else if (key.startsWith("setting")) {
     router.push(`/project/${projectId.value}/${key}`);
   }

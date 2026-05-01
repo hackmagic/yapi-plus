@@ -16,6 +16,22 @@
         <n-space>
           <Search />
           <template v-if="userStore.loginState">
+            <n-tooltip trigger="hover">
+              <template #trigger>
+                <n-button text @click="router.push('/follows')">
+                  <n-icon :size="20"><StarOutline /></n-icon>
+                </n-button>
+              </template>
+              我的关注
+            </n-tooltip>
+            <n-tooltip trigger="hover">
+              <template #trigger>
+                <n-button text @click="router.push('/add-project')">
+                  <n-icon :size="20"><AddOutline /></n-icon>
+                </n-button>
+              </template>
+              新建项目
+            </n-tooltip>
             <n-dropdown :options="userMenuOptions" @select="handleUserMenu">
               <n-button text>
                 <n-avatar :size="28" :style="{ backgroundColor: '#2080f0' }">
@@ -39,6 +55,8 @@ import { useRouter } from "vue-router";
 import { useUserStore } from "../../store/user";
 import LogoSVG from "../../components/LogoSVG/LogoSVG.vue";
 import Search from "./Search/Search.vue";
+import { NIcon } from "naive-ui";
+import { StarOutline, AddOutline } from "@vicons/ionicons5";
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -68,7 +86,7 @@ const userMenuOptions = [
 
 const handleUserMenu = (key) => {
   if (key === "profile") {
-    router.push("/user");
+    router.push("/user/profile");
   } else if (key === "logout") {
     userStore.logout();
     router.push("/login");

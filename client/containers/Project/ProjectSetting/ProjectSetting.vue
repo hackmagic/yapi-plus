@@ -11,8 +11,14 @@
         <n-tab-pane name="env" tab="环境设置">
           <EnvSetting :project-id="projectId" />
         </n-tab-pane>
+        <n-tab-pane name="request" tab="请求配置">
+          <RequestSetting :project-id="projectId" />
+        </n-tab-pane>
         <n-tab-pane name="token" tab="Token管理">
           <TokenSetting :project-id="projectId" />
+        </n-tab-pane>
+        <n-tab-pane name="mock" tab="全局Mock脚本">
+          <MockSetting :project-id="projectId" />
         </n-tab-pane>
         <n-tab-pane name="data" tab="数据管理">
           <DataSetting :project-id="projectId" />
@@ -28,7 +34,9 @@ import { useRoute } from "vue-router";
 import BaseSetting from "./BaseSetting.vue";
 import MemberSetting from "./MemberSetting.vue";
 import EnvSetting from "./EnvSetting.vue";
+import RequestSetting from "../Setting/ProjectRequest/ProjectRequest.vue";
 import TokenSetting from "./TokenSetting.vue";
+import MockSetting from "../Setting/ProjectMock/ProjectMock.vue";
 import DataSetting from "./DataSetting.vue";
 
 const route = useRoute();
