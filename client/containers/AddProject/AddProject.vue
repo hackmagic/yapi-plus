@@ -12,28 +12,54 @@
           <n-input v-model:value="formData.name" placeholder="请输入项目名称" />
         </n-form-item>
 
-        <n-form-item label="项目描述" path="desc">
-          <n-input
-            v-model:value="formData.desc"
-            type="textarea"
-            :rows="4"
-            placeholder="请输入项目描述"
-          />
-        </n-form-item>
-
         <n-form-item label="所属项目组" path="group_id">
           <n-select
             v-model:value="formData.group_id"
             :options="groupOptions"
             placeholder="请选择项目组"
+            :render-label="renderGroupLabel"
+          />
+        </n-form-item>
+
+        <n-form-item label="基本路径" path="basepath">
+          <n-input
+            v-model:value="formData.basepath"
+            placeholder="/api, /v1 等（可选）"
+            @blur="handlePathFormat"
+          >
+            <template #suffix>
+              <n-tooltip trigger="hover">
+                <template #trigger>
+                  <n-icon><HelpCircleOutline /></n-icon>
+                </template>
+                接口基本路径，为空是根路径
+              </n-tooltip>
+            </template>
+          </n-input>
+        </n-form-item>
+
+        <n-form-item label="项目描述" path="desc">
+          <n-input
+            v-model:value="formData.desc"
+            type="textarea"
+            :rows="4"
+            placeholder="请输入项目描述（可选，不超过144字）"
+            :maxlength="144"
+            show-count
           />
         </n-form-item>
 
         <n-form-item label="项目权限">
-          <n-radio-group v-model:value="formData.permission">
-            <n-space>
-              <n-radio value="private">私有</n-radio>
-              <n-radio value="public">公开</n-radio>
+          <n-radio-group v-model:value="formData.project_type">
+            <n-space vertical>
+              <n-radio value="private">
+                <span>私有</span>
+                <span class="radio-desc">只有组长和项目开发者可以索引并查看项目信息</span>
+              </n-radio>
+              <!-- <n-radio value="public">
+                <span>公开</span>
+                <span class="radio-desc">任何人都可以索引并查看项目信息</span>
+              </n-radio> -->
             </n-space>
           </n-radio-group>
         </n-form-item>
@@ -58,6 +84,7 @@ import { ref, reactive, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useMessage } from "naive-ui";
 import axios from "axios";
+import { HelpCircleOutline } from "@vicons/ionicons5";
 
 const router = useRouter();
 const message = useMessage();
@@ -70,27 +97,68 @@ const formData = reactive({
   name: "",
   desc: "",
   group_id: null,
-  permission: "private",
+  basepath: "",
+  project_type: "private",
   mock_url: "/mock",
 });
 
 const rules = {
-  name: { required: true, message: "请输入项目名称", trigger: "blur" },
-  group_id: { required: true, message: "请选择项目组", trigger: "change" },
+  name: { required: true, message: "请输入项目名称", trigger: ["blur", "input"] },
+  group_id: {
+    required: true,
+    message: "请选择项目组",
+    trigger: ["change"],
+  },
 };
 
+// 格式化路径
+const handlePathFormat = () => {
+  if (formData.basepath) {
+    let path = formData.basepath.trim();
+    // 确保路径以 / 开头
+    if (path && !path.startsWith("/")) {
+      path = "/" + path;
+    }
+    // 移除末尾的 /
+    if (path.endsWith("/") && path.length > 1) {
+      path = path.slice(0, -1);
+    }
+    formData.basepath = path;
+  }
+};
+
+// 自定义分组标签渲染
+const renderGroupLabel = (option) => {
+  return option.label;
+};
+
+// 获取分组列表
 const fetchGroups = async () => {
   try {
     const res = await axios.get("/api/group/list");
     if (res.data.errcode === 0) {
-      groupOptions.value = res.data.data.list.map((group) => ({
-        label: group.group_name,
-        value: group._id,
-      }));
+      groupOptions.value = res.data.data.list
+        .filter((group) => group.role === "dev" || group.role === "owner" || group.role === "admin")
+        .map((group) => ({
+          label: group.group_name,
+          value: group._id,
+          disabled: !(group.role === "dev" || group.role === "owner" || group.role === "admin"),
+        }));
+
+      // 默认选择第一个可用的分组
+      if (groupOptions.value.length > 0 && !formData.group_id) {
+        formData.group_id = groupOptions.value[0].value;
+      }
     }
   } catch (error) {
     message.error("获取项目组列表失败");
   }
+};
+
+// 获取分组名称
+const getGroupName = (groupId) => {
+  const group = groupOptions.value.find((g) => g.value === groupId);
+  return group ? group.label : "";
 };
 
 const handleSubmit = async () => {
@@ -99,10 +167,25 @@ const handleSubmit = async () => {
 
   loading.value = true;
   try {
-    const res = await axios.post("/api/project/add", formData);
+    // 格式化路径
+    handlePathFormat();
+
+    const postData = {
+      name: formData.name,
+      desc: formData.desc,
+      group_id: formData.group_id,
+      group_name: getGroupName(formData.group_id),
+      basepath: formData.basepath,
+      project_type: formData.project_type,
+      mock_url: formData.mock_url,
+      icon: "doc",
+      color: getRandomColor(),
+    };
+
+    const res = await axios.post("/api/project/add", postData);
     if (res.data.errcode === 0) {
-      message.success("创建成功");
-      router.push(`/project/${res.data.data._id}`);
+      message.success("创建成功!");
+      router.push(`/project/${res.data.data._id}/interface/api`);
     } else {
       message.error(res.data.errmsg || "创建失败");
     }
@@ -113,15 +196,37 @@ const handleSubmit = async () => {
   }
 };
 
+// 获取随机颜色
+const getRandomColor = () => {
+  const colors = [
+    "#2395f1",
+    "#57cf27",
+    "#ffa407",
+    "#ff561b",
+    "#b341f9",
+    "#18a058",
+    "#d03050",
+    "#2080f0",
+  ];
+  return colors[Math.floor(Math.random() * colors.length)];
+};
+
 onMounted(() => {
   fetchGroups();
 });
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .add-project {
   padding: 24px;
   max-width: 800px;
   margin: 0 auto;
+}
+
+.radio-desc {
+  display: block;
+  font-size: 12px;
+  color: #999;
+  margin-top: 2px;
 }
 </style>

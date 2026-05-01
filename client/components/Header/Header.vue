@@ -2,8 +2,9 @@
   <n-layout-header class="header">
     <div class="header-inner">
       <div class="header-left">
-        <router-link to="/" class="logo-link" title="首页">
+        <router-link to="/group" class="logo-link" title="YAPI Plus">
           <LogoSVG />
+          <span class="logo-text">YAPI</span>
         </router-link>
       </div>
 
@@ -11,7 +12,7 @@
         <Breadcrumb />
       </div>
 
-      <div class="header-right" v-if="userStore.loginState">
+      <div class="header-right" v-if="isLogin">
         <n-space align="center" :size="6">
           <Search />
 
@@ -33,12 +34,26 @@
             新建项目
           </n-tooltip>
 
-          <n-dropdown :options="userMenuOptions" @select="handleUserMenu">
+          <n-tooltip trigger="hover">
+            <template #trigger>
+              <a href="https://hellosean1025.github.io/yapi" target="_blank" class="toolbar-btn">
+                <n-icon :size="18"><HelpCircleOutline /></n-icon>
+              </a>
+            </template>
+            使用文档
+          </n-tooltip>
+
+          <n-dropdown :options="userMenuOptions" @select="handleUserMenu" trigger="click">
             <n-button text class="user-btn">
-              <n-avatar :size="28" round :style="{ backgroundColor: '#2080f0' }">
-                {{ userStore.username?.charAt(0)?.toUpperCase() }}
+              <n-avatar
+                :size="28"
+                round
+                :src="avatarUrl"
+                :style="{ backgroundColor: '#2395f1' }"
+              >
+                {{ username?.charAt(0)?.toUpperCase() }}
               </n-avatar>
-              <span class="user-name">{{ userStore.username }}</span>
+              <span class="user-name">{{ username }}</span>
               <n-icon :size="14"><ChevronDownOutline /></n-icon>
             </n-button>
           </n-dropdown>
@@ -56,7 +71,7 @@
 </template>
 
 <script setup>
-import { h } from "vue";
+import { h, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "../../store/user";
 import LogoSVG from "../../components/LogoSVG/LogoSVG.vue";
@@ -69,26 +84,71 @@ import {
   PersonOutline,
   LogOutOutline,
   ChevronDownOutline,
+  HelpCircleOutline,
+  SettingsOutline,
 } from "@vicons/ionicons5";
 
 const router = useRouter();
 const userStore = useUserStore();
 
+const isLogin = computed(() => userStore.isLogin);
+const username = computed(() => userStore.username);
+const userRole = computed(() => userStore.role);
+const uid = computed(() => userStore.uid);
+
+const avatarUrl = computed(() => {
+  if (uid.value) {
+    return `/api/user/avatar?uid=${uid.value}`;
+  }
+  return "";
+});
+
 const renderIcon = (icon) => {
   return () => h(NIcon, null, { default: () => h(icon) });
 };
 
-const userMenuOptions = [
-  { label: "个人中心", key: "profile", icon: renderIcon(PersonOutline) },
-  { label: "退出登录", key: "logout", icon: renderIcon(LogOutOutline) },
-];
+const userMenuOptions = computed(() => {
+  const options = [
+    { label: "个人中心", key: "profile", icon: renderIcon(PersonOutline) },
+  ];
+
+  // 管理员显示系统设置
+  if (userRole.value === "admin") {
+    options.push(
+      { label: "系统设置", key: "system", icon: renderIcon(SettingsOutline) },
+      { label: "用户管理", key: "userlist", icon: renderIcon(PersonOutline) }
+    );
+  }
+
+  options.push({ type: "divider", key: "d1" });
+  options.push({ label: "退出登录", key: "logout", icon: renderIcon(LogOutOutline) });
+
+  return options;
+});
 
 const handleUserMenu = (key) => {
-  if (key === "profile") {
-    router.push("/user/profile");
-  } else if (key === "logout") {
-    userStore.logout();
+  switch (key) {
+    case "profile":
+      router.push(`/user/profile`);
+      break;
+    case "system":
+      router.push("/system-settings");
+      break;
+    case "userlist":
+      router.push("/user");
+      break;
+    case "logout":
+      handleLogout();
+      break;
+  }
+};
+
+const handleLogout = async () => {
+  try {
+    await userStore.logout();
     router.push("/login");
+  } catch (e) {
+    console.error("退出失败", e);
   }
 };
 </script>

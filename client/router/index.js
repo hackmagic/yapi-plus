@@ -89,6 +89,11 @@ const routes = [
     component: () => import("../containers/AddProject/AddProject.vue"),
   },
   {
+    path: "/add-group",
+    name: "AddGroup",
+    component: () => import("../containers/AddGroup/AddGroup.vue"),
+  },
+  {
     path: "/user",
     name: "UserList",
     component: () => import("../containers/User/UserList/UserList.vue"),
