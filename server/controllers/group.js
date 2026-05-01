@@ -133,14 +133,15 @@ class groupController extends baseController {
     // }
 
     let owners = [];
+    const ownerUids = params.owner_uids || [];
 
-    if (params.owner_uids.length === 0) {
-      params.owner_uids.push(this.getUid());
+    if (ownerUids.length === 0) {
+      ownerUids.push(this.getUid());
     }
 
-    if (params.owner_uids) {
-      for (let i = 0, len = params.owner_uids.length; i < len; i++) {
-        let id = params.owner_uids[i];
+    if (ownerUids) {
+      for (let i = 0, len = ownerUids.length; i < len; i++) {
+        let id = ownerUids[i];
         let groupUserdata = await this.getUserdata(id, "owner");
         if (groupUserdata) {
           owners.push(groupUserdata);

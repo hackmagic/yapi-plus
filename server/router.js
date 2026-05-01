@@ -71,44 +71,14 @@ let routerConfig = {
       method: "get",
     },
 
-    {
+{
       action: "list",
       path: "list",
       method: "get",
     },
     {
-      action: "add",
-      path: "add",
-      method: "post",
-    },
-    {
-      action: "up",
-      path: "up",
-      method: "post",
-    },
-    {
-      action: "del",
-      path: "del",
-      method: "post",
-    },
-    {
-      action: "addMember",
-      path: "add_member",
-      method: "post",
-    },
-    {
-      action: "changeMemberRole",
-      path: "change_member_role",
-      method: "post",
-    },
-    {
-      action: "delMember",
-      path: "del_member",
-      method: "post",
-    },
-    {
-      action: "getMemberList",
-      path: "get_member_list",
+      action: "all",
+      path: "all",
       method: "get",
     },
     {

@@ -43,7 +43,7 @@ export const useProjectStore = defineStore("project", {
 
     async fetchAllProjects() {
       try {
-        const res = await http.get("/api/project/list");
+        const res = await http.get("/api/project/all");
         const data = unwrapResponse(res, "获取所有项目失败");
         this.projectList = data;
         return data;

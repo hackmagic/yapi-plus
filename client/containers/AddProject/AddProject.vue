@@ -76,7 +76,13 @@ const formData = reactive({
 
 const rules = {
   name: { required: true, message: "请输入项目名称", trigger: "blur" },
-  group_id: { required: true, message: "请选择项目组", trigger: "change" },
+  group_id: {
+    validator: (rule, value) => {
+      return value !== null && value !== undefined && value !== "";
+    },
+    message: "请选择项目组",
+    trigger: "change",
+  },
 };
 
 const fetchGroups = async () => {
@@ -93,13 +99,29 @@ const fetchGroups = async () => {
   }
 };
 
+// 获取group_name
+const getGroupName = (groupId) => {
+  const group = groupOptions.value.find((g) => g.value === groupId);
+  return group ? group.label : "";
+};
+
 const handleSubmit = async () => {
   const valid = await formRef.value?.validate();
   if (!valid) return;
 
   loading.value = true;
   try {
-    const res = await axios.post("/api/project/add", formData);
+    // 转换参数以匹配后端期望
+    const postData = {
+      name: formData.name,
+      desc: formData.desc,
+      group_id: formData.group_id,
+      group_name: getGroupName(formData.group_id),
+      basepath: "",
+      project_type: formData.permission,
+      mock_url: formData.mock_url,
+    };
+    const res = await axios.post("/api/project/add", postData);
     if (res.data.errcode === 0) {
       message.success("创建成功");
       router.push(`/project/${res.data.data._id}`);
