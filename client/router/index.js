@@ -217,6 +217,11 @@ const routes = [
     name: "ProjectTag",
     component: () => import("../containers/Project/Setting/ProjectMessage/ProjectTag.vue"),
   },
+  {
+    path: "/devtools",
+    name: "DevTools",
+    component: () => import("../containers/DevTools/DevTools.vue"),
+  },
 ];
 
 const router = createRouter({
