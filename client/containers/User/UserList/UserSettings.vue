@@ -11,11 +11,11 @@
             label-width="100"
           >
             <n-form-item label="用户名" path="username">
-              <n-input v-model:value="formData.username" />
+              <n-input v-model:value="formData.username" name="username" />
             </n-form-item>
 
             <n-form-item label="邮箱" path="email">
-              <n-input v-model:value="formData.email" />
+              <n-input v-model:value="formData.email" name="email" />
             </n-form-item>
 
             <n-form-item>

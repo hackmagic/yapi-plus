@@ -59,7 +59,7 @@ test.describe('Real User Workflow Tests', () => {
     console.log('接口页面包含项目内容:', content.includes('接口') || content.includes('interface'));
     
     // 3. 尝试添加接口
-    const addBtn = page.locator('button:has-text("添加接口"), a:has-text("添加")').first();
+    const addBtn = page.locator('button:has-text("添加接口")');
     if (await addBtn.isVisible()) {
       await addBtn.click();
       await page.waitForTimeout(1000);
@@ -75,6 +75,10 @@ test.describe('Real User Workflow Tests', () => {
       }
     } else {
       console.log('添加接口按钮不可见');
+      // 打印页面内容以便调试
+      const pageContent = await page.content();
+      console.log('页面包含"接口":', pageContent.includes('接口'));
+      console.log('页面包含"添加":', pageContent.includes('添加'));
     }
   });
 
