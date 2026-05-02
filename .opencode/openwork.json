@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "workspace": {
+    "name": "yapi-plus",
+    "createdAt": 1777661936104,
+    "preset": "starter"
+  },
+  "authorizedRoots": [
+    "K:\\workspaces\\github\\yapi-plus"
+  ],
+  "reload": null
+}
