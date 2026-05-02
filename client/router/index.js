@@ -1,4 +1,4 @@
-﻿import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 import { useUserStore } from "../store/user";
 
 const routes = [
@@ -26,6 +26,7 @@ const routes = [
     path: "/group/:id",
     name: "Group",
     component: () => import("../containers/Group/Group.vue"),
+    meta: { requiresAuth: true },
     children: [
       {
         path: "",
@@ -57,6 +58,7 @@ const routes = [
     path: "/project/:id",
     name: "Project",
     component: () => import("../containers/Project/Project.vue"),
+    meta: { requiresAuth: true },
     children: [
       {
         path: "interface",
@@ -87,11 +89,13 @@ const routes = [
     path: "/add-project",
     name: "AddProject",
     component: () => import("../containers/AddProject/AddProject.vue"),
+    meta: { requiresAuth: true },
   },
   {
     path: "/add-group",
     name: "AddGroup",
     component: () => import("../containers/AddGroup/AddGroup.vue"),
+    meta: { requiresAuth: true },
   },
   {
     path: "/user",
@@ -109,11 +113,13 @@ const routes = [
     path: "/user/profile",
     name: "UserProfile",
     component: () => import("../containers/User/UserList/UserSettings.vue"),
+    meta: { requiresAuth: true },
   },
   {
     path: "/follows",
     name: "Follows",
     component: () => import("../containers/Follows/Follows.vue"),
+    meta: { requiresAuth: true },
   },
   {
     path: "/system-settings",
@@ -131,21 +137,25 @@ const routes = [
     path: "/search",
     name: "Search",
     component: () => import("../containers/Search/Search.vue"),
+    meta: { requiresAuth: true },
   },
   {
     path: "/news",
     name: "News",
     component: () => import("../containers/News/NewsTimeline/NewsTimeline.vue"),
+    meta: { requiresAuth: true },
   },
   {
     path: "/news/list",
     name: "NewsList",
     component: () => import("../containers/News/NewsList/NewsList.vue"),
+    meta: { requiresAuth: true },
   },
   {
     path: "/project/:projectId/interface/col/:colId",
     name: "InterfaceColContent",
     component: () => import("../containers/Project/Interface/Interface.vue"),
+    meta: { requiresAuth: true },
     children: [
       {
         path: "",
@@ -174,6 +184,7 @@ const routes = [
     path: "/project/:projectId/interface/case/:caseId",
     name: "InterfaceCaseContent",
     component: () => import("../containers/Project/Interface/Interface.vue"),
+    meta: { requiresAuth: true },
     children: [
       {
         path: "",
@@ -190,6 +201,7 @@ const routes = [
     path: "/project/:id/interface/api/:actionId",
     name: "InterfaceWithId",
     component: () => import("../containers/Project/Interface/Interface.vue"),
+    meta: { requiresAuth: true },
     children: [
       {
         path: "",
@@ -206,21 +218,25 @@ const routes = [
     path: "/project/:projectId/setting/mock",
     name: "ProjectMock",
     component: () => import("../containers/Project/Setting/ProjectMock/ProjectMock.vue"),
+    meta: { requiresAuth: true },
   },
   {
     path: "/project/:projectId/setting/request",
     name: "ProjectRequest",
     component: () => import("../containers/Project/Setting/ProjectRequest/ProjectRequest.vue"),
+    meta: { requiresAuth: true },
   },
   {
     path: "/project/:projectId/setting/tag",
     name: "ProjectTag",
     component: () => import("../containers/Project/Setting/ProjectMessage/ProjectTag.vue"),
+    meta: { requiresAuth: true },
   },
   {
     path: "/devtools",
     name: "DevTools",
     component: () => import("../containers/DevTools/DevTools.vue"),
+    meta: { requiresAuth: true },
   },
 ];
 
@@ -229,41 +245,57 @@ const router = createRouter({
   routes,
 });
 
-// 路由守卫优化：缓存用户信息，401/登出/定时失效
+// 路由守卫：检查认证状态
 let lastUserInfo = null;
 let lastUserFetchedAt = 0;
 const USER_CACHE_MAX_AGE = 5 * 60 * 1000; // 5分钟
 
 router.beforeEach(async (to, from, next) => {
-  if (to.meta.requiresAdmin) {
-    const isLoginPage = to.path === "/login";
-    if (!isLoginPage) {
-      try {
-        const userStore = useUserStore();
-        // 判断缓存是否可用
-        const now = Date.now();
-        let userInfo = null;
-        if (lastUserInfo && now - lastUserFetchedAt < USER_CACHE_MAX_AGE) {
-          userInfo = lastUserInfo;
-        } else {
-          userInfo = await userStore.fetchUserInfo({ maxAgeMs: USER_CACHE_MAX_AGE });
-          lastUserInfo = userInfo;
-          lastUserFetchedAt = now;
-        }
-        if (!userInfo || userInfo.role !== "admin") {
-          next("/login");
-          return;
-        }
-      } catch (e) {
-        // 401/失效/异常，清理缓存
-        lastUserInfo = null;
-        lastUserFetchedAt = 0;
+  const isLoginPage = to.path === "/login" || to.path === "/reg" || to.path === "/setup";
+  
+  // 公开页面直接放行
+  if (isLoginPage) {
+    next();
+    return;
+  }
+
+  try {
+    const userStore = useUserStore();
+    
+    // 判断缓存是否可用
+    const now = Date.now();
+    let userInfo = null;
+    
+    if (lastUserInfo && now - lastUserFetchedAt < USER_CACHE_MAX_AGE) {
+      userInfo = lastUserInfo;
+    } else {
+      userInfo = await userStore.fetchUserInfo({ maxAgeMs: USER_CACHE_MAX_AGE });
+      lastUserInfo = userInfo;
+      lastUserFetchedAt = now;
+    }
+    
+    // 如果需要管理员权限
+    if (to.meta.requiresAdmin) {
+      if (!userInfo || userInfo.role !== "admin") {
+        next("/login");
+        return;
+      }
+    } 
+    // 如果只需要登录
+    else if (to.meta.requiresAuth) {
+      if (!userInfo) {
         next("/login");
         return;
       }
     }
+    
+    next();
+  } catch (e) {
+    // 401/失效/异常，清理缓存并重定向到登录页
+    lastUserInfo = null;
+    lastUserFetchedAt = 0;
+    next("/login");
   }
-  next();
 });
 
 export default router;

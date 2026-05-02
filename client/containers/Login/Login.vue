@@ -127,8 +127,8 @@ const handleLogin = async () => {
     if (res.data.errcode === 0) {
       message.success("登录成功!");
       userStore.setUser(res.data.data);
-      // 登录成功后跳转到 /group 而不是 /
-      router.push("/group");
+      // 登录成功后跳转到首页
+      router.push("/");
     } else {
       message.error(res.data.errmsg || "登录失败");
     }

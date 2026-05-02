@@ -1,4 +1,4 @@
-﻿import { defineStore } from "pinia";
+import { defineStore } from "pinia";
 import http, { unwrapResponse } from "../services/http";
 
 export const useUserStore = defineStore("user", {
@@ -57,7 +57,8 @@ export const useUserStore = defineStore("user", {
 
       this.userFetchPromise = (async () => {
         try {
-          const res = await http.get("/api/user/current");
+          // 使用 /api/user/status 接口获取当前用户信息
+          const res = await http.get("/api/user/status");
           const data = unwrapResponse(res, "获取用户信息失败");
           this.setUser(data);
           return data;

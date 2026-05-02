@@ -13,16 +13,27 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { NConfigProvider, NMessageProvider, NDialogProvider } from "naive-ui";
 import Header from "./components/Header/Header.vue";
 import Footer from "./components/Footer/Footer.vue";
+import { useUserStore } from "./store/user";
 
 const route = useRoute();
+const userStore = useUserStore();
 
 const authPages = ["/", "/login", "/reg", "/setup"];
 const isAuthPage = computed(() => authPages.includes(route.path));
+
+// 应用启动时获取用户信息
+onMounted(async () => {
+  try {
+    await userStore.fetchUserInfo({ force: true });
+  } catch (e) {
+    console.error("获取用户信息失败", e);
+  }
+});
 
 // Naive UI 主题配置
 const themeOverrides = {
