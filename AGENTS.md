@@ -57,6 +57,13 @@ npm run dev
 |          | `npm run lint:client`         | ESLint 仅 `client/**`      |
 |          | `npm run fmt` / `vp fmt`      | Prettier 格式化            |
 | **测试** | `npm test`                    | 运行所有 Ava 测试          |
+|          | `npm run test:e2e`            | Playwright E2E 测试        |
+|          | `npm run test:ui`             | UI 测试                   |
+|          | `npm run test:functional`     | 功能测试                  |
+|          | `npm run test:ai`             | AI Agent 自动化测试       |
+|          | `npm run test:perf`           | 性能测试                  |
+|          | `npm run test:e2e:headed`     | 显示浏览器运行            |
+|          | `npm run test:e2e:report`    | 生成 HTML 测试报告        |
 | **打包** | `npm run package`             | 生成平台特定 zip/tar.gz    |
 | **发布** | `npm run release`             | git tag → GitHub Actions   |
 

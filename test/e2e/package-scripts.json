@@ -1,0 +1,12 @@
+{
+  "e2e": "playwright test --config=test/e2e/config.js",
+  "e2e:ui": "playwright test --config=test/e2e/config.js --ui",
+  "e2e:headed": "playwright test --config=test/e2e/config.js --headed",
+  "e2e:debug": "playwright test --config=test/e2e/config.js --debug",
+  "e2e:report": "playwright show-report test-results/html-report",
+  "test:ui": "playwright test test/e2e/tests/ui-tests.test.js --config=test/e2e/config.js",
+  "test:functional": "playwright test test/e2e/tests/functional-tests.test.js --config=test/e2e/config.js",
+  "test:ai-agent": "playwright test test/e2e/tests/ai-agent-tests.test.js --config=test/e2e/config.js",
+  "test:performance": "playwright test test/e2e/tests/performance-tests.test.js --config=test/e2e/config.js",
+  "test:all": "playwright test --config=test/e2e/config.js"
+}
