@@ -18,7 +18,7 @@ async function tryLogin(page) {
   
   if (await emailInput.isVisible()) {
     await emailInput.fill('admin@admin.com');
-    await passwordInput.fill('ymfe.org');
+    await passwordInput.fill('12345678');
     await loginButton.click();
     await page.waitForTimeout(3000);
     
@@ -67,7 +67,7 @@ test.describe('Authentication Flow Tests', () => {
   test('should test login with valid credentials', async ({ page }) => {
     await page.goto('http://localhost:4000/login');
     await page.fill('input[placeholder="请输入邮箱或用户名"]', 'admin@admin.com');
-    await page.fill('input[placeholder="请输入密码"]', 'ymfe.org');
+    await page.fill('input[placeholder="请输入密码"]', '12345678');
     await page.click('button:has-text("登录")');
     await page.waitForTimeout(3000);
     
@@ -171,7 +171,7 @@ test.describe('Authentication API Tests', () => {
     const response = await page.request.post('http://localhost:4000/api/user/login', {
       data: {
         email: 'admin@admin.com',
-        password: 'ymfe.org'
+        password: '12345678'
       }
     });
     

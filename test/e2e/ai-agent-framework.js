@@ -18,7 +18,7 @@ class AIAgentTestFramework {
     };
   }
 
-  async login(email = 'admin@admin.com', password = 'ymfe.org') {
+  async login(email = 'admin@admin.com', password = '12345678') {
     await this.page.goto(`${this.testConfig.baseURL}/login`);
     await this.page.fill('input[placeholder="请输入邮箱或用户名"]', email);
     await this.page.fill('input[placeholder="请输入密码"]', password);
@@ -306,7 +306,7 @@ const AI_TEST_CASES = {
     loginWithValidCredentials: {
       name: 'Login with valid credentials',
       steps: [
-        { action: 'login', value: { email: 'admin@admin.com', password: 'ymfe.org' } },
+        { action: 'login', value: { email: 'admin@admin.com', password: '12345678' } },
         { action: 'wait', value: 3000 },
       ],
       assertions: [
@@ -333,7 +333,7 @@ const AI_TEST_CASES = {
     viewProjectList: {
       name: 'View project list after login',
       steps: [
-        { action: 'login', value: { email: 'admin@admin.com', password: 'ymfe.org' } },
+        { action: 'login', value: { email: 'admin@admin.com', password: '12345678' } },
         { action: 'navigate', value: '/group/1/project' },
         { action: 'wait', value: 2000 },
       ],
@@ -345,7 +345,7 @@ const AI_TEST_CASES = {
     createProject: {
       name: 'Create a new project',
       steps: [
-        { action: 'login', value: { email: 'admin@admin.com', password: 'ymfe.org' } },
+        { action: 'login', value: { email: 'admin@admin.com', password: '12345678' } },
         { action: 'navigate', value: '/add-project' },
         { action: 'wait', value: 2000 },
         { action: 'fill', selector: 'input[placeholder*="项目名称"]', value: 'AI Test Project' },
@@ -362,7 +362,7 @@ const AI_TEST_CASES = {
     searchInterface: {
       name: 'Search for an interface',
       steps: [
-        { action: 'login', value: { email: 'admin@admin.com', password: 'ymfe.org' } },
+        { action: 'login', value: { email: 'admin@admin.com', password: '12345678' } },
         { action: 'navigate', value: '/project/1/interface' },
         { action: 'wait', value: 2000 },
         { action: 'fill', selector: 'input[placeholder*="搜索"]', value: 'test' },
@@ -378,7 +378,7 @@ const AI_TEST_CASES = {
     viewAiAgentPage: {
       name: 'Navigate to AI Agent page',
       steps: [
-        { action: 'login', value: { email: 'admin@admin.com', password: 'ymfe.org' } },
+        { action: 'login', value: { email: 'admin@admin.com', password: '12345678' } },
         { action: 'navigate', value: '/ai-agent' },
         { action: 'wait', value: 2000 },
       ],

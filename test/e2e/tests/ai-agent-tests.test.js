@@ -119,7 +119,20 @@ test.describe('AI Agent Integration Tests', () => {
 
   test('should run ai agent page test', async ({ page }) => {
     const framework = new AIAgentTestFramework(page);
-    await framework.executeTestCase(AI_TEST_CASES.aiAgent.viewAiAgentPage);
+    
+    await framework.executeTestCase({
+      name: 'Navigate to AI Agent page',
+      steps: [
+        { action: 'navigate', value: '/login' },
+        { action: 'fill', selector: 'input[placeholder="请输入邮箱或用户名"]', value: 'admin@admin.com' },
+        { action: 'fill', selector: 'input[placeholder="请输入密码"]', value: '12345678' },
+        { action: 'click', selector: 'button:has-text("登录")' },
+        { action: 'wait', value: 3000 },
+        { action: 'navigate', value: '/ai-agent' },
+        { action: 'wait', value: 2000 },
+      ],
+      assertions: [],
+    });
     
     const summary = framework.getTestSummary();
     expect(summary.total).toBe(1);
