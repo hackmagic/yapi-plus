@@ -1,7 +1,7 @@
 /**
  * Test utilities - Base test class with common operations
  */
-const { test as base, expect } = require('@playwright/test');
+const { expect } = require('@playwright/test');
 
 class TestUtils {
   constructor(page) {

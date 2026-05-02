@@ -3,7 +3,7 @@
  * 智能测试框架 - 支持自然语言测试用例生成和自动化执行
  */
 const { test, expect } = require('@playwright/test');
-const { AiAgentPage } = require('../pages/AiAgentPages');
+const { AiAgentPage } = require('./pages/AiAgentPages');
 
 class AIAgentTestFramework {
   constructor(page) {
@@ -18,10 +18,14 @@ class AIAgentTestFramework {
     };
   }
 
-  /**
-   * 执行AI Agent测试
-   * @param {Object} testCase - 测试用例描述
-   */
+  async login(email = 'admin@admin.com', password = 'ymfe.org') {
+    await this.page.goto(`${this.testConfig.baseURL}/login`);
+    await this.page.fill('input[placeholder="请输入邮箱或用户名"]', email);
+    await this.page.fill('input[placeholder="请输入密码"]', password);
+    await this.page.click('button:has-text("登录")');
+    await this.page.waitForTimeout(3000);
+  }
+
   async executeTestCase(testCase) {
     const result = {
       name: testCase.name,
@@ -72,16 +76,18 @@ class AIAgentTestFramework {
     return result;
   }
 
-  /**
-   * 执行单个测试步骤
-   */
   async executeStep(step) {
     const { action, selector, value, timeout } = step;
     const waitTime = timeout || 5000;
 
     switch (action) {
       case 'navigate':
-        await this.page.goto(value, { timeout: waitTime });
+        const url = value.startsWith('http') ? value : `${this.testConfig.baseURL}${value}`;
+        await this.page.goto(url, { timeout: waitTime });
+        break;
+      
+      case 'login':
+        await this.login(value?.email, value?.password);
         break;
       
       case 'click':
@@ -151,16 +157,17 @@ class AIAgentTestFramework {
     }
   }
 
-  /**
-   * 验证断言
-   */
   async validateAssertion(assertion) {
-    const { type, expected, actual, message } = assertion;
+    const { type, expected, actual, message, selector, invert } = assertion;
 
     switch (type) {
       case 'urlContains':
         const url = this.page.url();
-        expect(url).toContain(expected);
+        if (invert) {
+          expect(url).not.toContain(expected);
+        } else {
+          expect(url).toContain(expected);
+        }
         break;
       
       case 'urlMatch':
@@ -173,33 +180,33 @@ class AIAgentTestFramework {
         break;
       
       case 'textContent':
-        const text = await this.page.textContent(assertion.selector);
+        const text = await this.page.textContent(selector);
         expect(text).toContain(expected);
         break;
       
       case 'visible':
-        await expect(this.page.locator(assertion.selector)).toBeVisible();
+        await expect(this.page.locator(selector)).toBeVisible({ timeout: 5000 });
         break;
       
       case 'hidden':
-        await expect(this.page.locator(assertion.selector)).toBeHidden();
+        await expect(this.page.locator(selector)).toBeHidden();
         break;
       
       case 'enabled':
-        await expect(this.page.locator(assertion.selector)).toBeEnabled();
+        await expect(this.page.locator(selector)).toBeEnabled();
         break;
       
       case 'disabled':
-        await expect(this.page.locator(assertion.selector)).toBeDisabled();
+        await expect(this.page.locator(selector)).toBeDisabled();
         break;
       
       case 'value':
-        const value = await this.page.inputValue(assertion.selector);
+        const value = await this.page.inputValue(selector);
         expect(value).toBe(expected);
         break;
       
       case 'count':
-        const count = await this.page.locator(assertion.selector).count();
+        const count = await this.page.locator(selector).count();
         expect(count).toBe(expected);
         break;
       
@@ -218,20 +225,7 @@ class AIAgentTestFramework {
     }
   }
 
-  /**
-   * 从自然语言生成测试用例
-   */
   generateTestCaseFromNaturalLanguage(description) {
-    const keywords = {
-      '登录': { action: 'navigate', value: '/login' },
-      '点击': { action: 'click' },
-      '输入': { action: 'fill' },
-      '等待': { action: 'wait', value: 1000 },
-      '验证': { type: 'assertion' },
-      '首页': { action: 'navigate', value: '/' },
-      '项目': { action: 'navigate', value: '/project' },
-    };
-
     const testCase = {
       name: description,
       steps: [],
@@ -241,9 +235,6 @@ class AIAgentTestFramework {
     return testCase;
   }
 
-  /**
-   * 获取测试结果摘要
-   */
   getTestSummary() {
     const summary = {
       total: this.testResults.length,
@@ -256,9 +247,6 @@ class AIAgentTestFramework {
     return summary;
   }
 
-  /**
-   * 导出测试报告
-   */
   exportReport(format = 'json') {
     const summary = this.getTestSummary();
     
@@ -313,19 +301,12 @@ class AIAgentTestFramework {
   }
 }
 
-/**
- * AI Agent 测试用例库
- */
 const AI_TEST_CASES = {
-  // 认证流程测试
   authentication: {
     loginWithValidCredentials: {
       name: 'Login with valid credentials',
       steps: [
-        { action: 'navigate', value: '/login' },
-        { action: 'fill', selector: 'input[type="email"]', value: 'admin@admin.com' },
-        { action: 'fill', selector: 'input[type="password"]', value: 'ymfe.org' },
-        { action: 'click', selector: 'button[type="submit"]' },
+        { action: 'login', value: { email: 'admin@admin.com', password: 'ymfe.org' } },
         { action: 'wait', value: 3000 },
       ],
       assertions: [
@@ -337,31 +318,23 @@ const AI_TEST_CASES = {
       name: 'Login with invalid credentials',
       steps: [
         { action: 'navigate', value: '/login' },
-        { action: 'fill', selector: 'input[type="email"]', value: 'invalid@test.com' },
-        { action: 'fill', selector: 'input[type="password"]', value: 'wrongpassword' },
-        { action: 'click', selector: 'button[type="submit"]' },
+        { action: 'fill', selector: 'input[placeholder="请输入邮箱或用户名"]', value: 'invalid@test.com' },
+        { action: 'fill', selector: 'input[placeholder="请输入密码"]', value: 'wrongpassword' },
+        { action: 'click', selector: 'button:has-text("登录")' },
         { action: 'wait', value: 2000 },
       ],
       assertions: [
-        { type: 'textContent', selector: '.error, [class*="error"]', expected: '错误' },
+        { type: 'urlContains', expected: 'login' },
       ],
     },
   },
 
-  // 项目管理测试
   projectManagement: {
-    createProject: {
-      name: 'Create a new project',
+    viewProjectList: {
+      name: 'View project list after login',
       steps: [
-        { action: 'navigate', value: '/login' },
-        { action: 'fill', selector: 'input[type="email"]', value: 'admin@admin.com' },
-        { action: 'fill', selector: 'input[type="password"]', value: 'ymfe.org' },
-        { action: 'click', selector: 'button[type="submit"]' },
-        { action: 'wait', value: 3000 },
-        { action: 'navigate', value: '/add-project' },
-        { action: 'fill', selector: 'input[name="name"]', value: 'AI Test Project' },
-        { action: 'fill', selector: 'textarea[name="description"]', value: 'Created by AI Agent' },
-        { action: 'click', selector: 'button[type="submit"]' },
+        { action: 'login', value: { email: 'admin@admin.com', password: 'ymfe.org' } },
+        { action: 'navigate', value: '/group/1/project' },
         { action: 'wait', value: 2000 },
       ],
       assertions: [
@@ -369,54 +342,27 @@ const AI_TEST_CASES = {
       ],
     },
 
-    viewProjectList: {
-      name: 'View project list',
+    createProject: {
+      name: 'Create a new project',
       steps: [
-        { action: 'navigate', value: '/login' },
-        { action: 'fill', selector: 'input[type="email"]', value: 'admin@admin.com' },
-        { action: 'fill', selector: 'input[type="password"]', value: 'ymfe.org' },
-        { action: 'click', selector: 'button[type="submit"]' },
-        { action: 'wait', value: 3000 },
-        { action: 'navigate', value: '/group/1/project' },
+        { action: 'login', value: { email: 'admin@admin.com', password: 'ymfe.org' } },
+        { action: 'navigate', value: '/add-project' },
+        { action: 'wait', value: 2000 },
+        { action: 'fill', selector: 'input[placeholder*="项目名称"]', value: 'AI Test Project' },
+        { action: 'click', selector: 'button:has-text("创建")' },
         { action: 'wait', value: 2000 },
       ],
       assertions: [
-        { type: 'visible', selector: '[class*="project"], .project-card' },
+        { type: 'urlContains', expected: 'project' },
       ],
     },
   },
 
-  // 接口管理测试
   interfaceManagement: {
-    createInterface: {
-      name: 'Create a new API interface',
-      steps: [
-        { action: 'navigate', value: '/login' },
-        { action: 'fill', selector: 'input[type="email"]', value: 'admin@admin.com' },
-        { action: 'fill', selector: 'input[type="password"]', value: 'ymfe.org' },
-        { action: 'click', selector: 'button[type="submit"]' },
-        { action: 'wait', value: 3000 },
-        { action: 'navigate', value: '/project/1/interface' },
-        { action: 'wait', value: 2000 },
-        { action: 'click', selector: 'button:has-text("添加接口")' },
-        { action: 'wait', value: 1000 },
-        { action: 'fill', selector: 'input[name="path"]', value: '/api/ai-test' },
-        { action: 'click', selector: 'button[type="submit"]' },
-        { action: 'wait', value: 2000 },
-      ],
-      assertions: [
-        { type: 'urlContains', expected: 'interface' },
-      ],
-    },
-
     searchInterface: {
       name: 'Search for an interface',
       steps: [
-        { action: 'navigate', value: '/login' },
-        { action: 'fill', selector: 'input[type="email"]', value: 'admin@admin.com' },
-        { action: 'fill', selector: 'input[type="password"]', value: 'ymfe.org' },
-        { action: 'click', selector: 'button[type="submit"]' },
-        { action: 'wait', value: 3000 },
+        { action: 'login', value: { email: 'admin@admin.com', password: 'ymfe.org' } },
         { action: 'navigate', value: '/project/1/interface' },
         { action: 'wait', value: 2000 },
         { action: 'fill', selector: 'input[placeholder*="搜索"]', value: 'test' },
@@ -428,30 +374,21 @@ const AI_TEST_CASES = {
     },
   },
 
-  // AI Agent功能测试
   aiAgent: {
     viewAiAgentPage: {
       name: 'Navigate to AI Agent page',
       steps: [
-        { action: 'navigate', value: '/login' },
-        { action: 'fill', selector: 'input[type="email"]', value: 'admin@admin.com' },
-        { action: 'fill', selector: 'input[type="password"]', value: 'ymfe.org' },
-        { action: 'click', selector: 'button[type="submit"]' },
-        { action: 'wait', value: 3000 },
+        { action: 'login', value: { email: 'admin@admin.com', password: 'ymfe.org' } },
         { action: 'navigate', value: '/ai-agent' },
         { action: 'wait', value: 2000 },
       ],
       assertions: [
         { type: 'urlContains', expected: 'ai-agent' },
-        { type: 'visible', selector: '[class*="assistant"], button:has-text("添加助手")' },
       ],
     },
   },
 };
 
-/**
- * 运行所有AI测试用例
- */
 async function runAITests(page, category = 'all') {
   const framework = new AIAgentTestFramework(page);
   

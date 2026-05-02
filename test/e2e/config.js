@@ -8,7 +8,7 @@ module.exports = defineConfig({
   workers: 1,
   reporter: [
     ['list'],
-    ['html', { open: 'never', outputFolder: '../../test-results/html-report' }]
+    ['html', { open: 'never' }]
   ],
   use: {
     baseURL: 'http://localhost:4000',

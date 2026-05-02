@@ -37,7 +37,7 @@ class ProjectListPage {
   }
 
   get addProjectButton() {
-    return this.page.locator('a[href="/add-project"], button:has-text("添加项目"), button:has-text("新建项目")');
+    return this.page.locator('a[href="/add-project"], button:has-text("添加"), button:has-text("新建")').first();
   }
 
   get projectItems() {
@@ -53,7 +53,11 @@ class ProjectListPage {
   }
 
   async navigate(projectId) {
-    await this.utils.navigateTo(projectId ? `/project/${projectId}` : '/group/1/project');
+    if (projectId) {
+      await this.utils.navigateTo(`/project/${projectId}`);
+    } else {
+      await this.utils.navigateTo('/group/1/project');
+    }
   }
 
   async clickAddProject() {
@@ -72,15 +76,15 @@ class AddProjectPage {
   }
 
   get nameInput() {
-    return this.page.locator('input[name="name"], input[placeholder*="项目名称"]');
+    return this.page.locator('input[placeholder*="项目名称"], input[name="name"]').first();
   }
 
   get descriptionInput() {
-    return this.page.locator('textarea[name="description"], textarea[placeholder*="描述"]');
+    return this.page.locator('textarea[placeholder*="描述"], textarea[name="description"]').first();
   }
 
   get groupSelect() {
-    return this.page.locator('select[name="groupId"], .n-select');
+    return this.page.locator('.n-select');
   }
 
   get createButton() {
@@ -150,7 +154,7 @@ class InterfaceListPage {
   }
 
   get addInterfaceButton() {
-    return this.page.locator('button:has-text("添加接口"), a[href*="add"]');
+    return this.page.locator('button:has-text("添加接口"), a[href*="add"]').first();
   }
 
   get interfaceItems() {
@@ -158,7 +162,7 @@ class InterfaceListPage {
   }
 
   get searchInput() {
-    return this.page.locator('input[type="search"], input[placeholder*="搜索接口"]');
+    return this.page.locator('input[placeholder*="搜索"], input[type="search"]').first();
   }
 
   get methodBadge() {
@@ -200,19 +204,19 @@ class InterfaceEditPage {
   }
 
   get methodSelect() {
-    return this.page.locator('select[name="method"], .n-select');
+    return this.page.locator('.n-select');
   }
 
   get pathInput() {
-    return this.page.locator('input[name="path"], input[placeholder*="路径"]');
+    return this.page.locator('input[placeholder*="路径"], input[name="path"]').first();
   }
 
   get descriptionInput() {
-    return this.page.locator('textarea[name="description"], textarea[placeholder*="描述"]');
+    return this.page.locator('textarea[placeholder*="描述"], textarea[name="description"]').first();
   }
 
   get saveButton() {
-    return this.page.locator('button:has-text("保存"), button[type="submit"]');
+    return this.page.locator('button:has-text("保存"), button[type="submit"]').first();
   }
 
   get runButton() {
@@ -295,11 +299,11 @@ class AddGroupPage {
   }
 
   get nameInput() {
-    return this.page.locator('input[name="name"], input[placeholder*="分组名称"]');
+    return this.page.locator('input[placeholder*="分组名称"], input[name="name"]').first();
   }
 
   get descriptionInput() {
-    return this.page.locator('textarea[name="description"], textarea[placeholder*="描述"]');
+    return this.page.locator('textarea[placeholder*="描述"], textarea[name="description"]').first();
   }
 
   get createButton() {
