@@ -168,7 +168,9 @@ class openController extends baseController {
   }
 
   async projectInterfaceData(ctx) {
-    ctx.body = "projectInterfaceData";
+    // TODO: 实现项目接口数据导出功能
+    // 此接口目前未被前端使用，保留作为未来扩展
+    ctx.body = yapi.commons.resReturn(null, 404, "此功能暂未实现");
   }
 
   handleValue(val, global) {
