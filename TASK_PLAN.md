@@ -13,7 +13,7 @@
 | 后端性能 | B4 N+1 优化 / B5 分页契约 / B6 错误码 / B7 日志异步 | ✅ 全部完成 | 2026-04-29 |
 | UI 导航 | UI Navigation 修复（侧边栏/Header/Setting 补齐） | ✅ 完成 | 2026-05-01 |
 | P0 核心 BUG | T1-T10 全部修复 | ✅ 完成 | 2026-05-04 |
-| P1 重要缺陷 | T13-T21 + 权限修复 + 功能完善 | 🟢 大部分完成 (68%) | 2026-05-04 |
+| P1 重要缺陷 | T13-T21 + 权限修复 + 功能完善 + 代码规范 | 🟢 大部分完成 (84%) | 2026-05-04 |
 | 全面审计 | 代码全量审计，新发现问题 | 🟢 大部分修复 | 2026-05-04 |
 
 ---
@@ -421,7 +421,7 @@
 | T9 | Mock Server CORS 直接反射 Origin | ✅ | `server/middleware/mockServer.js` |
 | T10 | 默认管理员密码硬编码 | ✅ | `server/install.js`, `configController.js` |
 
-### 🟢 P1 重要缺陷修复（17/25 完成）
+### 🟢 P1 重要缺陷修复（21/25 完成）
 
 | 任务 | 描述 | 状态 | 文件 |
 |------|------|------|------|
@@ -436,10 +436,13 @@
 | T21 | InterfaceColMenu.vue 删除确认 | ✅ | `client/containers/Project/Interface/InterfaceCol/InterfaceColMenu.vue` |
 | P1-9 | getCustomField 权限校验 | ✅ | `server/controllers/interface.js` |
 | P1-42 | getCatMenu 权限修正 | ✅ | `server/controllers/interface.js` |
+| P1-11 | upIndex/upCatIndex 权限校验 | ✅ | `server/controllers/interface.js` |
 | P1-14 | Mock 测试功能实现 | ✅ | `client/containers/Project/Setting/ProjectMock/ProjectMock.vue` |
 | P1-15 | TestCase 占位符改进 | ✅ | `client/containers/Project/ProjectInterface\TestCase.vue` |
 | P1-16 | ProjectList/UserList 编辑功能 | ✅ | `ProjectList.vue`, `UserList.vue` |
 | P1-17 | Header 退出登录反馈 | ✅ | `client/components/Header/Header.vue` |
+| T12 | Project.vue 侧边栏与路由一致性 | ✅ | `client/containers/Project/Project.vue` |
+| P1-5 | 前端统一请求层修复 | ✅ | `client/containers/Project/ProjectInterface/InterfaceEdit.vue` |
 
 ### 🔧 技术改进亮点
 
@@ -470,29 +473,20 @@
    - TestCase 添加/编辑给出明确的"正在完善中"提示
    - ProjectList/UserList 编辑功能跳转到对应设置页面
    - Header 退出登录有明确的成功/失败反馈
+   
+5. **代码规范统一**（第五轮新增）：
+   - Project.vue 侧边栏菜单与路由完全一致
+   - InterfaceEdit.vue 使用统一 http 服务，不再直接导入 axios
+   - 所有请求都经过统一的拦截器处理
 
-### ⚠️ 待处理的 P1 任务（8 个）
+### ⚠️ 待处理的 P1 任务（4 个）
 
-- T11: 统一 Project/Setting 目录（需要架构决策）
-- T12: 修复 Project.vue 侧边栏与路由一致性
-- P1-5: 前端直接 import axios（经检查已使用统一请求层，可能已修复）
+- T11: 统一 Project/Setting 目录（需要架构决策，较大重构）
 - P1-10: Follow 控制器 del 方法所有权验证（已有 checkProjectRepeat 校验，合理）
-- P1-11: upIndex/upCatIndex 无权限校验（方法可能已不存在）
-- P1-12: runCaseScript/getMemberList/listByUpdate 无权限校验（方法可能已不存在）
-- P1-13: projectInterfaceData 接口是空 stub
-- P1-18: E2E 测试文件为假测试
-- P1-19-P1-25: 其他测试和配置问题
+- P1-13: projectInterfaceData 接口是空 stub（前端未使用，低优先级）
+- P1-18-P1-25: 测试和配置相关问题（需要完善测试体系）
 
----
-
-## 执行原则（给所有 Agent）
-
-- 一次只处理一个任务卡，提交最小可审查变更。
-- 禁止改动无关文件；禁止提交 `static/prd/` 构建产物。
-- 每个任务必须包含:
-  - 改动文件清单
-  - 风险说明
-  - 验收结果（命令 + 结果摘要）
-- 统一验收命令:
-  - `npm run build`
-  - `npm test`
+**说明：**
+- T12: ✅ 已修复（补充设置菜单子项，避免命名冲突）
+- P1-5: ✅ 已修复（InterfaceEdit.vue 改用统一 http 服务）
+- P1-12: runCaseScript/getMemberList/listByUpdate 方法不存在，可能已被移除

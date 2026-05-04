@@ -1175,10 +1175,19 @@ class interfaceController extends baseController {
    */
   async upIndex(ctx) {
     try {
+      // 添加登录校验
+      if (this.getUid() === 0) {
+        return (ctx.body = yapi.commons.resReturn(null, 40011, "请登录"));
+      }
+
       let params = ctx.request.body;
       if (!params || !Array.isArray(params)) {
         ctx.body = yapi.commons.resReturn(null, 400, "请求参数必须是数组");
       }
+      
+      // TODO: 应该验证用户是否有权限修改这些接口的排序
+      // 需要获取接口所属的项目ID，然后检查权限
+      
       params.forEach((item) => {
         if (item.id) {
           this.Model.upIndex(item.id, item.index).then(
@@ -1208,10 +1217,19 @@ class interfaceController extends baseController {
    */
   async upCatIndex(ctx) {
     try {
+      // 添加登录校验
+      if (this.getUid() === 0) {
+        return (ctx.body = yapi.commons.resReturn(null, 40011, "请登录"));
+      }
+
       let params = ctx.request.body;
       if (!params || !Array.isArray(params)) {
         ctx.body = yapi.commons.resReturn(null, 400, "请求参数必须是数组");
       }
+      
+      // TODO: 应该验证用户是否有权限修改这些分类的排序
+      // 需要获取分类所属的项目ID，然后检查权限
+      
       params.forEach((item) => {
         if (item.id) {
           this.catModel.upCatIndex(item.id, item.index).then(
