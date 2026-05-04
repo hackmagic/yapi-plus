@@ -46,6 +46,7 @@ import {
   LayersOutline,
   PulseOutline,
   ServerOutline,
+  KeyOutline,
 } from "@vicons/ionicons5";
 import { useProjectStore } from "@/store/project";
 
@@ -110,6 +111,16 @@ const menuOptions = computed(() => [
         label: "环境配置",
         key: "setting/env",
         icon: renderIcon(SpeedometerOutline),
+      },
+      {
+        label: "Token 管理",
+        key: "setting/token",
+        icon: renderIcon(KeyOutline),
+      },
+      {
+        label: "数据导出",
+        key: "setting/data",
+        icon: renderIcon(ServerOutline),
       },
     ],
   },

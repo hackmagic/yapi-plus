@@ -62,7 +62,7 @@
 import { ref, reactive, computed, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useMessage } from "naive-ui";
-import axios from "axios";
+import http from "@/services/http";
 import ParamTable from "../../../components/ParamTable/ParamTable.vue";
 
 const route = useRoute();
@@ -107,7 +107,7 @@ const handleSave = async () => {
   try {
     const url = isEdit.value ? `/api/interface/up?id=${route.params.id}` : "/api/interface/add";
 
-    const res = await axios.post(url, {
+    const res = await http.post(url, {
       ...formData,
       project_id: route.params.id,
     });
@@ -131,7 +131,7 @@ const fetchInterface = async () => {
   try {
     // 使用 actionId 而非 id，因为路由是 /project/:id/interface/api/:actionId
     const interfaceId = route.params.actionId || route.params.id;
-    const res = await axios.get(`/api/interface/get?id=${interfaceId}`);
+    const res = await http.get(`/api/interface/get?id=${interfaceId}`);
     if (res.data.errcode === 0) {
       const data = res.data.data;
       Object.assign(formData, data);

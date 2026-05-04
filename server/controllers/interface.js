@@ -1175,10 +1175,30 @@ class interfaceController extends baseController {
    */
   async upIndex(ctx) {
     try {
+      // 添加登录校验
+      if (this.getUid() === 0) {
+        return (ctx.body = yapi.commons.resReturn(null, 40011, "请登录"));
+      }
+
       let params = ctx.request.body;
       if (!params || !Array.isArray(params)) {
         ctx.body = yapi.commons.resReturn(null, 400, "请求参数必须是数组");
       }
+      
+      // 验证用户是否有权限修改这些接口的排序
+      // 需要获取第一个接口所属的项目ID，然后检查权限
+      if (params.length > 0 && params[0].id) {
+        const firstInterface = await this.Model.get(params[0].id);
+        if (firstInterface && firstInterface.project_id) {
+          const project = await this.projectModel.getBaseInfo(firstInterface.project_id);
+          if (project && project.project_type === "private") {
+            if ((await this.checkAuth(project._id, "project", "edit")) !== true) {
+              return (ctx.body = yapi.commons.resReturn(null, 406, "没有权限"));
+            }
+          }
+        }
+      }
+      
       params.forEach((item) => {
         if (item.id) {
           this.Model.upIndex(item.id, item.index).then(
@@ -1208,10 +1228,30 @@ class interfaceController extends baseController {
    */
   async upCatIndex(ctx) {
     try {
+      // 添加登录校验
+      if (this.getUid() === 0) {
+        return (ctx.body = yapi.commons.resReturn(null, 40011, "请登录"));
+      }
+
       let params = ctx.request.body;
       if (!params || !Array.isArray(params)) {
         ctx.body = yapi.commons.resReturn(null, 400, "请求参数必须是数组");
       }
+      
+      // 验证用户是否有权限修改这些分类的排序
+      // 需要获取第一个分类所属的项目ID，然后检查权限
+      if (params.length > 0 && params[0].id) {
+        const firstCat = await this.catModel.get(params[0].id);
+        if (firstCat && firstCat.project_id) {
+          const project = await this.projectModel.getBaseInfo(firstCat.project_id);
+          if (project && project.project_type === "private") {
+            if ((await this.checkAuth(project._id, "project", "edit")) !== true) {
+              return (ctx.body = yapi.commons.resReturn(null, 406, "没有权限"));
+            }
+          }
+        }
+      }
+      
       params.forEach((item) => {
         if (item.id) {
           this.catModel.upCatIndex(item.id, item.index).then(
