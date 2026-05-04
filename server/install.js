@@ -28,15 +28,23 @@ function install() {
 function setupSql() {
   let userInst = yapi.getInst(userModel);
   let passsalt = yapi.commons.randStr();
+  
+  // 生成随机强密码，避免使用硬编码的弱密码
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
+  const adminPassword = Array.from({ length: 16 }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
+  
   let result = userInst.save({
     username: yapi.WEBCONFIG.adminAccount.substr(0, yapi.WEBCONFIG.adminAccount.indexOf("@")),
     email: yapi.WEBCONFIG.adminAccount,
-    password: yapi.commons.generatePassword("ymfe.org", passsalt),
+    password: yapi.commons.generatePassword(adminPassword, passsalt),
     passsalt: passsalt,
     role: "admin",
     add_time: yapi.commons.time(),
     up_time: yapi.commons.time(),
   });
+
+  console.log(`\n⚠️  初始管理员密码已自动生成: ${adminPassword}`);
+  console.log("⚠️  请妥善保存此密码，首次登录后请立即修改！\n");
 
   yapi.connect
     .then(function () {

@@ -79,6 +79,17 @@ class aiController extends baseController {
    */
   async callAiApi(agent, messages) {
     const { type, apiKey, model, baseURL } = agent;
+    
+    // SSRF 防护：校验 baseURL 是否为合法的外部 URL
+    if (baseURL) {
+      try {
+        const { assertSafeExternalUrl } = require("../utils/security");
+        await assertSafeExternalUrl(baseURL);
+      } catch (err) {
+        throw new Error("AI API 地址不安全: " + err.message);
+      }
+    }
+    
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${apiKey}`,

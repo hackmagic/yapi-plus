@@ -66,7 +66,33 @@ const routes = [
       },
       {
         path: "setting",
-        component: () => import("../containers/Project/ProjectSetting/ProjectSetting.vue"),
+        component: () => import("../containers/Project/Setting/Setting.vue"),
+        children: [
+          {
+            path: "",
+            redirect: (to) => `/project/${to.params.id}/setting/base`,
+          },
+          {
+            path: "base",
+            component: () => import("../containers/Project/ProjectSetting/BaseSetting.vue"),
+          },
+          {
+            path: "member",
+            component: () => import("../containers/Project/ProjectSetting/MemberSetting.vue"),
+          },
+          {
+            path: "env",
+            component: () => import("../containers/Project/ProjectSetting/EnvSetting.vue"),
+          },
+          {
+            path: "token",
+            component: () => import("../containers/Project/ProjectSetting/TokenSetting.vue"),
+          },
+          {
+            path: "data",
+            component: () => import("../containers/Project/ProjectSetting/DataSetting.vue"),
+          },
+        ],
       },
       {
         path: "activity",

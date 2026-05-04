@@ -270,6 +270,11 @@ let routerConfig = {
       path: "swagger_url",
       method: "get",
     },
+    {
+      action: "activity",
+      path: "activity",
+      method: "get",
+    },
   ],
   interface: [
     {
@@ -305,11 +310,6 @@ let routerConfig = {
     {
       action: "del",
       path: "del",
-      method: "post",
-    },
-    {
-      action: "interUpload",
-      path: "interUpload",
       method: "post",
     },
     {
@@ -556,6 +556,11 @@ let routerConfig = {
       action: "importData",
       path: "import_data",
       method: "post",
+    },
+    {
+      action: "exportData",
+      path: "export_data",
+      method: "get",
     },
   ],
   ai: [

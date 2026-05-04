@@ -932,7 +932,7 @@ class interfaceController extends baseController {
         this.Model.upEditUid(id, 0).then();
       });
     } catch (err) {
-      yapi.commons.log(err, "error");
+      yapi.commons.log(err, "warn");
     }
   }
 
@@ -1024,7 +1024,7 @@ class interfaceController extends baseController {
       let id = ctx.request.body.catid;
       let catData = await this.catModel.get(id);
       if (!catData) {
-        ctx.body = yapi.commons.resReturn(null, 400, "不存在的分类");
+        return (ctx.body = yapi.commons.resReturn(null, 400, "不存在的分类"));
       }
 
       if (catData.uid !== this.getUid()) {
@@ -1083,7 +1083,8 @@ class interfaceController extends baseController {
     try {
       let project = await this.projectModel.getBaseInfo(project_id);
       if (project.project_type === "private") {
-        if ((await this.checkAuth(project._id, "project", "edit")) !== true) {
+        // 获取分类列表只需要 view 权限，不需要 edit
+        if ((await this.checkAuth(project._id, "project", "view")) !== true) {
           return (ctx.body = yapi.commons.resReturn(null, 406, "没有权限"));
         }
       }
@@ -1106,6 +1107,11 @@ class interfaceController extends baseController {
    */
   async getCustomField(ctx) {
     let params = ctx.request.query;
+
+    // 添加登录校验
+    if (this.getUid() === 0) {
+      return (ctx.body = yapi.commons.resReturn(null, 40011, "请登录"));
+    }
 
     if (Object.keys(params).length !== 1) {
       return (ctx.body = yapi.commons.resReturn(null, 400, "参数数量错误"));

@@ -50,6 +50,12 @@ class configController extends baseController {
    */
   async saveConfig(ctx) {
     try {
+      // 安全检查：只有在未初始化时才允许调用此接口
+      const initLockPath = yapi.path.join(yapi.WEBROOT_RUNTIME, "init.lock");
+      if (yapi.fs.existsSync(initLockPath)) {
+        return (ctx.body = yapi.commons.resReturn(null, 403, "系统已初始化，无法再次配置"));
+      }
+
       const config = ctx.request.body;
 
       // 验证必需的配置
@@ -159,7 +165,16 @@ class configController extends baseController {
       const passsalt = yapi.commons.randStr();
       const adminEmail = config.adminAccount;
       const adminUsername = adminEmail.substr(0, adminEmail.indexOf("@"));
-      const adminPassword = config.adminPassword || "ymfe.org";
+      
+      // 生成随机强密码，避免使用硬编码的弱密码
+      let adminPassword = config.adminPassword;
+      if (!adminPassword || adminPassword === "ymfe.org") {
+        // 生成 16 位随机密码：大写字母 + 小写字母 + 数字 + 特殊字符
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
+        adminPassword = Array.from({ length: 16 }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
+        console.log(`\n⚠️  初始管理员密码已自动生成: ${adminPassword}`);
+        console.log("⚠️  请妥善保存此密码，首次登录后请立即修改！\n");
+      }
 
       // 创建 User mongoose model
       const userSchema = new mongoose.Schema({

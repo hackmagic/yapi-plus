@@ -83,11 +83,11 @@ class interfaceColController extends baseController {
       });
 
       req.on("finish", function () {
-        console.log(34343);
+        // 文件上传完成
       });
 
       req.on("end", function () {
-        let data = new Buffer(size);
+        let data = Buffer.alloc(size);
         for (let i = 0, pos = 0, l = chunks.length; i < l; i++) {
           let chunk = chunks[i];
           chunk.copy(data, pos);
@@ -231,7 +231,6 @@ class interfaceColController extends baseController {
       let result = { b: "12", c: "23" };
       ctx.set("Access-Control-Allow-Origin", "*");
       ctx.set("Content-Type", "text");
-      console.log(ctx.response);
       ctx.body = result;
     } catch (e) {
       ctx.body = yapi.commons.resReturn(null, 402, e.message);

@@ -205,8 +205,46 @@ const handleSave = async () => {
   }
 };
 
-const handleTestMock = () => {
-  message.info("Mock 测试功能开发中");
+const handleTestMock = async () => {
+  if (!formData.value.enable) {
+    message.warning("请先启用 Mock");
+    return;
+  }
+
+  try {
+    // 构造测试请求
+    const testPath = ruleList.value.length > 0 ? ruleList.value[0].path : "/test";
+    
+    // 显示加载状态
+    message.loading("正在测试 Mock 配置...", { duration: 0 });
+    
+    // 调用后端 Mock 接口进行测试
+    const baseUrl = window.location.origin;
+    const mockUrl = `${baseUrl}/mock/${props.projectId}${testPath}`;
+    
+    const response = await fetch(mockUrl, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    // 隐藏加载消息
+    message.destroyAll();
+
+    if (response.ok) {
+      const data = await response.json();
+      message.success(`Mock 测试成功！响应状态: ${response.status}`);
+      
+      // 可以在这里添加更详细的响应展示
+      console.log("Mock 响应数据:", data);
+    } else {
+      message.error(`Mock 测试失败: ${response.status} ${response.statusText}`);
+    }
+  } catch (e) {
+    message.destroyAll();
+    message.error("Mock 测试失败: " + e.message);
+  }
 };
 
 const handleAddRule = async () => {

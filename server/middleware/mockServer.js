@@ -79,7 +79,25 @@ function parseCookie(str) {
 
 function handleCorsRequest(ctx) {
   let header = ctx.request.header;
-  ctx.set("Access-Control-Allow-Origin", header.origin);
+  const origin = header.origin;
+  
+  // CORS Origin 白名单校验
+  if (origin) {
+    const allowedOrigins = yapi.WEBCONFIG.allowedOrigins || [];
+    const isAllowed = 
+      allowedOrigins.includes(origin) || 
+      origin.endsWith('.yapi.com') || // 示例：允许子域名
+      origin === 'null'; // 允许本地文件访问
+    
+    if (!isAllowed) {
+      yapi.commons.log(`Blocked CORS request from origin: ${origin}`, 'warn');
+      ctx.status = 403;
+      ctx.body = 'CORS policy violation';
+      return;
+    }
+  }
+  
+  ctx.set("Access-Control-Allow-Origin", origin);
   ctx.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, HEADER, PATCH, OPTIONS");
   ctx.set("Access-Control-Allow-Headers", header["access-control-request-headers"]);
   ctx.set("Access-Control-Allow-Credentials", true);
@@ -165,6 +183,25 @@ module.exports = async (ctx, next) => {
 
   ctx.set("Access-Control-Allow-Origin", header.origin);
   ctx.set("Access-Control-Allow-Credentials", true);
+
+  // CORS Origin 白名单校验
+  const origin = header.origin;
+  if (origin) {
+    const allowedOrigins = yapi.WEBCONFIG.allowedOrigins || [];
+    const isAllowed = 
+      allowedOrigins.includes(origin) || 
+      origin.endsWith('.yapi.com') ||
+      origin === 'null';
+    
+    if (!isAllowed) {
+      yapi.commons.log(`Blocked CORS request from origin: ${origin}`, 'warn');
+      ctx.status = 403;
+      ctx.body = yapi.commons.resReturn(null, 403, 'CORS policy violation');
+      return;
+    }
+  }
+  
+  ctx.set("Access-Control-Allow-Origin", origin);
 
   // ctx.set('Access-Control-Allow-Origin', '*');
 

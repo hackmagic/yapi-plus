@@ -46,7 +46,8 @@ const handleDelete = (projectId) => {
 };
 
 const handleEdit = (project) => {
-  message.info(`编辑项目: ${project.name}`);
+  // 跳转到项目设置页面
+  router.push(`/project/${project._id}/setting/base`);
 };
 
 const fetchProjects = async () => {

@@ -66,7 +66,7 @@
 <script setup>
 import { ref, computed, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { useMessage } from "naive-ui";
+import { useMessage, useDialog } from "naive-ui";
 import { useInterfaceColStore } from "@/store/interfaceCol";
 import { CreateOutline, TrashOutline } from "@vicons/ionicons5";
 
@@ -82,6 +82,7 @@ const emit = defineEmits(["select"]);
 const route = useRoute();
 const router = useRouter();
 const message = useMessage();
+const dialog = useDialog();
 const interfaceColStore = useInterfaceColStore();
 
 const loading = ref(false);
@@ -152,7 +153,21 @@ const handleSaveCol = async () => {
 };
 
 const handleDeleteCol = (col) => {
-  message.warning("确定删除该集合？");
+  dialog.warning({
+    title: "确认删除",
+    content: `确定要删除集合 "${col.name}" 及其下面的所有测试用例吗？此操作不可恢复。`,
+    positiveText: "确定删除",
+    negativeText: "取消",
+    onPositiveClick: async () => {
+      try {
+        await interfaceColStore.deleteCol(col._id);
+        message.success("删除成功");
+        await loadColList();
+      } catch (e) {
+        message.error(e.message || "删除失败");
+      }
+    },
+  });
 };
 
 const handleSelectCase = (caseItem) => {

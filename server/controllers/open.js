@@ -1,4 +1,4 @@
-﻿const projectModel = require("../models/project.js");
+const projectModel = require("../models/project.js");
 const interfaceColModel = require("../models/interfaceCol.js");
 const interfaceCaseModel = require("../models/interfaceCase.js");
 const interfaceModel = require("../models/interface.js");
@@ -88,7 +88,9 @@ class openController extends baseController {
         warnMessage = "importData Api 已废弃 dataSync 传参，请联系管理员将 dataSync 改为 merge.";
         dataSync = ctx.params.dataSync;
       }
-    } catch (e) {}
+    } catch (e) {
+      yapi.commons.log(e, "warn");
+    }
 
     let token = ctx.params.token;
     if (!type || !importDataModule[type]) {
@@ -418,6 +420,69 @@ class openController extends baseController {
       return item && typeof item === "object";
     });
     return req_header;
+  }
+
+  /**
+   * 导出数据
+   * @interface /open/export_data
+   * @method GET
+   * @category open
+   * @param {Number} project_id 项目ID
+   * @param {String} type 导出类型 (json, markdown, html)
+   * @param {String} scope 导出范围 (all, cat, menu)
+   */
+  async exportData(ctx) {
+    const projectId = ctx.request.query.project_id;
+    const type = ctx.request.query.type || "json";
+    const scope = ctx.request.query.scope || "all";
+
+    if (!projectId) {
+      return (ctx.body = yapi.commons.resReturn(null, 400, "project_id不能为空"));
+    }
+
+    // 检查权限
+    if (await this.checkAuth(projectId, "project", "view")) {
+      return (ctx.body = yapi.commons.resReturn(null, 400, "没有权限"));
+    }
+
+    try {
+      const interfaceModel = yapi.getInst(require("../models/interface.js"));
+      const interfaceCatModel = yapi.getInst(require("../models/interfaceCat.js"));
+      
+      let interfaces;
+      if (scope === "all") {
+        interfaces = await interfaceModel.listByProjectId(projectId);
+      } else {
+        // 简化处理，默认导出全部
+        interfaces = await interfaceModel.listByProjectId(projectId);
+      }
+
+      let exportContent = "";
+      let contentType = "application/json";
+      let filename = `export.json`;
+
+      if (type === "json") {
+        exportContent = JSON.stringify(interfaces, null, 2);
+        contentType = "application/json";
+        filename = `export.json`;
+      } else if (type === "markdown") {
+        // 简化的 Markdown 导出
+        exportContent = interfaces.map(item => 
+          `## ${item.title}\n\n**Path:** ${item.path}\n\n**Method:** ${item.method}\n\n${item.desc || ""}\n\n---\n\n`
+        ).join("\n");
+        contentType = "text/markdown";
+        filename = `export.md`;
+      } else {
+        exportContent = JSON.stringify(interfaces, null, 2);
+      }
+
+      ctx.set("Content-Type", contentType);
+      ctx.set("Content-Disposition", `attachment; filename="${filename}"`);
+      ctx.body = exportContent;
+    } catch (err) {
+      yapi.commons.log(err, "error");
+      ctx.body = yapi.commons.resReturn(null, 500, "导出失败: " + err.message);
+    }
   }
 }
 

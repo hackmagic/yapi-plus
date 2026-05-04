@@ -14,6 +14,7 @@ export const useUserStore = defineStore("user", {
     uid: (state) => state.userInfo?.uid || null,
     email: (state) => state.userInfo?.email || "",
     role: (state) => state.userInfo?.role || "",
+    isLogin: (state) => state.loginState === 1,
   },
 
   actions: {

@@ -99,11 +99,13 @@ const columns = [
 ];
 
 const handleAdd = () => {
-  message.info("添加测试用例");
+  message.info("测试用例添加功能正在完善中，敬请期待");
+  // TODO: 打开添加测试用例的模态框
 };
 
 const handleEdit = (testCase) => {
-  message.info(`编辑测试用例: ${testCase.name}`);
+  message.info("测试用例编辑功能正在完善中，敬请期待");
+  // TODO: 打开编辑测试用例的模态框
 };
 
 const handleDelete = async (testCase) => {

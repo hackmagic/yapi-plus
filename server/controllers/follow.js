@@ -26,8 +26,9 @@ class followController extends baseController {
     let uid = this.getUid();
     let page = parseInt(ctx.request.query.page) || 1;
     let limit = parseInt(ctx.request.query.limit) || 20;
-    const MAX_LIMIT = 500;
+    const MAX_LIMIT = 100; // 降低分页上限
     limit = Math.min(limit, MAX_LIMIT);
+    page = Math.max(page, 1); // 确保页码至少为 1
 
     if (!uid) {
       return (ctx.body = yapi.commons.resReturn(null, 400, "用户id不能为空"));
@@ -106,6 +107,12 @@ class followController extends baseController {
       return (ctx.body = yapi.commons.resReturn(null, 400, "项目id不能为空"));
     }
 
+    // 验证项目是否存在
+    let project = await this.projectModel.get(params.projectid);
+    if (!project) {
+      return (ctx.body = yapi.commons.resReturn(null, 400, "项目不存在"));
+    }
+
     let checkRepeat = await this.Model.checkProjectRepeat(uid, params.projectid);
 
     if (checkRepeat) {
@@ -113,7 +120,6 @@ class followController extends baseController {
     }
 
     try {
-      let project = await this.projectModel.get(params.projectid);
       let data = {
         uid: uid,
         projectid: params.projectid,

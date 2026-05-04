@@ -129,7 +129,9 @@ const fetchInterface = async () => {
   if (!isEdit.value) return;
 
   try {
-    const res = await axios.get(`/api/interface/get?id=${route.params.id}`);
+    // 使用 actionId 而非 id，因为路由是 /project/:id/interface/api/:actionId
+    const interfaceId = route.params.actionId || route.params.id;
+    const res = await axios.get(`/api/interface/get?id=${interfaceId}`);
     if (res.data.errcode === 0) {
       const data = res.data.data;
       Object.assign(formData, data);

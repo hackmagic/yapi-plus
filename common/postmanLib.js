@@ -298,7 +298,10 @@ async function crossRequest(defaultOptions, preScript, afterScript, commonContex
   try {
     const yapi = require("../server/yapi");
     scriptEnable = yapi.WEBCONFIG.scriptEnable === true;
-  } catch (err) {}
+  } catch (err) {
+    // 如果无法加载配置，默认禁用脚本
+    console.error("Failed to load script config:", err.message);
+  }
 
   if (preScript && scriptEnable) {
     context = await sandbox(context, preScript);

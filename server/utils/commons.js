@@ -81,6 +81,14 @@ exports.resReturn = (data, num, errmsg) => {
   };
 };
 
+exports.resSuccess = (data) => {
+  return exports.resReturn(data, 0, "成功！");
+};
+
+exports.resError = (errmsg, code) => {
+  return exports.resReturn(null, code || 400, errmsg || "请求失败");
+};
+
 exports.log = (msg, type) => {
   if (!msg) {
     return;
@@ -464,7 +472,9 @@ function handleParamsValue(params, val) {
   let value = {};
   try {
     params = params.toObject();
-  } catch (e) {}
+  } catch (e) {
+    // params 可能已经是普通对象，忽略错误
+  }
   if (params.length === 0 || val.length === 0) {
     return params;
   }

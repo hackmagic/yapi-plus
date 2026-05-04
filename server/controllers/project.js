@@ -1,4 +1,4 @@
-﻿const projectModel = require("../models/project.js");
+const projectModel = require("../models/project.js");
 const yapi = require("../yapi.js");
 const _ = require("underscore");
 const baseController = require("./base.js");
@@ -1033,10 +1033,10 @@ class projectController extends baseController {
         return (ctx.body = yapi.commons.resReturn(null, 405, "项目id不能为空"));
       }
 
-      // 去掉权限判断
-      // if ((await this.checkAuth(project_id, 'project', 'edit')) !== true) {
-      //   return (ctx.body = yapi.commons.resReturn(null, 405, '没有权限'));
-      // }
+      // 恢复权限校验：只有有编辑权限的用户才能查看环境变量
+      if ((await this.checkAuth(project_id, "project", "edit")) !== true) {
+        return (ctx.body = yapi.commons.resReturn(null, 405, "没有权限"));
+      }
 
       let env = await this.Model.getByEnv(project_id);
 
@@ -1199,6 +1199,41 @@ class projectController extends baseController {
     } catch (err) {
       ctx.body = yapi.commons.resReturn(null, 402, String(err));
     }
+  }
+
+  /**
+   * 获取项目动态列表
+   * @interface /project/activity
+   * @method GET
+   * @category project
+   * @param {Number} project_id 项目ID
+   * @returns {Object}
+   */
+  async activity(ctx) {
+    const projectId = ctx.request.query.project_id;
+    if (!projectId) {
+      return (ctx.body = yapi.commons.resReturn(null, 400, "project_id不能为空"));
+    }
+
+    // 检查项目权限
+    if (await this.checkAuth(projectId, "project", "view")) {
+      return (ctx.body = yapi.commons.resReturn(null, 400, "没有权限"));
+    }
+
+    const logModel = yapi.getInst(require("../models/log.js"));
+    const list = await logModel.list("project", projectId, 1, 100);
+    
+    // 格式化返回数据
+    const activities = list.map(item => ({
+      id: item._id,
+      type: item.type,
+      content: item.content,
+      username: item.username,
+      uid: item.uid,
+      add_time: item.add_time,
+    }));
+
+    return (ctx.body = yapi.commons.resReturn(activities));
   }
 }
 

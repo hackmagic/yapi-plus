@@ -800,7 +800,7 @@ class interfaceColController extends baseController {
       let id = ctx.query.col_id;
       let colData = await this.colModel.get(id);
       if (!colData) {
-        ctx.body = yapi.commons.resReturn(null, 400, "不存在的id");
+        return (ctx.body = yapi.commons.resReturn(null, 400, "不存在的id"));
       }
 
       if (colData.uid !== this.getUid()) {
@@ -837,7 +837,7 @@ class interfaceColController extends baseController {
       let caseid = ctx.query.caseid;
       let caseData = await this.caseModel.get(caseid);
       if (!caseData) {
-        ctx.body = yapi.commons.resReturn(null, 400, "不存在的caseid");
+        return (ctx.body = yapi.commons.resReturn(null, 400, "不存在的caseid"));
       }
 
       if (caseData.uid !== this.getUid()) {

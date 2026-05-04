@@ -111,16 +111,6 @@ const menuOptions = computed(() => [
         key: "setting/env",
         icon: renderIcon(SpeedometerOutline),
       },
-      {
-        label: "Mock 设置",
-        key: "setting/mock",
-        icon: renderIcon(DocumentTextOutline),
-      },
-      {
-        label: "高级功能",
-        key: "setting/advanced",
-        icon: renderIcon(SettingsOutline),
-      },
     ],
   },
 ]);

@@ -1,4 +1,4 @@
-﻿const yapi = require("../yapi");
+const yapi = require("../yapi");
 
 const crypto = require("crypto");
 
@@ -96,12 +96,16 @@ exports.parseToken = function parseToken(token) {
     if (parsed && parsed.uid && parsed.projectToken) {
       return parsed;
     }
-  } catch (e) {}
+  } catch (e) {
+    yapi.commons.log(e, "warn");
+  }
 
   let tokens;
   try {
     tokens = decodeLegacyToken(token, passsalt);
-  } catch (e) {}
+  } catch (e) {
+    yapi.commons.log(e, "warn");
+  }
   if (tokens && typeof tokens === "string" && tokens.indexOf("|") > 0) {
     tokens = tokens.split("|");
     return {
