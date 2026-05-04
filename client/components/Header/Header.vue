@@ -146,9 +146,11 @@ const handleUserMenu = (key) => {
 const handleLogout = async () => {
   try {
     await userStore.logout();
+    message.success("退出成功");
     router.push("/login");
   } catch (e) {
     console.error("退出失败", e);
+    message.error("退出失败，请重试");
   }
 };
 </script>

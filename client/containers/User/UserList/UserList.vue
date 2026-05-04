@@ -28,11 +28,13 @@
 import { ref, h, onMounted } from "vue";
 import { useMessage, NTag, NButton, NSpace, NAvatar } from "naive-ui";
 import axios from "axios";
+import { useRouter } from "vue-router";
 
 const message = useMessage();
 const loading = ref(false);
 const userList = ref([]);
 const searchKeyword = ref("");
+const router = useRouter();
 
 const pagination = {
   page: 1,
@@ -134,7 +136,8 @@ const handleSearch = () => {
 };
 
 const handleEdit = (user) => {
-  message.info(`编辑用户: ${user.username}`);
+  // 跳转到用户详情页面进行编辑
+  router.push(`/user/${user._id}`);
 };
 
 const handleDelete = async (user) => {

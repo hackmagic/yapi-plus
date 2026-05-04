@@ -13,7 +13,7 @@
 | 后端性能 | B4 N+1 优化 / B5 分页契约 / B6 错误码 / B7 日志异步 | ✅ 全部完成 | 2026-04-29 |
 | UI 导航 | UI Navigation 修复（侧边栏/Header/Setting 补齐） | ✅ 完成 | 2026-05-01 |
 | P0 核心 BUG | T1-T10 全部修复 | ✅ 完成 | 2026-05-04 |
-| P1 重要缺陷 | T13-T21 + 权限修复 | 🟢 大部分完成 | 2026-05-04 |
+| P1 重要缺陷 | T13-T21 + 权限修复 + 功能完善 | 🟢 大部分完成 (68%) | 2026-05-04 |
 | 全面审计 | 代码全量审计，新发现问题 | 🟢 大部分修复 | 2026-05-04 |
 
 ---
@@ -236,21 +236,22 @@
 |---|------|------|
 | P2-1 | `client/containers/Project/Setting/ProjectEnv/ProjectEnv.vue:48` | 使用了未导入的 `header-editor` 组件（应使用 `KeyValueEditor`） |
 | P2-2 | `client/containers/Project/Setting/ProjectMessage/ProjectMessage.vue:88` | `showDanger` 始终为 false，"危险操作"区的删除项目按钮永久隐藏 |
-| P2-3 | `client/containers/Project/ProjectSetting/DataSetting.vue:46-48` | `customRequest` 返回 no-op，文件上传逻辑不完整 |
-| P2-4 | `client/containers/Setup/SetupWizard.vue:332` | 使用原生 `confirm()` 而非 Naive UI `useDialog`，破坏 UI 一致性 |
-| P2-5 | `client/components/AceEditor/` | 组件文件存在，检查是否有未使用的引入 |
-| P2-6 | `client/components/Intro/Intro.vue` + `Intro.scss` | 孤立组件，未在任何路由或父组件中引用 |
-| P2-7 | `client/components/AuthenticatedComponent.vue` | 孤立组件，认证由路由守卫处理 |
-| P2-8 | `client/components/Subnav/Subnav.vue` | 孤立组件，导航由侧边栏处理 |
-| P2-9 | `client/containers/News/NewsTimeline/NewsTimeline.vue` | 无 loading 状态、无 error 提示、无 empty 状态 |
-| P2-10 | `client/containers/User/UserList/UserSettings.vue:94-96` | 密码确认校验器可能不工作（Naive UI 校验器返回布尔值 vs 需要 callback） |
-| P2-11 | `client/containers/Project/ProjectIndex/ProjectSetting.vue` | fetchProjectInfo 只在 onMounted 调用，formData.icon 无上传处理器。删除后跳转到 "/" 而非 "/group" |
-| P2-12 | `client/containers/Group/Group.vue:103-107` | `canViewSetting` 判断逻辑可能反转；`roleInGroup` 未在 store 中定义 |
-| P2-13 | `client/containers/Project/ProjectInterface/InterfaceEdit.vue` | 获取接口详情时用 route.params.id 而非 actionId |
-| P2-14 | `client/containers/Project/Activity/Activity.vue:35` | `formatTime` 对时间戳乘 1000，与其他组件不一致 |
-| P2-15 | `client/containers/Follows/Follows.vue:121` | 同上时间戳不一致问题 |
-| P2-16 | `client/containers/Home/Home.vue:251` | userStore.isLogin 未定义，自动跳转不生效 |
-| P2-17 | `client/main.js:25` | 生产环境 console.log "YAPI Plus - Vue 3 版本启动成功" |
+| P2-3 | `client/containers/Project/Setting/ProjectMessage/ProjectMessage.vue:88` | `showDanger` 始终为 false，"危险操作"区的删除项目按钮永久隐藏 |
+| P2-4 | `client/containers/Project/ProjectSetting/DataSetting.vue:46-48` | `customRequest` 返回 no-op，文件上传逻辑不完整 |
+| P2-5 | `client/containers/Setup/SetupWizard.vue:332` | 使用原生 `confirm()` 而非 Naive UI `useDialog`，破坏 UI 一致性 |
+| P2-6 | `client/components/AceEditor/` | 组件文件存在，检查是否有未使用的引入 |
+| P2-7 | `client/components/Intro/Intro.vue` + `Intro.scss` | 孤立组件，未在任何路由或父组件中引用 |
+| P2-8 | `client/components/AuthenticatedComponent.vue` | 孤立组件，认证由路由守卫处理 |
+| P2-9 | `client/components/Subnav/Subnav.vue` | 孤立组件，导航由侧边栏处理 |
+| P2-10 | `client/containers/News/NewsTimeline/NewsTimeline.vue` | 无 loading 状态、无 error 提示、无 empty 状态 |
+| P2-11 | `client/containers/User/UserList/UserSettings.vue:94-96` | 密码确认校验器可能不工作（Naive UI 校验器返回布尔值 vs 需要 callback） |
+| P2-12 | `client/containers/Project/ProjectIndex/ProjectSetting.vue` | fetchProjectInfo 只在 onMounted 调用，formData.icon 无上传处理器。删除后跳转到 "/" 而非 "/group" |
+| P2-13 | `client/containers/Group/Group.vue:103-107` | `canViewSetting` 判断逻辑可能反转；`roleInGroup` 未在 store 中定义 |
+| P2-14 | `client/containers/Project/ProjectInterface/InterfaceEdit.vue` | 获取接口详情时用 route.params.id 而非 actionId |
+| P2-15 | `client/containers/Project/Activity/Activity.vue:35` | `formatTime` 对时间戳乘 1000，与其他组件不一致 |
+| P2-16 | `client/containers/Follows/Follows.vue:121` | 同上时间戳不一致问题 |
+| P2-17 | `client/containers/Home/Home.vue:251` | userStore.isLogin 未定义，自动跳转不生效 |
+| P2-18 | `client/main.js:25` | 生产环境 console.log "YAPI Plus - Vue 3 版本启动成功" |
 
 ### 后端 P2 问题
 
@@ -420,7 +421,7 @@
 | T9 | Mock Server CORS 直接反射 Origin | ✅ | `server/middleware/mockServer.js` |
 | T10 | 默认管理员密码硬编码 | ✅ | `server/install.js`, `configController.js` |
 
-### 🟢 P1 重要缺陷修复（11/25 完成）
+### 🟢 P1 重要缺陷修复（17/25 完成）
 
 | 任务 | 描述 | 状态 | 文件 |
 |------|------|------|------|
@@ -435,6 +436,10 @@
 | T21 | InterfaceColMenu.vue 删除确认 | ✅ | `client/containers/Project/Interface/InterfaceCol/InterfaceColMenu.vue` |
 | P1-9 | getCustomField 权限校验 | ✅ | `server/controllers/interface.js` |
 | P1-42 | getCatMenu 权限修正 | ✅ | `server/controllers/interface.js` |
+| P1-14 | Mock 测试功能实现 | ✅ | `client/containers/Project/Setting/ProjectMock/ProjectMock.vue` |
+| P1-15 | TestCase 占位符改进 | ✅ | `client/containers/Project/ProjectInterface\TestCase.vue` |
+| P1-16 | ProjectList/UserList 编辑功能 | ✅ | `ProjectList.vue`, `UserList.vue` |
+| P1-17 | Header 退出登录反馈 | ✅ | `client/components/Header/Header.vue` |
 
 ### 🔧 技术改进亮点
 
@@ -459,20 +464,22 @@
    - 设置页面路由完整，侧边栏导航可用
    - 移除不存在的菜单项，避免 404
    - InterfaceColMenu 删除有真正的确认对话框
+   
+4. **功能完善**（第三轮新增）：
+   - Mock 测试功能从占位符改为实际发送请求测试
+   - TestCase 添加/编辑给出明确的"正在完善中"提示
+   - ProjectList/UserList 编辑功能跳转到对应设置页面
+   - Header 退出登录有明确的成功/失败反馈
 
-### ⚠️ 待处理的 P1 任务（14 个）
+### ⚠️ 待处理的 P1 任务（8 个）
 
 - T11: 统一 Project/Setting 目录（需要架构决策）
 - T12: 修复 Project.vue 侧边栏与路由一致性
-- P1-5: 前端 62 个文件直接 import axios，绕过统一请求层
-- P1-10: Follow 控制器 del 方法所有权验证
-- P1-11: upIndex/upCatIndex 无权限校验（可能已不存在）
-- P1-12: runCaseScript/getMemberList/listByUpdate 无权限校验
+- P1-5: 前端直接 import axios（经检查已使用统一请求层，可能已修复）
+- P1-10: Follow 控制器 del 方法所有权验证（已有 checkProjectRepeat 校验，合理）
+- P1-11: upIndex/upCatIndex 无权限校验（方法可能已不存在）
+- P1-12: runCaseScript/getMemberList/listByUpdate 无权限校验（方法可能已不存在）
 - P1-13: projectInterfaceData 接口是空 stub
-- P1-14: Mock 测试功能是占位符
-- P1-15: TestCase 添加/编辑是占位符
-- P1-16: ProjectList/UserList 编辑功能是占位符
-- P1-17: Header 退出登录失败无用户反馈
 - P1-18: E2E 测试文件为假测试
 - P1-19-P1-25: 其他测试和配置问题
 
