@@ -443,6 +443,8 @@
 | P1-17 | Header 退出登录反馈 | ✅ | `client/components/Header/Header.vue` |
 | T12 | Project.vue 侧边栏与路由一致性 | ✅ | `client/containers/Project/Project.vue` |
 | P1-5 | 前端统一请求层修复 | ✅ | `client/containers/Project/ProjectInterface/InterfaceEdit.vue` |
+| T12 | Project.vue 侧边栏与路由一致性 | ✅ | `client/containers/Project/Project.vue` |
+| P1-5 | 前端统一请求层修复 | ✅ | `client/containers/Project/ProjectInterface/InterfaceEdit.vue` |
 
 ### 🔧 技术改进亮点
 

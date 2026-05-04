@@ -1180,6 +1180,11 @@ class interfaceController extends baseController {
         return (ctx.body = yapi.commons.resReturn(null, 40011, "请登录"));
       }
 
+      // 添加登录校验
+      if (this.getUid() === 0) {
+        return (ctx.body = yapi.commons.resReturn(null, 40011, "请登录"));
+      }
+
       let params = ctx.request.body;
       if (!params || !Array.isArray(params)) {
         ctx.body = yapi.commons.resReturn(null, 400, "请求参数必须是数组");
@@ -1228,6 +1233,11 @@ class interfaceController extends baseController {
    */
   async upCatIndex(ctx) {
     try {
+      // 添加登录校验
+      if (this.getUid() === 0) {
+        return (ctx.body = yapi.commons.resReturn(null, 40011, "请登录"));
+      }
+
       // 添加登录校验
       if (this.getUid() === 0) {
         return (ctx.body = yapi.commons.resReturn(null, 40011, "请登录"));
