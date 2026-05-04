@@ -1,3 +1,21 @@
+/**
+ * Project Setting Components
+ * 
+ * 项目设置相关的页面组件
+ * 
+ * 目录结构说明：
+ * - Setting/ - 设置页面的容器和布局（父组件）
+ * - ProjectSetting/ - 具体的设置页面组件（子路由组件）
+ * 
+ * 路由配置：
+ * /project/:id/setting (Setting.vue - 容器)
+ *   ├── /base (BaseSetting.vue)
+ *   ├── /member (MemberSetting.vue)
+ *   ├── /env (EnvSetting.vue)
+ *   ├── /token (TokenSetting.vue)
+ *   └── /data (DataSetting.vue)
+ */
+
 <template>
   <n-form ref="formRef" :model="formData" :rules="rules" label-placement="left" label-width="120">
     <n-form-item label="项目名称" path="name">
