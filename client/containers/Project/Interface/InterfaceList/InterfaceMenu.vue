@@ -193,7 +193,33 @@ const handleExpand = (keys) => {
 };
 
 const handleSearch = (value) => {
-  // 搜索逻辑
+  if (!value || !value.trim()) {
+    // 清空搜索，重新加载
+    loadInterfaceList();
+    return;
+  }
+  const keyword = value.trim().toLowerCase();
+  // 过滤树形数据
+  const filterTree = (nodes) => {
+    return nodes
+      .map((node) => {
+        if (node.type === "interface") {
+          const match =
+            node.label.toLowerCase().includes(keyword) ||
+            (node.data?.title || "").toLowerCase().includes(keyword) ||
+            (node.data?.path || "").toLowerCase().includes(keyword);
+          return match ? node : null;
+        }
+        // 分类节点：检查子节点是否有匹配
+        const filteredChildren = filterTree(node.children || []);
+        if (filteredChildren.length > 0 || node.label.toLowerCase().includes(keyword)) {
+          return { ...node, children: filteredChildren };
+        }
+        return null;
+      })
+      .filter(Boolean);
+  };
+  treeData.value = filterTree(treeData.value);
 };
 
 const showAddCatModal = () => {

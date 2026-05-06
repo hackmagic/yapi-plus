@@ -42,7 +42,7 @@ const importFile = ref(null);
 
 const handleExport = async () => {
   try {
-    const res = await axios.get(`/api/project/export_data?project_id=${props.projectId}`, {
+    const res = await axios.get(`/api/open/export_data?project_id=${props.projectId}`, {
       responseType: "blob",
     });
     const url = window.URL.createObjectURL(new Blob([res.data]));
@@ -73,7 +73,7 @@ const handleImport = async () => {
     formData.append("file", importFile.value);
     formData.append("project_id", props.projectId);
 
-    const res = await axios.post("/api/project/import_data", formData);
+    const res = await axios.post("/api/open/import_data", formData);
     if (res.data.errcode === 0) {
       message.success("导入成功");
       showImportModal.value = false;

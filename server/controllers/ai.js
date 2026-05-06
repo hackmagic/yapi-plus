@@ -146,8 +146,13 @@ class aiController extends baseController {
         };
     }
 
-    const response = await axios.post(apiUrl, requestBody, { headers, timeout: 60000 });
-    return response.data;
+    try {
+      const response = await axios.post(apiUrl, requestBody, { headers, timeout: 60000 });
+      return response.data;
+    } catch (e) {
+      yapi.commons.log(e, "error");
+      throw new Error("AI API 调用失败: " + (e.response?.data?.error?.message || e.message));
+    }
   }
 
   /**

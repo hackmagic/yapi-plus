@@ -70,8 +70,7 @@ let routerConfig = {
       path: "get_mygroup",
       method: "get",
     },
-
-{
+    {
       action: "list",
       path: "list",
       method: "get",
@@ -84,6 +83,36 @@ let routerConfig = {
     {
       action: "get",
       path: "get",
+      method: "get",
+    },
+    {
+      action: "add",
+      path: "add",
+      method: "post",
+    },
+    {
+      action: "up",
+      path: "up",
+      method: "post",
+    },
+    {
+      action: "del",
+      path: "del",
+      method: "post",
+    },
+    {
+      action: "addMember",
+      path: "add_member",
+      method: "post",
+    },
+    {
+      action: "delMember",
+      path: "del_member",
+      method: "post",
+    },
+    {
+      action: "getMemberList",
+      path: "get_member_list",
       method: "get",
     },
   ],
@@ -268,6 +297,11 @@ let routerConfig = {
     {
       action: "swaggerUrl",
       path: "swagger_url",
+      method: "get",
+    },
+    {
+      action: "all",
+      path: "all",
       method: "get",
     },
     {

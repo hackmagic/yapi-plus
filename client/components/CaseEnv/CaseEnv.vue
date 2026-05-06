@@ -35,11 +35,12 @@ const handleEnvChange = (value) => {
 
 const fetchEnvs = async () => {
   try {
-    const res = await axios.get(`/api/project/env_list?project_id=${props.projectId}`);
+    // 通过项目详情获取环境列表
+    const res = await axios.get(`/api/project/get?id=${props.projectId}`);
     if (res.data.errcode === 0) {
-      envOptions.value = res.data.data.map((env) => ({
-        label: env.name,
-        value: env._id,
+      envOptions.value = (res.data.data.env || []).map((env, idx) => ({
+        label: env.name || `环境${idx + 1}`,
+        value: idx,
       }));
 
       if (envOptions.value.length > 0) {

@@ -63,7 +63,7 @@ export const useProjectStore = defineStore("project", {
     },
 
     async addMember(projectId, memberData) {
-      const res = await http.post("/api/project/addMember", {
+      const res = await http.post("/api/project/add_member", {
         id: projectId,
         ...memberData,
       });
@@ -73,7 +73,7 @@ export const useProjectStore = defineStore("project", {
     },
 
     async removeMember(projectId, uid) {
-      const res = await http.post("/api/project/delMember", {
+      const res = await http.post("/api/project/del_member", {
         id: projectId,
         uid,
       });

@@ -96,10 +96,10 @@ const handleExport = async (type) => {
 
 const handleClear = async () => {
   try {
-    const res = await axios.delete(`/api/project/clear`, {
-      params: {
-        project_id: props.projectId,
-      },
+    // 清空数据：通过 open API 导入空数据实现
+    const res = await axios.post("/api/open/import_data", {
+      project_id: props.projectId,
+      type: "clear",
     });
 
     if (res.data.errcode === 0) {

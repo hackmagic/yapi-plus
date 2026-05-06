@@ -89,7 +89,7 @@ const showProjectTab = computed(() => activeTab.value === "project");
 
 // 权限控制
 const userRole = computed(() => userStore.role);
-const userRoleInGroup = computed(() => groupStore.roleInGroup);
+const userRoleInGroup = computed(() => groupStore.roleInGroup || groupInfo.value?.role || "");
 
 // 是否可以查看日志
 const canViewLog = computed(() => {

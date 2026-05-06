@@ -52,7 +52,7 @@ const formatDate = (timestamp) => {
 
 const fetchNotices = async () => {
   try {
-    const res = await axios.get("/api/notice/list");
+    const res = await axios.get("/api/log/list");
     if (res.data.errcode === 0) {
       systemNotices.value = res.data.data.list;
     }

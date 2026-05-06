@@ -11,6 +11,13 @@ export const useGroupStore = defineStore("group", {
   getters: {
     groupId: (state) => state.currentGroup?._id,
     groupName: (state) => state.currentGroup?.group_name || "",
+    roleInGroup: (state) => {
+      // 从当前分组的成员列表中查找当前用户的角色
+      if (!state.currentGroup || !state.memberList) return "";
+      // 如果分组数据中直接包含 role 字段
+      if (state.currentGroup.role) return state.currentGroup.role;
+      return "";
+    },
   },
 
   actions: {
@@ -55,7 +62,7 @@ export const useGroupStore = defineStore("group", {
     },
 
     async addMember(groupId, memberData) {
-      const res = await http.post("/api/group/addMember", {
+      const res = await http.post("/api/group/add_member", {
         id: groupId,
         ...memberData,
       });
@@ -65,7 +72,7 @@ export const useGroupStore = defineStore("group", {
     },
 
     async removeMember(groupId, uid) {
-      const res = await http.post("/api/group/delMember", {
+      const res = await http.post("/api/group/del_member", {
         id: groupId,
         uid,
       });

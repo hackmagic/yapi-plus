@@ -45,7 +45,7 @@
               <n-input v-model:value="currentEnv.domain" placeholder="http://api.example.com" />
             </n-form-item>
             <n-form-item label="全局Header">
-              <header-editor v-model="currentEnv.header" />
+              <HeaderEditor v-model="currentEnv.header" />
             </n-form-item>
             <n-form-item>
               <n-button type="primary" @click="saveEnv">保存环境</n-button>
@@ -62,6 +62,7 @@ import { ref, computed, onMounted } from "vue";
 import { useMessage } from "naive-ui";
 import { AddOutline, TrashOutline } from "@vicons/ionicons5";
 import axios from "axios";
+import HeaderEditor from "@/components/HeaderEditor/HeaderEditor.vue";
 
 const props = defineProps({
   projectId: {

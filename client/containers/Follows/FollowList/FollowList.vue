@@ -53,7 +53,7 @@ const fetchFollows = async () => {
 
 const handleUnfollow = async (item) => {
   try {
-    const res = await axios.delete(`/api/follow/del?id=${item._id}`);
+    const res = await axios.post(`/api/follow/del`, { id: item._id });
     if (res.data.errcode === 0) {
       message.success("取消关注成功");
       fetchFollows();

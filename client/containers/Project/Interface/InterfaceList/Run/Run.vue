@@ -35,17 +35,19 @@
 
               <n-tabs type="line" animated v-model:value="activeTab">
                 <n-tab-pane name="params" tab="Query Params">
-                  <n-editable-table
-                    v-model:data="requestData.params"
+                  <n-data-table
+                    :data="requestData.params"
                     :columns="paramColumns"
-                    :max-height="200"
+                    :pagination="{ pageSize: 5 }"
+                    size="small"
                   />
                 </n-tab-pane>
                 <n-tab-pane name="headers" tab="Headers">
-                  <n-editable-table
-                    v-model:data="requestData.headers"
+                  <n-data-table
+                    :data="requestData.headers"
                     :columns="paramColumns"
-                    :max-height="200"
+                    :pagination="{ pageSize: 5 }"
+                    size="small"
                   />
                 </n-tab-pane>
                 <n-tab-pane name="body" tab="Body">
@@ -66,10 +68,11 @@
                     />
                   </n-form-item>
                   <n-form-item v-else-if="requestData.bodyType === 'form'" label="Form Data">
-                    <n-editable-table
-                      v-model:data="requestData.bodyForm"
+                    <n-data-table
+                      :data="requestData.bodyForm"
                       :columns="paramColumns"
-                      :max-height="200"
+                      :pagination="{ pageSize: 5 }"
+                      size="small"
                     />
                   </n-form-item>
                   <n-form-item v-else-if="requestData.bodyType === 'raw'" label="Raw">

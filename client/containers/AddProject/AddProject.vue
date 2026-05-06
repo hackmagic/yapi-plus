@@ -176,7 +176,7 @@ const handleSubmit = async () => {
       group_id: formData.group_id,
       group_name: getGroupName(formData.group_id),
       basepath: "",
-      project_type: formData.permission,
+      project_type: formData.project_type,
       mock_url: formData.mock_url,
     };
     const res = await axios.post("/api/project/add", postData);
@@ -191,21 +191,6 @@ const handleSubmit = async () => {
   } finally {
     loading.value = false;
   }
-};
-
-// 获取随机颜色
-const getRandomColor = () => {
-  const colors = [
-    "#2395f1",
-    "#57cf27",
-    "#ffa407",
-    "#ff561b",
-    "#b341f9",
-    "#18a058",
-    "#d03050",
-    "#2080f0",
-  ];
-  return colors[Math.floor(Math.random() * colors.length)];
 };
 
 onMounted(() => {

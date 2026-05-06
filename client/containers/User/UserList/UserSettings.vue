@@ -103,7 +103,7 @@ const handleUpdate = async () => {
 
   loading.value = true;
   try {
-    const res = await axios.put("/api/user/update", formData);
+    const res = await axios.post("/api/user/update", formData);
     if (res.data.errcode === 0) {
       message.success("更新成功");
     } else {
@@ -122,7 +122,7 @@ const handleChangePassword = async () => {
 
   loading.value = true;
   try {
-    const res = await axios.put("/api/user/change_password", passwordData);
+    const res = await axios.post("/api/user/change_password", passwordData);
     if (res.data.errcode === 0) {
       message.success("密码修改成功");
       passwordData.old_password = "";

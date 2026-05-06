@@ -131,7 +131,7 @@ const fetchProjectInfo = async () => {
       formData.name = data.name;
       formData.desc = data.desc;
       formData.icon = data.icon;
-      formData.permission = data.permission || "private";
+      formData.permission = data.project_type || "private";
     }
   } catch (error) {
     message.error("获取项目信息失败");

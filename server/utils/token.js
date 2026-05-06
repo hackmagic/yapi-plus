@@ -81,11 +81,9 @@ function decodeLegacyToken(token, passsalt) {
 
 exports.getToken = function getToken(token, uid) {
   if (!token) throw new Error("token 不能为空");
-  if (uid === undefined || uid === null || uid === "") {
-    return token;
-  }
   const passsalt = resolvePasssalt();
-  return encodeTokenPayload({ uid: String(uid), projectToken: token }, passsalt);
+  // 即使 uid 为空，也进行加密处理，确保 token 安全性
+  return encodeTokenPayload({ uid: String(uid || ""), projectToken: token }, passsalt);
 };
 
 exports.parseToken = function parseToken(token) {

@@ -66,7 +66,9 @@ class baseController {
     ) {
       let tokens = parseToken(token);
 
-      const oldTokenUid = "999999";
+      // 旧版 token 格式的默认 uid（未加密的 token 使用此占位值）
+      const LEGACY_TOKEN_UID = "999999";
+      const oldTokenUid = LEGACY_TOKEN_UID;
 
       let tokenUid = oldTokenUid;
 

@@ -249,10 +249,15 @@ const testMock = async () => {
     return;
   }
   try {
-    const res = await axios.post('/api/project/mock', {
-      rule: mockForm.rule,
-    });
-    mockResult.value = JSON.stringify(res.data, null, 2);
+    // 使用 Mock.js 在前端直接生成数据，不依赖后端
+    try {
+      const mock = require('mockjs');
+      const parsed = JSON.parse(mockForm.rule);
+      const result = mock.mock(parsed);
+      mockResult.value = JSON.stringify(result, null, 2);
+    } catch (mockErr) {
+      mockResult.value = 'Mock 规则解析失败: ' + mockErr.message;
+    }
   } catch (e) {
     mockResult.value = 'Mock 测试需要后端 Mock 服务支持';
   }

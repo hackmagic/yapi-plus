@@ -542,7 +542,7 @@ function convertString(variable) {
   }
 }
 
-exports.runCaseScript = async function runCaseScript(params, colId, interfaceId) {
+exports.runCaseScript = async function runCaseScript(params, colId, interfaceId, uid) {
   const colInst = yapi.getInst(interfaceColModel);
   let colData = await colInst.get(colId);
   const logs = [];
@@ -638,7 +638,7 @@ exports.handleMockScript = async function (script, context) {
     params: Object.assign({}, context.ctx.query, context.ctx.request.body),
     resHeader: context.resHeader,
     httpCode: context.httpCode,
-    delay: context.httpCode,
+    delay: 0,
     Random: Mock.Random,
   };
   sandbox.cookie = {};

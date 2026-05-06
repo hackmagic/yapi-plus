@@ -141,11 +141,9 @@ const handleAddMember = async () => {
 
 const handleRemoveMember = async (member) => {
   try {
-    const res = await axios.delete(`/api/project/del_member`, {
-      params: {
-        project_id: props.projectId,
-        member_id: member._id,
-      },
+    const res = await axios.post(`/api/project/del_member`, {
+      project_id: props.projectId,
+      member_id: member._id,
     });
 
     if (res.data.errcode === 0) {

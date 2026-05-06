@@ -110,7 +110,7 @@ const handleEdit = (testCase) => {
 
 const handleDelete = async (testCase) => {
   try {
-    const res = await axios.delete(`/api/testcase/del?id=${testCase._id}`);
+    const res = await axios.post(`/api/col/del_case`, { id: testCase._id });
     if (res.data.errcode === 0) {
       message.success("删除成功");
       fetchTestCases();

@@ -676,22 +676,27 @@ class projectController extends baseController {
    */
 
   async del(ctx) {
-    let id = ctx.params.id;
+    try {
+      let id = ctx.params.id;
 
-    if ((await this.checkAuth(id, "project", "danger")) !== true) {
-      return (ctx.body = yapi.commons.resReturn(null, 405, "没有权限"));
+      if ((await this.checkAuth(id, "project", "danger")) !== true) {
+        return (ctx.body = yapi.commons.resReturn(null, 405, "没有权限"));
+      }
+
+      let interfaceInst = yapi.getInst(interfaceModel);
+      let interfaceColInst = yapi.getInst(interfaceColModel);
+      let interfaceCaseInst = yapi.getInst(interfaceCaseModel);
+      await interfaceInst.delByProjectId(id);
+      await interfaceCaseInst.delByProjectId(id);
+      await interfaceColInst.delByProjectId(id);
+      await this.followModel.delByProjectId(id);
+      yapi.emitHook("project_del", id).then();
+      let result = await this.Model.del(id);
+      ctx.body = yapi.commons.resReturn(result);
+    } catch (e) {
+      yapi.commons.log(e, "error");
+      ctx.body = yapi.commons.resReturn(null, 400, "删除项目失败: " + e.message);
     }
-
-    let interfaceInst = yapi.getInst(interfaceModel);
-    let interfaceColInst = yapi.getInst(interfaceColModel);
-    let interfaceCaseInst = yapi.getInst(interfaceCaseModel);
-    await interfaceInst.delByProjectId(id);
-    await interfaceCaseInst.delByProjectId(id);
-    await interfaceColInst.delByProjectId(id);
-    await this.followModel.delByProjectId(id);
-    yapi.emitHook("project_del", id).then();
-    let result = await this.Model.del(id);
-    ctx.body = yapi.commons.resReturn(result);
   }
 
   /**
@@ -819,6 +824,8 @@ class projectController extends baseController {
           username: username,
           typeid: id,
         });
+      }).catch((followErr) => {
+        yapi.commons.log(followErr, "error");
       });
     } catch (e) {
       yapi.commons.log(e, "error"); // eslint-disable-line
@@ -1210,30 +1217,35 @@ class projectController extends baseController {
    * @returns {Object}
    */
   async activity(ctx) {
-    const projectId = ctx.request.query.project_id;
-    if (!projectId) {
-      return (ctx.body = yapi.commons.resReturn(null, 400, "project_id不能为空"));
+    try {
+      const projectId = ctx.request.query.project_id;
+      if (!projectId) {
+        return (ctx.body = yapi.commons.resReturn(null, 400, "project_id不能为空"));
+      }
+
+      // 检查项目权限：checkAuth 返回 true 表示有权限
+      if (!(await this.checkAuth(projectId, "project", "view"))) {
+        return (ctx.body = yapi.commons.resReturn(null, 400, "没有权限"));
+      }
+
+      const logModel = yapi.getInst(require("../models/log.js"));
+      const list = await logModel.list("project", projectId, 1, 100);
+
+      // 格式化返回数据
+      const activities = list.map(item => ({
+        id: item._id,
+        type: item.type,
+        content: item.content,
+        username: item.username,
+        uid: item.uid,
+        add_time: item.add_time,
+      }));
+
+      return (ctx.body = yapi.commons.resReturn(activities));
+    } catch (e) {
+      yapi.commons.log(e, "error");
+      return (ctx.body = yapi.commons.resReturn(null, 400, "获取项目动态失败: " + e.message));
     }
-
-    // 检查项目权限
-    if (await this.checkAuth(projectId, "project", "view")) {
-      return (ctx.body = yapi.commons.resReturn(null, 400, "没有权限"));
-    }
-
-    const logModel = yapi.getInst(require("../models/log.js"));
-    const list = await logModel.list("project", projectId, 1, 100);
-    
-    // 格式化返回数据
-    const activities = list.map(item => ({
-      id: item._id,
-      type: item.type,
-      content: item.content,
-      username: item.username,
-      uid: item.uid,
-      add_time: item.add_time,
-    }));
-
-    return (ctx.body = yapi.commons.resReturn(activities));
   }
 }
 

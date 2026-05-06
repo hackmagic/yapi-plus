@@ -77,7 +77,7 @@ import { useUserStore } from "../../store/user";
 import LogoSVG from "../../components/LogoSVG/LogoSVG.vue";
 import Search from "./Search/Search.vue";
 import Breadcrumb from "../Breadcrumb/Breadcrumb.vue";
-import { NIcon } from "naive-ui";
+import { NIcon, useMessage } from "naive-ui";
 import {
   StarOutline,
   AddOutline,
@@ -90,6 +90,7 @@ import {
 
 const router = useRouter();
 const userStore = useUserStore();
+const message = useMessage();
 
 const isLogin = computed(() => userStore.isLogin);
 const username = computed(() => userStore.username);

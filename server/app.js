@@ -157,6 +157,45 @@ async function startNormalMode() {
         textLimit: "1mb",
       }),
     );
+    // 全局错误处理中间件
+    app.use(async (ctx, next) => {
+      try {
+        await next();
+      } catch (err) {
+        yapi.commons.log(err, "error");
+        ctx.status = err.status || 500;
+        ctx.body = yapi.commons.resReturn(null, err.status || 500, err.message || "服务器内部错误");
+        // 通知 Koa 应用层错误事件
+        ctx.app.emit("error", err, ctx);
+      }
+    });
+
+    // 统一 CORS 中间件
+    app.use(async (ctx, next) => {
+      const origin = ctx.get("Origin");
+      // 允许的 Origin 列表
+      const allowedOrigins = [
+        ctx.origin, // 当前请求源
+      ];
+      // 开发环境允许所有源
+      if (process.env.NODE_ENV !== "production") {
+        ctx.set("Access-Control-Allow-Origin", origin || "*");
+      } else if (origin && allowedOrigins.includes(origin)) {
+        ctx.set("Access-Control-Allow-Origin", origin);
+      }
+      ctx.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
+      ctx.set("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With");
+      ctx.set("Access-Control-Allow-Credentials", "true");
+      ctx.set("Access-Control-Max-Age", "86400");
+
+      // 处理 OPTIONS 预检请求
+      if (ctx.method === "OPTIONS") {
+        ctx.status = 204;
+        return;
+      }
+      await next();
+    });
+
     app.use(mockServer);
     app.use(router.routes());
     app.use(router.allowedMethods());

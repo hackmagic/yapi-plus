@@ -68,8 +68,9 @@ const formatJson = (data) => {
 const handleSave = async () => {
   saving.value = true;
   try {
-    const res = await axios.post(`/api/interface/mock`, {
-      interface_id: props.interfaceId,
+    // Mock 模板保存：使用 interface up 接口
+    const res = await axios.post(`/api/interface/up`, {
+      id: props.interfaceId,
       mock_template: mockTemplate.value,
     });
 

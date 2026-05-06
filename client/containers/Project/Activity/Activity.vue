@@ -23,6 +23,7 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
+import axios from "axios";
 
 const route = useRoute();
 
@@ -60,10 +61,11 @@ const getActivityTitle = (type) => {
 const loadActivities = async () => {
   loading.value = true;
   try {
-    const res = await fetch(`/api/project/activity?project_id=${projectId.value}`);
-    const data = await res.json();
-    if (data.errcode === 0) {
-      activityList.value = data.data || [];
+    const res = await axios.get("/api/project/activity", {
+      params: { project_id: projectId.value },
+    });
+    if (res.data.errcode === 0) {
+      activityList.value = res.data.data || [];
     }
   } catch (e) {
     console.error("加载动态失败", e);

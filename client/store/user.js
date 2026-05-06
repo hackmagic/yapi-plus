@@ -80,7 +80,7 @@ export const useUserStore = defineStore("user", {
     },
 
     async updateUserInfo(data) {
-      const res = await http.put("/api/user/update", data);
+      const res = await http.post("/api/user/update", data);
       unwrapResponse(res, "更新失败");
       this.setUser({ ...this.userInfo, ...data });
       return res.data;

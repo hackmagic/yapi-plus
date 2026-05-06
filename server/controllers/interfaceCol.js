@@ -731,7 +731,7 @@ class interfaceColController extends baseController {
     try {
       let params = ctx.request.body;
       if (!params || !Array.isArray(params)) {
-        ctx.body = yapi.commons.resReturn(null, 400, "请求参数必须是数组");
+        return (ctx.body = yapi.commons.resReturn(null, 400, "请求参数必须是数组"));
       }
       params.forEach((item) => {
         if (item.id) {
@@ -765,7 +765,7 @@ class interfaceColController extends baseController {
     try {
       let params = ctx.request.body;
       if (!params || !Array.isArray(params)) {
-        ctx.body = yapi.commons.resReturn(null, 400, "请求参数必须是数组");
+        return (ctx.body = yapi.commons.resReturn(null, 400, "请求参数必须是数组"));
       }
       params.forEach((item) => {
         if (item.id) {
@@ -870,13 +870,18 @@ class interfaceColController extends baseController {
   }
 
   async runCaseScript(ctx) {
-    let params = ctx.request.body;
-    ctx.body = await yapi.commons.runCaseScript(
-      params,
-      params.col_id,
-      params.interface_id,
-      this.getUid(),
-    );
+    try {
+      let params = ctx.request.body;
+      ctx.body = await yapi.commons.runCaseScript(
+        params,
+        params.col_id,
+        params.interface_id,
+        this.getUid(),
+      );
+    } catch (e) {
+      yapi.commons.log(e, "error");
+      ctx.body = yapi.commons.resReturn(null, 400, "脚本执行失败: " + e.message);
+    }
   }
 
   // 数组去重

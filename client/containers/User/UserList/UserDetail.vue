@@ -51,7 +51,7 @@ const formatDate = (timestamp) => {
 
 const fetchUserInfo = async () => {
   try {
-    const res = await axios.get(`/api/user/info?id=${route.params.id}`);
+    const res = await axios.get(`/api/user/find?id=${route.params.id}`);
     if (res.data.errcode === 0) {
       userInfo.value = res.data.data;
     } else {

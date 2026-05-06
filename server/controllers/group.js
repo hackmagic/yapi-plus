@@ -96,18 +96,25 @@ class groupController extends baseController {
    * @example
    */
   async get(ctx) {
-    let params = ctx.params;
+    try {
+      let params = ctx.params;
 
-    let groupInst = yapi.getInst(groupModel);
-    let result = await groupInst.getGroupById(params.id);
-    if (result) {
-      result = result.toObject();
-      let role = await this.getProjectRole(params.id, "group");
-      result.role = role;
-      if (result.type === "private") {
-        result.group_name = "个人空间";
+      let groupInst = yapi.getInst(groupModel);
+      let result = await groupInst.getGroupById(params.id);
+      if (result) {
+        result = result.toObject();
+        let role = await this.getProjectRole(params.id, "group");
+        result.role = role;
+        if (result.type === "private") {
+          result.group_name = "个人空间";
+        }
+        ctx.body = yapi.commons.resReturn(result);
+      } else {
+        ctx.body = yapi.commons.resReturn(null, 404, "分组不存在");
       }
-      ctx.body = yapi.commons.resReturn(result);
+    } catch (e) {
+      yapi.commons.log(e, "error");
+      ctx.body = yapi.commons.resReturn(null, 400, "获取分组失败: " + e.message);
     }
   }
 
@@ -212,21 +219,26 @@ class groupController extends baseController {
   }
 
   async getMyGroup(ctx) {
-    var groupInst = yapi.getInst(groupModel);
-    let privateGroup = await groupInst.getByPrivateUid(this.getUid());
-    if (!privateGroup) {
-      privateGroup = await groupInst.save({
-        uid: this.getUid(),
-        group_name: "User-" + this.getUid(),
-        add_time: yapi.commons.time(),
-        up_time: yapi.commons.time(),
-        type: "private",
-      });
-    }
-    if (privateGroup) {
-      ctx.body = yapi.commons.resReturn(privateGroup);
-    } else {
-      ctx.body = yapi.commons.resReturn(null);
+    try {
+      var groupInst = yapi.getInst(groupModel);
+      let privateGroup = await groupInst.getByPrivateUid(this.getUid());
+      if (!privateGroup) {
+        privateGroup = await groupInst.save({
+          uid: this.getUid(),
+          group_name: "User-" + this.getUid(),
+          add_time: yapi.commons.time(),
+          up_time: yapi.commons.time(),
+          type: "private",
+        });
+      }
+      if (privateGroup) {
+        ctx.body = yapi.commons.resReturn(privateGroup);
+      } else {
+        ctx.body = yapi.commons.resReturn(null);
+      }
+    } catch (e) {
+      yapi.commons.log(e, "error");
+      ctx.body = yapi.commons.resReturn(null, 400, "获取我的分组失败: " + e.message);
     }
   }
 
@@ -343,10 +355,18 @@ class groupController extends baseController {
    */
 
   async getMemberList(ctx) {
-    let params = ctx.params;
-    let groupInst = yapi.getInst(groupModel);
-    let group = await groupInst.get(params.id);
-    ctx.body = yapi.commons.resReturn(group.members);
+    try {
+      let params = ctx.params;
+      let groupInst = yapi.getInst(groupModel);
+      let group = await groupInst.get(params.id);
+      if (!group) {
+        return (ctx.body = yapi.commons.resReturn(null, 404, "分组不存在"));
+      }
+      ctx.body = yapi.commons.resReturn(group.members);
+    } catch (e) {
+      yapi.commons.log(e, "error");
+      ctx.body = yapi.commons.resReturn(null, 400, "获取成员列表失败: " + e.message);
+    }
   }
 
   /**

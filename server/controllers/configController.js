@@ -172,8 +172,8 @@ class configController extends baseController {
         // 生成 16 位随机密码：大写字母 + 小写字母 + 数字 + 特殊字符
         const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
         adminPassword = Array.from({ length: 16 }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
-        console.log(`\n⚠️  初始管理员密码已自动生成: ${adminPassword}`);
-        console.log("⚠️  请妥善保存此密码，首次登录后请立即修改！\n");
+        // 密码已自动生成，请通过安全渠道获取
+        console.log("⚠️  初始管理员密码已自动生成，请通过安全渠道获取！\n");
       }
 
       // 创建 User mongoose model

@@ -1280,14 +1280,18 @@ class interfaceController extends baseController {
   }
 
   async schema2json(ctx) {
-    let schema = ctx.request.body.schema;
-    let required = ctx.request.body.required;
+    try {
+      let schema = ctx.request.body.schema;
+      let required = ctx.request.body.required;
 
-    let res = yapi.commons.schemaToJson(schema, {
-      alwaysFakeOptionals: _.isUndefined(required) ? true : required,
-    });
-    // console.log('res',res)
-    return (ctx.body = res);
+      let res = yapi.commons.schemaToJson(schema, {
+        alwaysFakeOptionals: _.isUndefined(required) ? true : required,
+      });
+      return (ctx.body = res);
+    } catch (e) {
+      yapi.commons.log(e, "error");
+      return (ctx.body = yapi.commons.resReturn(null, 400, "Schema 解析失败: " + e.message));
+    }
   }
 
   // 获取开放接口数据

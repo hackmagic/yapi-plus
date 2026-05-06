@@ -60,9 +60,7 @@ const formatDate = (timestamp) => {
 const handleGenerate = async () => {
   generating.value = true;
   try {
-    const res = await axios.post(`/api/project/token`, {
-      project_id: props.projectId,
-    });
+    const res = await axios.get(`/api/project/update_token?project_id=${props.projectId}`);
 
     if (res.data.errcode === 0) {
       message.success("Token 生成成功");
@@ -84,12 +82,9 @@ const handleCopy = (token) => {
 
 const handleDelete = async (token) => {
   try {
-    const res = await axios.delete(`/api/project/token`, {
-      params: {
-        project_id: props.projectId,
-        token_id: token._id,
-      },
-    });
+    // Token 删除功能暂不可用（后端未实现 token 删除接口）
+    message.warning("Token 删除功能暂未实现");
+    return;
 
     if (res.data.errcode === 0) {
       message.success("删除成功");
@@ -104,7 +99,7 @@ const handleDelete = async (token) => {
 
 const fetchTokens = async () => {
   try {
-    const res = await axios.get(`/api/project/token_list`, {
+    const res = await axios.get(`/api/project/token`, {
       params: {
         project_id: props.projectId,
       },

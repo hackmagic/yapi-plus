@@ -28,15 +28,15 @@ const columns = [
   {
     title: "操作",
     key: "actions",
-    render: (row) =>
-      h(NButton, { text: true, type: "error", onClick: () => deleteToken(row._id) }, "删除"),
+    render: () =>
+      h(NButton, { text: true, type: "warning", onClick: () => deleteToken() }, "重新生成"),
   },
 ];
 
 const loadTokens = async () => {
   loading.value = true;
   try {
-    const res = await axios.get(`/api/project/token/list?project_id=${props.projectId}`);
+    const res = await axios.get(`/api/project/token?project_id=${props.projectId}`);
     if (res.data.errcode === 0) tokenList.value = res.data.data;
   } catch (error) {
     message.error("加载失败");
@@ -47,7 +47,7 @@ const loadTokens = async () => {
 
 const deleteToken = async (id) => {
   try {
-    await axios.post(`/api/project/token/del?id=${id}`);
+    await axios.get(`/api/project/update_token?project_id=${props.projectId}`);
     message.success("删除成功");
     loadTokens();
   } catch (error) {

@@ -78,7 +78,7 @@ const followList = ref([]);
 const loadFollows = async () => {
   loading.value = true;
   try {
-    const res = await axios.get("/api/project/follow_list");
+    const res = await axios.get("/api/follow/list");
     if (res.data.errcode === 0) {
       // 按更新时间排序
       followList.value = (res.data.data || []).sort((a, b) => {
@@ -99,7 +99,7 @@ const handleView = (project) => {
 
 const handleUnfollow = async (project) => {
   try {
-    const res = await axios.post(`/api/project/follow`, {
+    const res = await axios.post(`/api/follow/add`, {
       project_id: project._id,
       action: "del",
     });

@@ -159,6 +159,16 @@ const handleParamChange = (params) => {
 };
 
 const handleSubmit = async () => {
+  // 表单校验
+  if (!formData.title || !formData.title.trim()) {
+    message.error("请输入接口名称");
+    return;
+  }
+  if (!formData.path || !formData.path.trim()) {
+    message.error("请输入接口路径");
+    return;
+  }
+
   try {
     submitting.value = true;
     const data = {

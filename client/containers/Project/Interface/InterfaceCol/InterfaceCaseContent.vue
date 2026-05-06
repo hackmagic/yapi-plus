@@ -49,17 +49,19 @@
 
           <n-tabs type="line" animated>
             <n-tab-pane name="params" tab="Query 参数">
-              <n-editable-table
-                v-model:data="formData.req_query"
+              <n-data-table
+                :data="formData.req_query"
                 :columns="paramColumns"
-                :max-height="200"
+                :pagination="{ pageSize: 5 }"
+                size="small"
               />
             </n-tab-pane>
             <n-tab-pane name="headers" tab="Headers">
-              <n-editable-table
-                v-model:data="formData.req_headers"
+              <n-data-table
+                :data="formData.req_headers"
                 :columns="paramColumns"
-                :max-height="200"
+                :pagination="{ pageSize: 5 }"
+                size="small"
               />
             </n-tab-pane>
             <n-tab-pane name="body" tab="Body">
@@ -226,10 +228,18 @@ const loadCaseData = async () => {
 const handleSave = async () => {
   saving.value = true;
   try {
-    await axios.put("/api/interfaceCase/up", {
+    await axios.post("/api/col/up_case", {
       id: props.caseId,
       casename: formData.value.casename,
       case_env: formData.value.case_env,
+      method: formData.value.method,
+      path: formData.value.path,
+      req_query: formData.value.req_query,
+      req_headers: formData.value.req_headers,
+      req_body_type: formData.value.req_body_type,
+      req_body_other: formData.value.req_body_other,
+      req_body_form: formData.value.req_body_form,
+      req_params: formData.value.req_params,
     });
     message.success("保存成功");
   } catch (e) {

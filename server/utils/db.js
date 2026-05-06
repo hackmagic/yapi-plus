@@ -63,8 +63,8 @@ function connect(callback) {
     },
     function (err) {
       yapi.commons.log(err + "mongodb connect error", "error");
-      // 重新抛出错误，让调用者能够捕获
-      throw err;
+      // 不重新抛出，避免未捕获的 Promise 异常导致进程崩溃
+      // 连接失败已通过日志记录，调用者可通过 db 状态判断
     },
   );
 

@@ -27,9 +27,12 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 import { useMessage } from "naive-ui";
 import ProjectCard from "../../../components/ProjectCard/ProjectCard.vue";
 import axios from "axios";
+
+const router = useRouter();
 
 const props = defineProps({
   groupId: {

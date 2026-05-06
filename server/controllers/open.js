@@ -442,8 +442,8 @@ class openController extends baseController {
       return (ctx.body = yapi.commons.resReturn(null, 400, "project_id不能为空"));
     }
 
-    // 检查权限
-    if (await this.checkAuth(projectId, "project", "view")) {
+    // 检查权限：checkAuth 返回 true 表示有权限，返回 false/null 表示无权限
+    if (!(await this.checkAuth(projectId, "project", "view"))) {
       return (ctx.body = yapi.commons.resReturn(null, 400, "没有权限"));
     }
 

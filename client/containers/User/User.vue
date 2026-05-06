@@ -160,7 +160,7 @@ const handleSave = async () => {
 const handleChangePassword = async () => {
   saving.value = true;
   try {
-    await axios.post("/api/user/changePassword", {
+    await axios.post("/api/user/change_password", {
       oldPassword: pwdForm.value.oldPassword,
       newPassword: pwdForm.value.newPassword,
     });

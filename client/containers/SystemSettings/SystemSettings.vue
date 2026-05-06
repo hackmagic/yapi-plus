@@ -134,7 +134,9 @@ const loadConfig = async () => {
 const saveDbConfig = async () => {
   saving.value = true;
   try {
-    const res = await axios.post("/api/config/update-database", dbConfig);
+    const res = await axios.post("/api/config/save", {
+      database: dbConfig,
+    });
     if (res.data.errcode === 0) {
       message.success("数据库配置保存成功");
     } else {
@@ -150,7 +152,9 @@ const saveDbConfig = async () => {
 const saveAdminConfig = async () => {
   saving.value = true;
   try {
-    const res = await axios.post("/api/config/update-admin", adminConfig);
+    const res = await axios.post("/api/config/save", {
+      admin: adminConfig,
+    });
     if (res.data.errcode === 0) {
       message.success("管理员配置保存成功");
     } else {
@@ -166,7 +170,9 @@ const saveAdminConfig = async () => {
 const saveMailConfig = async () => {
   saving.value = true;
   try {
-    const res = await axios.post("/api/config/update-mail", mailConfig);
+    const res = await axios.post("/api/config/save", {
+      mail: mailConfig,
+    });
     if (res.data.errcode === 0) {
       message.success("邮件配置保存成功");
     } else {

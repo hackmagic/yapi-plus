@@ -31,7 +31,7 @@ export const useInterfaceColStore = defineStore("interfaceCol", {
 
     async fetchColList(projectId) {
       try {
-        const res = await http.get("/api/interfaceCol/list", { params: { project_id: projectId } });
+        const res = await http.get("/api/col/list", { params: { project_id: projectId } });
         const data = unwrapResponse(res, "获取集合列表失败");
         this.colList = data;
         return data;
@@ -43,7 +43,7 @@ export const useInterfaceColStore = defineStore("interfaceCol", {
 
     async fetchCaseList(colId) {
       try {
-        const res = await http.get("/api/interfaceCol/getCaseList", { params: { col_id: colId } });
+        const res = await http.get("/api/col/case_list", { params: { col_id: colId } });
         const data = unwrapResponse(res, "获取用例列表失败");
         this.caseList = data;
         return data;
@@ -54,7 +54,7 @@ export const useInterfaceColStore = defineStore("interfaceCol", {
     },
 
     async addCol(projectId, data) {
-      const res = await http.post("/api/interfaceCol/add", {
+      const res = await http.post("/api/col/add_col", {
         project_id: projectId,
         ...data,
       });
@@ -64,7 +64,7 @@ export const useInterfaceColStore = defineStore("interfaceCol", {
     },
 
     async updateCol(colId, data) {
-      const res = await http.put("/api/interfaceCol/up", { id: colId, ...data });
+      const res = await http.post("/api/col/up_col", { id: colId, ...data });
       unwrapResponse(res, "更新集合失败");
       const index = this.colList.findIndex((c) => c._id === colId);
       if (index !== -1) {
@@ -74,14 +74,14 @@ export const useInterfaceColStore = defineStore("interfaceCol", {
     },
 
     async deleteCol(colId, projectId) {
-      const res = await http.delete("/api/interfaceCol/del", { data: { id: colId } });
+      const res = await http.get("/api/col/del_col", { params: { id: colId } });
       unwrapResponse(res, "删除集合失败");
       await this.fetchColList(projectId);
       return res.data;
     },
 
     async addCase(colId, data) {
-      const res = await http.post("/api/interfaceCase/add", {
+      const res = await http.post("/api/col/add_case", {
         col_id: colId,
         ...data,
       });
@@ -91,7 +91,7 @@ export const useInterfaceColStore = defineStore("interfaceCol", {
     },
 
     async updateCase(caseId, data) {
-      const res = await http.put("/api/interfaceCase/up", { id: caseId, ...data });
+      const res = await http.post("/api/col/up_case", { id: caseId, ...data });
       unwrapResponse(res, "更新用例失败");
       const index = this.caseList.findIndex((c) => c._id === caseId);
       if (index !== -1) {
@@ -101,14 +101,14 @@ export const useInterfaceColStore = defineStore("interfaceCol", {
     },
 
     async deleteCase(caseId, colId) {
-      const res = await http.delete("/api/interfaceCase/del", { data: { id: caseId } });
+      const res = await http.get("/api/col/del_case", { params: { id: caseId } });
       unwrapResponse(res, "删除用例失败");
       await this.fetchCaseList(colId);
       return res.data;
     },
 
     async runCases(colId) {
-      const res = await http.post("/api/interfaceCol/run", { col_id: colId });
+      const res = await http.post("/api/col/run_script", { col_id: colId });
       return unwrapResponse(res, "运行失败");
     },
 
