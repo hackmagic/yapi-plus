@@ -127,19 +127,31 @@ class UserSettingsPage {
   }
 
   get usernameInput() {
-    return this.page.locator('input[name="username"], input[placeholder*="用户名"]');
+    return this.page.locator('input[name="username"], input[placeholder*="用户名"]').first();
   }
 
   get emailInput() {
-    return this.page.locator('input[name="email"], input[placeholder*="邮箱"]');
+    return this.page.locator('input[name="email"], input[placeholder*="邮箱"]').first();
   }
 
-  get passwordInput() {
-    return this.page.locator('input[name="password"], input[placeholder*="密码"]');
+  get oldPasswordInput() {
+    return this.page.locator('input[placeholder*="原密码"], input[placeholder*="旧密码"]').first();
+  }
+
+  get newPasswordInput() {
+    return this.page.locator('input[placeholder*="新密码"]').first();
+  }
+
+  get confirmPasswordInput() {
+    return this.page.locator('input[placeholder*="确认密码"]').first();
   }
 
   get saveButton() {
-    return this.page.locator('button[type="submit"], button:has-text("保存")');
+    return this.page.locator('button[type="submit"], button:has-text("保存")').first();
+  }
+
+  get changePasswordButton() {
+    return this.page.locator('button:has-text("修改密码"), button:has-text("更改密码")').first();
   }
 
   get avatarUpload() {
@@ -157,9 +169,19 @@ class UserSettingsPage {
   }
 
   async changePassword(oldPassword, newPassword) {
-    await this.passwordInput.first().fill(oldPassword);
-    await this.passwordInput.last().fill(newPassword);
-    await this.saveButton.click();
+    if (await this.oldPasswordInput.isVisible().catch(() => false)) {
+      await this.oldPasswordInput.fill(oldPassword);
+    }
+    if (await this.newPasswordInput.isVisible().catch(() => false)) {
+      await this.newPasswordInput.fill(newPassword);
+    }
+    if (await this.confirmPasswordInput.isVisible().catch(() => false)) {
+      await this.confirmPasswordInput.fill(newPassword);
+    }
+    const btn = await this.changePasswordButton.isVisible().catch(() => false)
+      ? this.changePasswordButton
+      : this.saveButton;
+    await btn.click();
   }
 }
 
@@ -170,23 +192,31 @@ class SystemSettingsPage {
   }
 
   get mailSettingTab() {
-    return this.page.locator('button:has-text("邮件设置")');
+    return this.page.locator('button:has-text("邮件设置"), [role="tab"]:has-text("邮件")');
+  }
+
+  get databaseTab() {
+    return this.page.locator('button:has-text("数据库设置"), [role="tab"]:has-text("数据库")');
+  }
+
+  get adminTab() {
+    return this.page.locator('button:has-text("管理员设置"), [role="tab"]:has-text("管理员")');
   }
 
   get smtpHostInput() {
-    return this.page.locator('input[name="smtpHost"], input[placeholder*="SMTP"]');
+    return this.page.locator('input[name="smtpHost"], input[placeholder*="SMTP"], input[placeholder*="smtp"]').first();
   }
 
   get smtpPortInput() {
-    return this.page.locator('input[name="smtpPort"], input[placeholder*="端口"]');
+    return this.page.locator('input[name="smtpPort"], input[placeholder*="端口"]').first();
   }
 
   get smtpUserInput() {
-    return this.page.locator('input[name="smtpUser"], input[placeholder*="用户名"]');
+    return this.page.locator('input[name="smtpUser"], input[placeholder*="用户名"]').first();
   }
 
   get smtpPassInput() {
-    return this.page.locator('input[name="smtpPass"], input[placeholder*="密码"]');
+    return this.page.locator('input[name="smtpPass"], input[placeholder*="密码"]').first();
   }
 
   get saveButton() {
@@ -198,11 +228,21 @@ class SystemSettingsPage {
   }
 
   async updateMailSettings(config) {
+    await this.mailSettingTab.click().catch(() => {});
+    await this.page.waitForTimeout(500);
     await this.smtpHostInput.fill(config.host || '');
     await this.smtpPortInput.fill(String(config.port || ''));
     await this.smtpUserInput.fill(config.user || '');
     await this.smtpPassInput.fill(config.pass || '');
     await this.saveButton.click();
+  }
+
+  async saveConfig(configData) {
+    // Uses unified /api/config/save endpoint
+    const response = await this.page.request.post('http://localhost:4000/api/config/save', {
+      data: configData
+    });
+    return response;
   }
 }
 

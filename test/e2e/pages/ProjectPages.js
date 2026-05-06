@@ -9,11 +9,11 @@ class HeaderComponent {
   }
 
   get userMenu() {
-    return this.page.locator('[class*="user"], [class*="avatar"], .n-dropdown');
+    return this.page.locator('.n-dropdown, [class*="user"], [class*="avatar"], .n-avatar').first();
   }
 
   get logoutButton() {
-    return this.page.locator('button:has-text("退出"), button:has-text("登出")');
+    return this.page.locator('button:has-text("退出"), span:has-text("退出"), div:has-text("退出")').first();
   }
 
   get homeLink() {
@@ -24,9 +24,23 @@ class HeaderComponent {
     return this.page.locator('input[placeholder*="搜索"], input[type="search"]');
   }
 
+  get loginButton() {
+    return this.page.locator('button:has-text("登录"), a:has-text("登录")').first();
+  }
+
+  get registerButton() {
+    return this.page.locator('button:has-text("注册"), a:has-text("注册")').first();
+  }
+
   async logout() {
     await this.userMenu.click();
+    await this.page.waitForTimeout(500);
     await this.logoutButton.click();
+  }
+
+  async isLoggedIn() {
+    const loginVisible = await this.loginButton.isVisible().catch(() => false);
+    return !loginVisible;
   }
 }
 
@@ -76,19 +90,23 @@ class AddProjectPage {
   }
 
   get nameInput() {
-    return this.page.locator('input[placeholder*="项目名称"], input[name="name"]').first();
+    return this.page.locator('input[placeholder*="项目名称"]').first();
   }
 
   get descriptionInput() {
-    return this.page.locator('textarea[placeholder*="描述"], textarea[name="description"]').first();
+    return this.page.locator('textarea[placeholder*="描述"]').first();
+  }
+
+  get basepathInput() {
+    return this.page.locator('input[placeholder*="基本路径"], input[placeholder*="basepath"]').first();
   }
 
   get groupSelect() {
-    return this.page.locator('.n-select');
+    return this.page.locator('.n-select').first();
   }
 
   get createButton() {
-    return this.page.locator('button[type="submit"], button:has-text("创建"), button:has-text("确定")');
+    return this.page.locator('button:has-text("创建项目")');
   }
 
   get cancelButton() {
@@ -99,10 +117,19 @@ class AddProjectPage {
     await this.utils.navigateTo('/add-project');
   }
 
+  async selectGroup() {
+    await this.groupSelect.click();
+    await this.page.waitForTimeout(500);
+    const firstOption = this.page.locator('.n-select-option, .n-base-select-option').first();
+    if (await firstOption.isVisible()) {
+      await firstOption.click();
+    }
+  }
+
   async createProject(name, description = '', groupId = '') {
     await this.nameInput.fill(name);
     if (description) await this.descriptionInput.fill(description);
-    if (groupId) await this.groupSelect.selectOption(groupId);
+    await this.selectGroup();
     await this.createButton.click();
   }
 }
@@ -162,7 +189,7 @@ class InterfaceListPage {
   }
 
   get searchInput() {
-    return this.page.locator('input[placeholder*="搜索"], input[type="search"]').first();
+    return this.page.locator('input[placeholder*="搜索"], input[placeholder*="search"]').first();
   }
 
   get methodBadge() {
@@ -177,12 +204,17 @@ class InterfaceListPage {
     await this.utils.navigateTo(`/project/${projectId}/interface`);
   }
 
+  async navigateToApi(projectId) {
+    await this.utils.navigateTo(`/project/${projectId}/interface/api`);
+  }
+
   async clickAddInterface() {
     await this.addInterfaceButton.click();
   }
 
   async searchInterface(keyword) {
     await this.searchInput.fill(keyword);
+    await this.page.waitForTimeout(500);
   }
 
   async getInterfaceList() {
@@ -203,20 +235,24 @@ class InterfaceEditPage {
     this.utils = new TestUtils(page);
   }
 
+  get titleInput() {
+    return this.page.locator('input[placeholder*="接口名称"], input[placeholder*="标题"]').first();
+  }
+
   get methodSelect() {
-    return this.page.locator('.n-select');
+    return this.page.locator('.n-select').first();
   }
 
   get pathInput() {
-    return this.page.locator('input[placeholder*="路径"], input[name="path"]').first();
+    return this.page.locator('input[placeholder*="路径"]').first();
   }
 
   get descriptionInput() {
-    return this.page.locator('textarea[placeholder*="描述"], textarea[name="description"]').first();
+    return this.page.locator('textarea[placeholder*="描述"]').first();
   }
 
   get saveButton() {
-    return this.page.locator('button:has-text("保存"), button[type="submit"]').first();
+    return this.page.locator('button:has-text("保存")').first();
   }
 
   get runButton() {
@@ -231,22 +267,31 @@ class InterfaceEditPage {
     return this.page.locator('button:has-text("返回数据")');
   }
 
+  get validationError() {
+    return this.page.locator('.n-form-item-feedback, .n-message, [class*="error"]');
+  }
+
   async navigate(projectId, interfaceId) {
-    const path = interfaceId 
+    const path = interfaceId
       ? `/project/${projectId}/interface/api/${interfaceId}`
-      : `/project/${projectId}/interface`;
+      : `/project/${projectId}/interface/api`;
     await this.utils.navigateTo(path);
   }
 
-  async createInterface(method, path, description = '') {
-    await this.methodSelect.selectOption(method);
-    await this.pathInput.fill(path);
+  async createInterface(title, method, path, description = '') {
+    if (title) await this.titleInput.fill(title);
+    if (method) await this.methodSelect.selectOption(method);
+    if (path) await this.pathInput.fill(path);
     if (description) await this.descriptionInput.fill(description);
     await this.saveButton.click();
   }
 
   async runInterface() {
     await this.runButton.click();
+  }
+
+  async hasValidationError() {
+    return await this.validationError.isVisible().catch(() => false);
   }
 }
 
@@ -321,6 +366,73 @@ class AddGroupPage {
   }
 }
 
+class FollowsPage {
+  constructor(page) {
+    this.page = page;
+    this.utils = new TestUtils(page);
+  }
+
+  get followItems() {
+    return this.page.locator('[class*="follow"], [class*="item"], .n-list-item');
+  }
+
+  get unfollowButton() {
+    return this.page.locator('button:has-text("取消关注"), button:has-text("取消")');
+  }
+
+  async navigate() {
+    await this.utils.navigateTo('/follows');
+  }
+
+  async getFollowCount() {
+    const items = await this.followItems.all();
+    return items.length;
+  }
+}
+
+class NewsPage {
+  constructor(page) {
+    this.page = page;
+    this.utils = new TestUtils(page);
+  }
+
+  get newsItems() {
+    return this.page.locator('[class*="news"], [class*="log"], [class*="item"], .n-list-item');
+  }
+
+  get newsContent() {
+    return this.page.locator('[class*="content"], [class*="desc"]');
+  }
+
+  async navigate() {
+    await this.utils.navigateTo('/news');
+  }
+
+  async getNewsCount() {
+    const items = await this.newsItems.all();
+    return items.length;
+  }
+}
+
+class ProjectDataPage {
+  constructor(page) {
+    this.page = page;
+    this.utils = new TestUtils(page);
+  }
+
+  get exportButton() {
+    return this.page.locator('button:has-text("导出"), a:has-text("导出")');
+  }
+
+  get importButton() {
+    return this.page.locator('button:has-text("导入"), a:has-text("导入")');
+  }
+
+  async navigate(projectId) {
+    await this.utils.navigateTo(`/project/${projectId}/setting`);
+  }
+}
+
 module.exports = {
   HeaderComponent,
   ProjectListPage,
@@ -329,5 +441,8 @@ module.exports = {
   InterfaceListPage,
   InterfaceEditPage,
   GroupPage,
-  AddGroupPage
+  AddGroupPage,
+  FollowsPage,
+  NewsPage,
+  ProjectDataPage
 };

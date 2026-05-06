@@ -59,7 +59,40 @@
 | 自然语言生成 | 从描述生成测试 |
 | 报告生成 | JSON/HTML格式导出 |
 
-#### 2.4 性能测试 (performance-tests.test.js)
+#### 2.4 深度审计修复验证测试 (deep-audit-fixes.test.js)
+
+> 验证 2026-05-06 深度流程审计中修复的所有问题。
+
+| 测试项 | 描述 | 对应修复 |
+|--------|------|----------|
+| Header 退出登录 | useMessage 已注入，退出不崩溃 | NT1 |
+| 项目列表编辑按钮 | useRouter 已注入，编辑不崩溃 | NT2 |
+| 关注列表 API | 使用 `/api/follow/list` 而非旧路径 | NT3-NT4 |
+| 集合 API 路径 | 使用 `/api/col/*` 而非 `/api/interfaceCol/*` | NT3-NT4 |
+| 分组成员 API | 使用 `/api/group/add_member` 等 | NT3-NT4 |
+| 项目成员 API | 使用 `/api/project/add_member` 等 | NT3-NT4 |
+| 数据导出 API | 使用 `/api/open/export_data` | NT3 |
+| 用户详情 API | 使用 `/api/user/find` | NT3 |
+| 修改密码方法 | 使用 POST 方法和正确路径 | NT3 |
+| 动态列表 API | 使用 `/api/log/list` | NT3 |
+| 系统设置 API | 统一使用 `/api/config/save` | NT3 |
+| exportData 权限 | 有权限用户可正常导出 | NT7 |
+| activity 权限 | 有权限用户可查看活动 | NT8 |
+| 接口表单校验 | 空标题/路径不能提交 | NT10 |
+| 项目字段映射 | 使用 `project_type` 而非 `permission` | NT12 |
+| 接口搜索功能 | 搜索输入框可用 | NT13 |
+| Activity 页面 | 使用 axios 而非 fetch | NT14 |
+| 测试用例表格 | 使用 `n-data-table` 而非 `n-editable-table` | NT15 |
+| 全局错误处理 | 服务器错误返回 JSON | NT25 |
+| CORS 中间件 | 响应头包含 CORS 字段 | NT26 |
+| 后端错误处理 | 异常不导致服务器崩溃 | NT27 |
+| 项目设置字段 | 使用 `project_type` | NT33 |
+| 配置保存安全 | 密码不泄露到日志 | NT34 |
+| runCaseScript | 参数正确传递 | NT37 |
+| Token 常量 | 旧版格式使用常量 | NT54 |
+| 集成工作流 | 完整流程: 登录→创建→编辑→退出 | 全部 |
+
+#### 2.5 性能测试 (performance-tests.test.js)
 
 | 测试项 | 指标 |
 |--------|------|
@@ -79,19 +112,22 @@ pages/
 │   └── SetupPage        # 初始化页面
 │
 ├── ProjectPages.js      # 项目管理页面
-│   ├── HeaderComponent  # 公共头部组件
-│   ├── ProjectListPage  # 项目列表
-│   ├── AddProjectPage   # 添加项目
+│   ├── HeaderComponent  # 公共头部组件 (含 useMessage / Naive UI Dropdown)
+│   ├── ProjectListPage  # 项目列表 (含 useRouter)
+│   ├── AddProjectPage   # 添加项目 (project_type 字段 / Naive UI Select)
 │   ├── ProjectSettingPage  # 项目设置
-│   ├── InterfaceListPage   # 接口列表
-│   ├── InterfaceEditPage   # 接口编辑
+│   ├── InterfaceListPage   # 接口列表 (含搜索功能)
+│   ├── InterfaceEditPage   # 接口编辑 (含表单校验)
 │   ├── GroupPage        # 分组页面
-│   └── AddGroupPage     # 添加分组
+│   ├── AddGroupPage     # 添加分组
+│   ├── FollowsPage      # 关注列表
+│   ├── NewsPage        # 动态/消息列表
+│   └── ProjectDataPage  # 项目数据导出/导入
 │
 └── AiAgentPages.js      # AI Agent页面
-    ├── AiAgentPage     # AI助手管理
-    ├── UserSettingsPage # 用户设置
-    └── SystemSettingsPage # 系统设置
+    ├── AiAgentPage       # AI助手管理
+    ├── UserSettingsPage  # 用户设置 (POST 方法 / 正确路径)
+    └── SystemSettingsPage # 系统设置 (统一 /api/config/save)
 ```
 
 ### 4. AI Agent自动化框架
@@ -183,8 +219,11 @@ npm run test:e2e:report
 
 默认测试账户:
 - 邮箱: admin@admin.com
-- 密码: ymfe.org
+- 密码: 12345678 (管理员安装后设置的密码)
 - 角色: 管理员
+
+> 注意：深度审计修复后，所有测试已更新为使用修复后的 API 路径和字段名。
+> 详见 `deep-audit-fixes.test.js` 中的完整修复验证列表。
 
 ### 7. 故障排除
 
