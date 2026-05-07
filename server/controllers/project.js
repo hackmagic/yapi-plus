@@ -244,11 +244,9 @@ class projectController extends baseController {
       });
     }
     let uid = this.getUid();
-    // 将项目添加者变成项目组长,除admin以外
-    if (this.getRole() !== "admin") {
-      let userdata = await yapi.commons.getUserdata(uid, "owner");
-      await this.Model.addMember(result._id, [userdata]);
-    }
+    // 将项目创建者加入成员列表（无论角色）
+    let userdata = await yapi.commons.getUserdata(uid, "owner");
+    await this.Model.addMember(result._id, [userdata]);
     let username = this.getUsername();
     yapi.commons.saveLog({
       content: `<a href="/user/profile/${this.getUid()}">${username}</a> 添加了项目 <a href="/project/${
@@ -630,7 +628,7 @@ class projectController extends baseController {
 
     if (role === "admin") {
       // 管理员可以查看所有项目
-      const allProjects = await this.Model.list();
+      const allProjects = await this.Model.model.find({}).exec();
       projectList = allProjects.map((p) => p.toObject());
     } else {
       // 普通用户：获取自己创建的项目 + 是成员的项目 + 公开项目
