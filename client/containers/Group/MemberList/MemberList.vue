@@ -3,7 +3,15 @@
     <n-card title="组成员管理" :bordered="false">
       <template #header-extra>
         <n-button type="primary" @click="showAddModal = true"> 添加成员 </n-button>
+          <template #footer>
+        <n-space justify="end">
+          <n-button @click="handleCancel">取消</n-button>
+          <n-button type="primary" :loading="submitting" @click="handleAddMember">确定</n-button>
+        </n-space>
       </template>
+    </n-modal>
+  </div>
+</template>
 
       <n-data-table :columns="columns" :data="memberList" :loading="loading" :pagination="false" />
 
@@ -11,7 +19,7 @@
         v-model:show="showAddModal"
         preset="dialog"
         title="添加成员"
-        @positive-click="handleAddMember"
+        @positive-click="handleAddMember" @negative-click="handleCancel"
       >
         <n-form ref="formRef" :model="formData" :rules="rules">
           <n-form-item label="用户邮箱" path="email">
@@ -26,6 +34,14 @@
         </n-form>
       </n-modal>
     </n-card>
+  </div>
+    <template #footer>
+        <n-space justify="end">
+          <n-button @click="handleCancel">取消</n-button>
+          <n-button type="primary" :loading="submitting" @click="handleAddMember">确定</n-button>
+        </n-space>
+      </template>
+    </n-modal>
   </div>
 </template>
 
@@ -138,6 +154,12 @@ const handleRemoveMember = async (row) => {
   } catch (e) {
     message.error(e.response?.data?.errmsg || "移除失败");
   }
+};
+
+const handleCancel = () => {
+  showAddModal.value = false;
+  // Reset form
+  formData.value = { email: "", role: "member" };
 };
 </script>
 

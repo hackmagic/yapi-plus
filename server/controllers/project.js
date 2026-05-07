@@ -496,16 +496,21 @@ class projectController extends baseController {
    */
 
   async getMemberList(ctx) {
-    let params = ctx.params;
-    if (!params.id) {
-      return (ctx.body = yapi.commons.resReturn(null, 400, "项目id不能为空"));
-    }
-    if ((await this.checkAuth(params.id, "project", "view")) !== true) {
-      return (ctx.body = yapi.commons.resReturn(null, 405, "没有权限"));
-    }
+    try {
+      let params = ctx.params;
+      if (!params.id) {
+        return (ctx.body = yapi.commons.resReturn(null, 400, "项目id不能为空"));
+      }
+      if ((await this.checkAuth(params.id, "project", "view")) !== true) {
+        return (ctx.body = yapi.commons.resReturn(null, 405, "没有权限"));
+      }
 
-    let project = await this.Model.get(params.id);
-    ctx.body = yapi.commons.resReturn(project.members);
+      let project = await this.Model.get(params.id);
+      ctx.body = yapi.commons.resReturn(project.members);
+    } catch (e) {
+      yapi.commons.log(e, "error");
+      ctx.body = yapi.commons.resReturn(null, 400, "获取成员列表失败: " + e.message);
+    }
   }
 
   /**

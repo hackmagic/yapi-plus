@@ -69,7 +69,7 @@
       </n-form>
       <template #footer>
         <n-space justify="end">
-          <n-button @click="showAddModal = false">取消</n-button>
+          <n-button @click="handleCancel">取消</n-button>
           <n-button type="primary" :loading="saving" @click="handleSave"> 确定 </n-button>
         </n-space>
       </template>
@@ -251,7 +251,20 @@ const handleSave = async () => {
   } finally {
     saving.value = false;
   }
+}
+const handleCancel = () => {
+  showAddModal.value = false;
+  // 重置表单
+  formModel.name = '';
+  formModel.description = '';
+  formModel.apiKey = '';
+  formModel.model = formModel.type === 'deepseek' ? 'deepseek-chat' : '';
+  formModel.baseURL = defaultBaseURLs[formModel.type] || '';
+  formModel.temperature = 0.7;
+  formModel.maxTokens = 1000;
+  editingAgent.value = null;
 };
+;
 
 const resetForm = () => {
   editingAgent.value = null;

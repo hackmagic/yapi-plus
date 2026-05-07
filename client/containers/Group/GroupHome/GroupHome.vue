@@ -24,9 +24,11 @@
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import axios from "axios";
+import { useMessage } from "naive-ui";
 import ProjectList from "../../Project/ProjectList/ProjectList.vue";
 
 const route = useRoute();
+const message = useMessage();
 const groupId = route.params.id;
 const groupInfo = ref(null);
 
@@ -36,6 +38,7 @@ const loadGroup = async () => {
     if (res.data.errcode === 0) groupInfo.value = res.data.data;
   } catch (error) {
     console.error("加载失败:", error);
+    message.error("加载组数据失败");
   }
 };
 

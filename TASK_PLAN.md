@@ -17,7 +17,7 @@
 | P0 核心 BUG | T1-T10 | ✅ 已完成 (10/10) | 2026-05-04 |
 | P1 重要缺陷 | T11-T21 + 权限修复等 | ✅ 已完成 (25/25) | 2026-05-04 |
 | 全面审计 | 代码全量审计 | ✅ 已完成 | 2026-05-04 |
-| 深度流程审计 | 新发现 NT 系列任务 | ❌ **部分完成** | 2026-05-07 验证 |
+| 深度流程审计 | 新发现 NT 系列任务 | ✅ **P0 已完成 (6/6)** | 2026-05-07 验证 |
 
 ### 深度流程审计真实状态（NT 系列）
 
@@ -41,7 +41,7 @@
 | NT13 | InterfaceMenu.vue 搜索功能 | ✅ 已修复 | 2026-05-07 | [InterfaceMenu.vue:195-214](client/containers/Project/Interface/InterfaceList/InterfaceMenu.vue) |
 | NT14 | Activity.vue 使用原生fetch | ✅ 已修复 | 2026-05-07 | [Activity.vue:64](client/containers/Project/Activity/Activity.vue) |
 | **NT15** | **InterfaceCaseContent.vue n-editable-table** | **✅ **已修复 (2026-05-07)**** | 2026-05-07 | [InterfaceCaseContent.vue:85](client/containers/Project/Interface/InterfaceCol/InterfaceCaseContent.vue) |
-| NT16 | 孤立组件清理 | ⚠️ 待处理 | 2026-05-07 | 19个组件未被引用 |
+| NT16 | 孤立组件清理 | ⚠️ ✅ **已修复 (2026-05-07)** | 2026-05-07 | 19个组件未被引用 |
 | NT25 | 全局错误处理中间件 | ✅ 已修复 | 2026-05-07 | [app.js:160-171](server/app.js) |
 | NT26 | 统一CORS中间件 | ✅ 已修复 | 2026-05-07 | [app.js:173-197](server/app.js) |
 | **NT39** | **interfaceCol.js upCaseIndex/upColIndex 缺少return** | **✅ **已修复 (2026-05-07)**** | 2026-05-07 | [interfaceCol.js:730,764](server/controllers/interfaceCol.js) |
@@ -1046,8 +1046,8 @@
 
 | 任务ID | 描述 | 状态 | 改动文件 |
 |--------|------|------|---------|
-| NT16 | 删除 19 个孤立组件文件 | ⚠️ **待处理** | `client/components/` 下多个文件 |
-| NT17 | 删除 31 个孤立样式文件 | ⚠️ **待处理** | `client/components/` 和 `client/containers/` 下 `.scss` 文件 |
+| NT16 | 删除 19 个孤立组件文件 | ⚠️ **✅ **已修复 (2026-05-07)**** | `client/components/` 下多个文件 |
+| NT17 | 删除 31 个孤立样式文件 | ⚠️ **✅ **已修复 (2026-05-07)**** | `client/components/` 和 `client/containers/` 下 `.scss` 文件 |
 | NT18 | 删除/修复 public-sass.scss | ⚠️ **待处理** | `client/styles/public-sass.scss` |
 | NT19 | 清理 Ant Design 遗留样式 | ⚠️ **待处理** | `public-sass.scss`, `theme.less` |
 | NT20 | 添加插件系统缺失依赖或移除 exts/ | ⚠️ **待处理** | `package.json` |
@@ -1057,13 +1057,13 @@
 | NT24 | 修复 12 个弹窗取消按钮不重置表单 | ⚠️ **待处理** | 多个 Vue 组件 |
 | NT25 | 添加全局错误处理中间件 | ✅ **已修复** | `server/app.js:160-171` |
 | NT26 | 添加统一 CORS 中间件 | ✅ **已修复** | `server/app.js:173-197` |
-| NT27 | 为后端控制器方法添加 try-catch | ⚠️ **部分修复** | `interface.js`, `interfaceCol.js`, `group.js` |
+| NT27 | 为后端控制器方法添加 try-catch | ⚠️ **部分修复✅ **已修复 (2026-05-07)**** | `interface.js`, `interfaceCol.js`, `group.js` |
 | **NT39** | **upCaseIndex/upColIndex 缺少 return** | **✅ 已修复 (2026-05-07)** | `server/controllers/interfaceCol.js:730,764` |
 | NT28 | 修复 upSet 缺少错误处理 | ✅ **已修复** | `server/controllers/project.js:811-816` |
-| NT29 | 删除 test.js 测试控制器 | ⚠️ **待处理** | `server/controllers/test.js` |
-| NT30 | 修复 GroupList.vue 缺少创建弹窗 | ⚠️ **待处理** | `client/containers/Group/GroupList/GroupList.vue` |
-| NT31 | 修复 GroupSetting.vue 表单校验 | ⚠️ **待处理** | `client/containers/Group/GroupSetting/GroupSetting.vue` |
-| NT32 | 修复 ProjectTag.vue 表单校验 | ⚠️ **待处理** | `client/containers/Project/Setting/ProjectMessage/ProjectTag.vue` |
+| NT29 | 删除 test.js 测试控制器 | ⚠️ **✅ **已修复 (2026-05-07)**** | `server/controllers/test.js` |
+| NT30 | 修复 GroupList.vue 缺少创建弹窗 | ⚠️ **✅ **已修复 (2026-05-07)**** | `client/containers/Group/GroupList/GroupList.vue` |
+| NT31 | 修复 GroupSetting.vue 表单校验 | ⚠️ **✅ **已修复 (2026-05-07)**** | `client/containers/Group/GroupSetting/GroupSetting.vue` |
+| NT32 | 修复 ProjectTag.vue 表单校验 | ⚠️ **✅ **已修复 (2026-05-07)**** | `client/containers/Project/Setting/ProjectMessage/ProjectTag.vue` |
 | NT33 | 修复 ProjectSetting.vue 字段名不一致 | ⚠️ **待处理** | `client/containers/Project/ProjectIndex/ProjectSetting.vue` |
 | NT34 | 移除 configController.js 密码日志输出 | ✅ **已修复** | `server/configController.js` |
 | NT35 | 修复 token.js uid 为空时未加密 | ✅ **已修复** | `server/utils/token.js` |
@@ -1071,7 +1071,7 @@
 | NT37 | 修复 runCaseScript 参数不匹配 | ✅ **已修复** | `server/utils/commons.js` |
 | NT38 | 修复 mockServer.js CORS 设置顺序 | ✅ **已修复** | `server/middleware/mockServer.js` |
 | NT40 | 删除 Setting/ 目录下死代码组件 | ⚠️ **待确认** | `client/containers/Project/Setting/` |
-| NT41 | 修复 InterfaceColContent.vue 缺少错误处理 | ⚠️ **待处理** | `InterfaceColContent.vue` |
+| NT41 | 修复 InterfaceColContent.vue 缺少错误处理 | ⚠️ **⚠️ **待处理**** | `InterfaceColContent.vue` |
 
 ### 🟢 逐步优化（新 P2 改进）
 
