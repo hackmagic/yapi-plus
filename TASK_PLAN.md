@@ -26,10 +26,10 @@
 | NT1 | Header.vue message 未定义 | ✅ 已修复 | 2026-05-07 | [Header.vue:80,93](client/components/Header/Header.vue) |
 | NT2 | ProjectList.vue router 未定义 | ✅ 已修复 | 2026-05-07 | [ProjectList.vue:30,35](client/containers/Project/ProjectList/ProjectList.vue) |
 | NT3 | 27个前端API路径不匹配 | ⚠️ 部分修复 | 2026-05-07 | 部分路径已修复，Store中仍有4处方法不匹配 |
-| **NT4a** | **group.js updateGroup 方法不匹配 (put→post)** | **❌ 未修复** | 2026-05-07 | [group.js:56](client/store/group.js) |
-| **NT4b** | **group.js fetchMemberList 路径不匹配** | **❌ 未修复** | 2026-05-07 | [group.js:86](client/store/group.js) |
-| **NT4c** | **user.js logout 方法不匹配 (post→get)** | **❌ 未修复** | 2026-05-07 | [user.js:42](client/store/user.js) |
-| **NT4d** | **project.js updateProject 方法不匹配 (put→post)** | **❌ 未修复** | 2026-05-07 | [project.js:57](client/store/project.js) |
+| **NT4a** | **group.js updateGroup 方法不匹配 (put→post)** | **✅ **已修复 (2026-05-07)**** | 2026-05-07 | [group.js:56](client/store/group.js) |
+| **NT4b** | **group.js fetchMemberList 路径不匹配** | **✅ **已修复 (2026-05-07)**** | 2026-05-07 | [group.js:86](client/store/group.js) |
+| **NT4c** | **user.js logout 方法不匹配 (post→get)** | **✅ **已修复 (2026-05-07)**** | 2026-05-07 | [user.js:42](client/store/user.js) |
+| **NT4d** | **project.js updateProject 方法不匹配 (put→post)** | **✅ **已修复 (2026-05-07)**** | 2026-05-07 | [project.js:57](client/store/project.js) |
 | NT5 | Group.vue roleInGroup 未定义 | ✅ 已修复 | 2026-05-07 | [group.js:14-20](client/store/group.js) |
 | NT6 | ProjectEnv.vue header-editor 未导入 | ✅ 已修复 | 2026-05-07 | [ProjectEnv.vue:65](client/containers/Project/Setting/ProjectEnv/ProjectEnv.vue) |
 | NT7 | open.js exportData 权限逻辑 | ✅ 已修复 | 2026-05-07 | [open.js:446](server/controllers/open.js) |
@@ -40,11 +40,11 @@
 | NT12 | AddProject.vue 字段映射 | ✅ 已修复 | 2026-05-07 | [AddProject.vue:179](client/containers/AddProject/AddProject.vue) |
 | NT13 | InterfaceMenu.vue 搜索功能 | ✅ 已修复 | 2026-05-07 | [InterfaceMenu.vue:195-214](client/containers/Project/Interface/InterfaceList/InterfaceMenu.vue) |
 | NT14 | Activity.vue 使用原生fetch | ✅ 已修复 | 2026-05-07 | [Activity.vue:64](client/containers/Project/Activity/Activity.vue) |
-| **NT15** | **InterfaceCaseContent.vue n-editable-table** | **❌ 未修复** | 2026-05-07 | [InterfaceCaseContent.vue:85](client/containers/Project/Interface/InterfaceCol/InterfaceCaseContent.vue) |
+| **NT15** | **InterfaceCaseContent.vue n-editable-table** | **✅ **已修复 (2026-05-07)**** | 2026-05-07 | [InterfaceCaseContent.vue:85](client/containers/Project/Interface/InterfaceCol/InterfaceCaseContent.vue) |
 | NT16 | 孤立组件清理 | ⚠️ 待处理 | 2026-05-07 | 19个组件未被引用 |
 | NT25 | 全局错误处理中间件 | ✅ 已修复 | 2026-05-07 | [app.js:160-171](server/app.js) |
 | NT26 | 统一CORS中间件 | ✅ 已修复 | 2026-05-07 | [app.js:173-197](server/app.js) |
-| **NT39** | **interfaceCol.js upCaseIndex/upColIndex 缺少return** | **❌ 未修复** | 2026-05-07 | [interfaceCol.js:730,764](server/controllers/interfaceCol.js) |
+| **NT39** | **interfaceCol.js upCaseIndex/upColIndex 缺少return** | **✅ **已修复 (2026-05-07)**** | 2026-05-07 | [interfaceCol.js:730,764](server/controllers/interfaceCol.js) |
 | NT45 | storage.js 类名拼写 | ✅ 误报 | 2026-05-07 | 实际拼写为storageModel，文档误报 |
 | NT46 | News.scss 孤立样式 | ⚠️ 待确认 | 2026-05-07 | 未找到引用 |
 | NT48 | AddProject.vue getRandomColor | ⚠️ 待确认 | 2026-05-07 | 未找到定义 |
