@@ -731,7 +731,8 @@ class interfaceColController extends baseController {
     try {
       let params = ctx.request.body;
       if (!params || !Array.isArray(params)) {
-        return (ctx.body = yapi.commons.resReturn(null, 400, "请求参数必须是数组"));
+        ctx.body = yapi.commons.resReturn(null, 400, "请求参数必须是数组");
+        return;
       }
       params.forEach((item) => {
         if (item.id) {
@@ -744,7 +745,7 @@ class interfaceColController extends baseController {
         }
       });
 
-      return (ctx.body = yapi.commons.resReturn("成功！"));
+      ctx.body = yapi.commons.resReturn("成功！");
     } catch (e) {
       ctx.body = yapi.commons.resReturn(null, 400, e.message);
     }
@@ -765,7 +766,9 @@ class interfaceColController extends baseController {
     try {
       let params = ctx.request.body;
       if (!params || !Array.isArray(params)) {
-        return (ctx.body = yapi.commons.resReturn(null, 400, "请求参数必须是数组"));
+        ctx.body = yapi.commons.resReturn(null, 400, "请求参数必须是数组");
+        return;
+        return;
       }
       params.forEach((item) => {
         if (item.id) {
@@ -778,7 +781,7 @@ class interfaceColController extends baseController {
         }
       });
 
-      return (ctx.body = yapi.commons.resReturn("成功！"));
+      ctx.body = yapi.commons.resReturn("成功！");
     } catch (e) {
       ctx.body = yapi.commons.resReturn(null, 400, e.message);
     }

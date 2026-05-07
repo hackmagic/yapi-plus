@@ -54,7 +54,7 @@ export const useProjectStore = defineStore("project", {
     },
 
     async updateProject(projectId, data) {
-      const res = await http.put("/api/project/up", { id: projectId, ...data });
+      const res = await http.post("/api/project/up", { id: projectId, ...data });
       unwrapResponse(res, "更新失败");
       if (this.currentProject && this.currentProject._id === projectId) {
         this.currentProject = { ...this.currentProject, ...data };

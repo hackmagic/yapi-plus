@@ -82,10 +82,11 @@
                 />
               </n-form-item>
               <n-form-item v-else-if="formData.req_body_type === 'form'" label="Form Data">
-                <n-editable-table
-                  v-model:data="formData.req_body_form"
+                <n-data-table
+                  :data="formData.req_body_form"
                   :columns="paramColumns"
                   :max-height="200"
+                  size="small"
                 />
               </n-form-item>
               <n-form-item v-else label="Raw">

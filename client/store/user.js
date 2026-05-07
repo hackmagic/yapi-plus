@@ -40,7 +40,7 @@ export const useUserStore = defineStore("user", {
 
     async logout() {
       try {
-        await http.post("/api/user/logout");
+        await http.get("/api/user/logout");
       } catch (e) {
         console.error("登出请求失败", e);
       }

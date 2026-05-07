@@ -53,7 +53,7 @@ export const useGroupStore = defineStore("group", {
     },
 
     async updateGroup(groupId, data) {
-      const res = await http.put("/api/group/up", { id: groupId, ...data });
+      const res = await http.post("/api/group/up", { id: groupId, ...data });
       unwrapResponse(res, "更新组失败");
       if (this.currentGroup && this.currentGroup._id === groupId) {
         this.currentGroup = { ...this.currentGroup, ...data };
@@ -83,7 +83,7 @@ export const useGroupStore = defineStore("group", {
 
     async fetchMemberList(groupId) {
       try {
-        const res = await http.get("/api/group/getMemberList", { params: { id: groupId } });
+        const res = await http.get("/api/group/get_member_list", { params: { id: groupId } });
         const data = unwrapResponse(res, "获取成员列表失败");
         this.memberList = data;
         return data;
