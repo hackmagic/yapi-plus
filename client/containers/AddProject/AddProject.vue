@@ -175,7 +175,7 @@ const handleSubmit = async () => {
       desc: formData.desc,
       group_id: formData.group_id,
       group_name: getGroupName(formData.group_id),
-      basepath: "",
+      basepath: formData.basepath || "",
       project_type: formData.project_type,
       mock_url: formData.mock_url,
     };

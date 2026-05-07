@@ -66,33 +66,7 @@ const routes = [
       },
       {
         path: "setting",
-        component: () => import("../containers/Project/Setting/Setting.vue"),
-        children: [
-          {
-            path: "",
-            redirect: (to) => `/project/${to.params.id}/setting/base`,
-          },
-          {
-            path: "base",
-            component: () => import("../containers/Project/ProjectSetting/BaseSetting.vue"),
-          },
-          {
-            path: "member",
-            component: () => import("../containers/Project/ProjectSetting/MemberSetting.vue"),
-          },
-          {
-            path: "env",
-            component: () => import("../containers/Project/ProjectSetting/EnvSetting.vue"),
-          },
-          {
-            path: "token",
-            component: () => import("../containers/Project/ProjectSetting/TokenSetting.vue"),
-          },
-          {
-            path: "data",
-            component: () => import("../containers/Project/ProjectSetting/DataSetting.vue"),
-          },
-        ],
+        component: () => import("../containers/Project/ProjectSetting/ProjectSetting.vue"),
       },
       {
         path: "activity",
@@ -107,7 +81,7 @@ const routes = [
       {
         path: "members",
         name: "ProjectMember",
-        component: () => import("../containers/Project/Setting/ProjectMember/ProjectMember.vue"),
+        component: () => import("../containers/Project/ProjectSetting/MemberSetting.vue"),
       },
     ],
   },
@@ -145,6 +119,12 @@ const routes = [
     path: "/follows",
     name: "Follows",
     component: () => import("../containers/Follows/Follows.vue"),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/my-projects",
+    name: "MyProjects",
+    component: () => import("../containers/Project/ProjectList/ProjectList.vue"),
     meta: { requiresAuth: true },
   },
   {
@@ -239,24 +219,6 @@ const routes = [
         component: () => import("../containers/Project/Interface/InterfaceList/Run/Run.vue"),
       },
     ],
-  },
-  {
-    path: "/project/:projectId/setting/mock",
-    name: "ProjectMock",
-    component: () => import("../containers/Project/Setting/ProjectMock/ProjectMock.vue"),
-    meta: { requiresAuth: true },
-  },
-  {
-    path: "/project/:projectId/setting/request",
-    name: "ProjectRequest",
-    component: () => import("../containers/Project/Setting/ProjectRequest/ProjectRequest.vue"),
-    meta: { requiresAuth: true },
-  },
-  {
-    path: "/project/:projectId/setting/tag",
-    name: "ProjectTag",
-    component: () => import("../containers/Project/Setting/ProjectMessage/ProjectTag.vue"),
-    meta: { requiresAuth: true },
   },
   {
     path: "/devtools",

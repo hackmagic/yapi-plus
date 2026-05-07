@@ -3,15 +3,7 @@
     <n-card title="组成员管理" :bordered="false">
       <template #header-extra>
         <n-button type="primary" @click="showAddModal = true"> 添加成员 </n-button>
-          <template #footer>
-        <n-space justify="end">
-          <n-button @click="handleCancel">取消</n-button>
-          <n-button type="primary" :loading="submitting" @click="handleAddMember">确定</n-button>
-        </n-space>
       </template>
-    </n-modal>
-  </div>
-</template>
 
       <n-data-table :columns="columns" :data="memberList" :loading="loading" :pagination="false" />
 
@@ -19,7 +11,8 @@
         v-model:show="showAddModal"
         preset="dialog"
         title="添加成员"
-        @positive-click="handleAddMember" @negative-click="handleCancel"
+        @positive-click="handleAddMember"
+        @negative-click="handleCancel"
       >
         <n-form ref="formRef" :model="formData" :rules="rules">
           <n-form-item label="用户邮箱" path="email">
@@ -32,16 +25,14 @@
             </n-radio-group>
           </n-form-item>
         </n-form>
+        <template #footer>
+          <n-space justify="end">
+            <n-button @click="handleCancel">取消</n-button>
+            <n-button type="primary" :loading="submitting" @click="handleAddMember">确定</n-button>
+          </n-space>
+        </template>
       </n-modal>
     </n-card>
-  </div>
-    <template #footer>
-        <n-space justify="end">
-          <n-button @click="handleCancel">取消</n-button>
-          <n-button type="primary" :loading="submitting" @click="handleAddMember">确定</n-button>
-        </n-space>
-      </template>
-    </n-modal>
   </div>
 </template>
 
@@ -62,6 +53,7 @@ const groupId = computed(() => route.params.id);
 const loading = ref(false);
 const memberList = ref([]);
 const showAddModal = ref(false);
+const submitting = ref(false);
 
 const formData = ref({
   email: "",
@@ -130,6 +122,7 @@ onMounted(() => {
 });
 
 const handleAddMember = async () => {
+  submitting.value = true;
   try {
     await axios.post("/api/group/addMember", {
       id: groupId.value,
@@ -140,6 +133,8 @@ const handleAddMember = async () => {
     await loadMembers();
   } catch (e) {
     message.error(e.response?.data?.errmsg || "添加失败");
+  } finally {
+    submitting.value = false;
   }
 };
 
@@ -158,7 +153,6 @@ const handleRemoveMember = async (row) => {
 
 const handleCancel = () => {
   showAddModal.value = false;
-  // Reset form
   formData.value = { email: "", role: "member" };
 };
 </script>

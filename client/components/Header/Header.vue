@@ -18,6 +18,15 @@
 
           <n-tooltip trigger="hover">
             <template #trigger>
+              <router-link to="/my-projects" class="toolbar-btn">
+                <n-icon :size="18"><AppsOutline /></n-icon>
+              </router-link>
+            </template>
+            我的项目
+          </n-tooltip>
+
+          <n-tooltip trigger="hover">
+            <template #trigger>
               <router-link to="/follows" class="toolbar-btn">
                 <n-icon :size="18"><StarOutline /></n-icon>
               </router-link>
@@ -81,6 +90,7 @@ import { NIcon, useMessage } from "naive-ui";
 import {
   StarOutline,
   AddOutline,
+  AppsOutline,
   PersonOutline,
   LogOutOutline,
   ChevronDownOutline,
