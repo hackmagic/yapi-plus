@@ -629,35 +629,25 @@ class projectController extends baseController {
     let projectList = [];
 
     if (role === "admin") {
-      // 管理员可以查看所有公开项目和自己的私有项目
+      // 管理员可以查看所有项目
       const allProjects = await this.Model.list();
       projectList = allProjects.map((p) => p.toObject());
     } else {
       // 普通用户：获取自己创建的项目 + 是成员的项目 + 公开项目
-      const myProjects = await this.Model.list(uid, true);
-      const authProjects = await this.Model.getAuthList(uid);
+      const projects = await this.Model.model.find({
+        $or: [
+          { uid },
+          { "members.uid": uid },
+          { project_type: "public" },
+        ],
+      }).exec();
 
-      // 获取有权限的项目详情
-      const authProjectIds = authProjects.map((p) => p.group_id);
-
-      // 合并所有项目
+      // 去重
       const projectIds = new Set();
       const results = [];
-
-      // 添加自己创建的项目
-      for (const p of myProjects) {
+      for (const p of projects) {
         const obj = p.toObject();
         if (!projectIds.has(obj._id.toString())) {
-          projectIds.add(obj._id.toString());
-          results.push(obj);
-        }
-      }
-
-      // 添加公开项目
-      const publicProjects = await this.Model.list();
-      for (const p of publicProjects) {
-        const obj = p.toObject();
-        if (obj.project_type === "public" && !projectIds.has(obj._id.toString())) {
           projectIds.add(obj._id.toString());
           results.push(obj);
         }

@@ -213,7 +213,9 @@ async function startNormalMode() {
     // 显式处理根路径，确保返回HTML并设置正确的Content-Type
     app.use(async (ctx, next) => {
       if (ctx.path === "/") {
-        const htmlPath = yapi.path.join(yapi.WEBROOT, "static", indexFile);
+        // 生产模式下 HTML 文件在 static/prd/ 目录，开发模式在 static/ 目录
+        const htmlDir = indexFile === "index.html" ? "prd" : "";
+        const htmlPath = yapi.path.join(yapi.WEBROOT, "static", htmlDir, indexFile);
         console.log("[DEBUG] Serving root path:", htmlPath);
         if (fs.existsSync(htmlPath)) {
           ctx.set("Content-Type", "text/html; charset=utf-8");

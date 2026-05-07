@@ -247,9 +247,9 @@ const docUrl = "https://hellosean1025.github.io/yapi";
 const currentYear = computed(() => new Date().getFullYear());
 
 onMounted(() => {
-  // 如果已登录，跳转到 group 页面
+  // 如果已登录，跳转到我的项目页面
   if (userStore.isLogin) {
-    router.replace("/group");
+    router.replace("/my-projects");
   }
 });
 </script>
