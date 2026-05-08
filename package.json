@@ -99,6 +99,7 @@
     "concurrently": "^9.2.1",
     "eslint": "^8.34.0",
     "eslint-plugin-vue": "^10.9.0",
+    "less": "^4.6.4",
     "nodemon": "^1.11.0",
     "playwright": "^1.59.1",
     "rewire": "^9.0.1",

@@ -1,69 +1,45 @@
 <template>
   <div class="group-page">
-    <n-layout has-sider>
-      <!-- 左侧分组列表 -->
-      <n-layout-sider
-        bordered
-        :width="280"
-        :collapsed-width="64"
-        collapse-mode="width"
-        :collapsed="collapsed"
-        show-trigger
-        @collapse="collapsed = true"
-        @expand="collapsed = false"
-      >
-        <div class="group-logo" v-if="!collapsed">
-          <span>项目分组</span>
-        </div>
-        <GroupSidebar :collapsed="collapsed" @select="handleGroupSelect" />
-      </n-layout-sider>
+    <!-- 分组信息卡片 -->
+    <n-card :title="groupInfo?.group_name || '加载中...'" :bordered="false" class="group-info-card">
+      <n-descriptions :column="2" v-if="groupInfo">
+        <n-descriptions-item label="组名称">{{ groupInfo.group_name }}</n-descriptions-item>
+        <n-descriptions-item label="组类型">
+          {{ groupInfo.type === "public" ? "公开" : "私有" }}
+        </n-descriptions-item>
+        <n-descriptions-item label="描述" :span="2">
+          {{ groupInfo.group_desc || "暂无描述" }}
+        </n-descriptions-item>
+      </n-descriptions>
+    </n-card>
 
-      <!-- 右侧内容区 -->
-      <n-layout>
-        <n-layout-content content-style="padding: 24px;">
-          <!-- 分组信息卡片 -->
-          <n-card :title="groupInfo?.group_name || '加载中...'" :bordered="false" class="group-info-card">
-            <n-descriptions :column="2" v-if="groupInfo">
-              <n-descriptions-item label="组名称">{{ groupInfo.group_name }}</n-descriptions-item>
-              <n-descriptions-item label="组类型">
-                {{ groupInfo.type === "public" ? "公开" : "私有" }}
-              </n-descriptions-item>
-              <n-descriptions-item label="描述" :span="2">
-                {{ groupInfo.group_desc || "暂无描述" }}
-              </n-descriptions-item>
-            </n-descriptions>
-          </n-card>
+    <!-- 标签页 -->
+    <div class="group-tabs">
+      <n-tabs type="line" :value="activeTab" @update:value="handleTabChange">
+        <n-tab-pane name="project" tab="项目列表" />
+        <n-tab-pane
+          v-if="groupInfo?.type === 'public'"
+          name="member"
+          tab="成员列表"
+        />
+        <n-tab-pane
+          v-if="canViewLog"
+          name="log"
+          tab="分组动态"
+        />
+        <n-tab-pane
+          v-if="canViewSetting"
+          name="setting"
+          tab="分组设置"
+        />
+      </n-tabs>
+    </div>
 
-          <!-- 标签页 -->
-          <div class="group-tabs">
-            <n-tabs type="line" :value="activeTab" @update:value="handleTabChange">
-              <n-tab-pane name="project" tab="项目列表" />
-              <n-tab-pane
-                v-if="groupInfo?.type === 'public'"
-                name="member"
-                tab="成员列表"
-              />
-              <n-tab-pane
-                v-if="canViewLog"
-                name="log"
-                tab="分组动态"
-              />
-              <n-tab-pane
-                v-if="canViewSetting"
-                name="setting"
-                tab="分组设置"
-              />
-            </n-tabs>
-          </div>
-
-          <!-- 标签页内容 -->
-          <div class="tab-content">
-            <router-view v-if="!showProjectTab" />
-            <ProjectList v-else :group-id="groupId" />
-          </div>
-        </n-layout-content>
-      </n-layout>
-    </n-layout>
+    <!-- 标签页内容 -->
+    <div class="tab-content">
+      <router-view v-if="!showProjectTab" />
+      <ProjectList v-else :group-id="groupId" />
+    </div>
   </div>
 </template>
 
@@ -148,15 +124,7 @@ const handleGroupSelect = (group) => {
 
 <style scoped lang="scss">
 .group-page {
-  min-height: 100vh;
-}
-
-.group-logo {
-  padding: 16px;
-  border-bottom: 1px solid #e8e8e8;
-  font-weight: 600;
-  font-size: 14px;
-  color: #333;
+  min-height: 100%;
 }
 
 .group-info-card {

@@ -22,10 +22,10 @@ const routes = [
     name: "Setup",
     component: () => import("../containers/Setup/SetupWizard.vue"),
   },
+  // 使用全局布局的路由
   {
     path: "/group/:id",
-    name: "Group",
-    component: () => import("../containers/Group/Group.vue"),
+    component: () => import("../layouts/MainLayout.vue"),
     meta: { requiresAuth: true },
     children: [
       {
@@ -34,134 +34,280 @@ const routes = [
       },
       {
         path: "home",
+        name: "GroupHome",
         component: () => import("../containers/Group/GroupHome/GroupHome.vue"),
+        meta: { showSidebar: true },
       },
       {
         path: "project",
+        name: "GroupProject",
         component: () => import("../containers/Group/ProjectList/ProjectList.vue"),
+        meta: { showSidebar: true },
       },
       {
         path: "member",
+        name: "GroupMember",
         component: () => import("../containers/Group/MemberList/MemberList.vue"),
+        meta: { showSidebar: true },
       },
       {
         path: "setting",
+        name: "GroupSetting",
         component: () => import("../containers/Group/GroupSetting/GroupSetting.vue"),
+        meta: { showSidebar: true },
       },
       {
         path: "log",
+        name: "GroupLog",
         component: () => import("../containers/Group/GroupLog/GroupLog.vue"),
+        meta: { showSidebar: true },
       },
     ],
   },
   {
     path: "/project/:id",
-    name: "Project",
-    component: () => import("../containers/Project/Project.vue"),
+    component: () => import("../layouts/MainLayout.vue"),
     meta: { requiresAuth: true },
     children: [
       {
+        path: "",
+        redirect: (to) => `/project/${to.params.id}/interface`,
+      },
+      {
         path: "interface",
-        component: () => import("../containers/Project/Interface/Interface.vue"),
+        name: "ProjectInterface",
+        component: () => import("../containers/Project/Project.vue"),
+        meta: { showSidebar: false }, // Project.vue 有自己的侧边栏
+        children: [
+          {
+            path: "",
+            redirect: (to) => `/project/${to.params.id}/interface`,
+          },
+          {
+            path: "/project/:id/interface",
+            component: () => import("../containers/Project/Interface/Interface.vue"),
+          },
+        ],
       },
       {
         path: "setting",
-        component: () => import("../containers/Project/ProjectSetting/ProjectSetting.vue"),
+        name: "ProjectSetting",
+        component: () => import("../containers/Project/Project.vue"),
+        meta: { showSidebar: false },
+        children: [
+          {
+            path: "",
+            component: () => import("../containers/Project/ProjectSetting/ProjectSetting.vue"),
+          },
+        ],
       },
       {
         path: "activity",
-        name: "Activity",
-        component: () => import("../containers/Project/Activity/Activity.vue"),
+        name: "ProjectActivity",
+        component: () => import("../containers/Project/Project.vue"),
+        meta: { showSidebar: false },
+        children: [
+          {
+            path: "",
+            component: () => import("../containers/Project/Activity/Activity.vue"),
+          },
+        ],
       },
       {
         path: "data",
         name: "ProjectData",
-        component: () => import("../containers/Project/ProjectData/DataPage.vue"),
+        component: () => import("../containers/Project/Project.vue"),
+        meta: { showSidebar: false },
+        children: [
+          {
+            path: "",
+            component: () => import("../containers/Project/ProjectData/DataPage.vue"),
+          },
+        ],
       },
       {
         path: "members",
         name: "ProjectMember",
-        component: () => import("../containers/Project/ProjectSetting/MemberSetting.vue"),
+        component: () => import("../containers/Project/Project.vue"),
+        meta: { showSidebar: false },
+        children: [
+          {
+            path: "",
+            component: () => import("../containers/Project/ProjectSetting/MemberSetting.vue"),
+          },
+        ],
+      },
+    ],
+  },
+  // 使用全局布局的独立页面
+  {
+    path: "/add-project",
+    component: () => import("../layouts/MainLayout.vue"),
+    meta: { requiresAuth: true },
+    children: [
+      {
+        path: "",
+        name: "AddProject",
+        component: () => import("../containers/AddProject/AddProject.vue"),
+        meta: { showSidebar: false },
       },
     ],
   },
   {
-    path: "/add-project",
-    name: "AddProject",
-    component: () => import("../containers/AddProject/AddProject.vue"),
-    meta: { requiresAuth: true },
-  },
-  {
     path: "/add-group",
-    name: "AddGroup",
-    component: () => import("../containers/AddGroup/AddGroup.vue"),
+    component: () => import("../layouts/MainLayout.vue"),
     meta: { requiresAuth: true },
+    children: [
+      {
+        path: "",
+        name: "AddGroup",
+        component: () => import("../containers/AddGroup/AddGroup.vue"),
+        meta: { showSidebar: false },
+      },
+    ],
   },
   {
     path: "/user",
-    name: "UserList",
-    component: () => import("../containers/User/UserList/UserList.vue"),
+    component: () => import("../layouts/MainLayout.vue"),
     meta: { requiresAdmin: true },
+    children: [
+      {
+        path: "",
+        name: "UserList",
+        component: () => import("../containers/User/UserList/UserList.vue"),
+        meta: { showSidebar: false },
+      },
+    ],
   },
   {
     path: "/user/:id",
-    name: "UserDetail",
-    component: () => import("../containers/User/UserList/UserDetail.vue"),
+    component: () => import("../layouts/MainLayout.vue"),
     meta: { requiresAdmin: true },
+    children: [
+      {
+        path: "",
+        name: "UserDetail",
+        component: () => import("../containers/User/UserList/UserDetail.vue"),
+        meta: { showSidebar: false },
+      },
+    ],
   },
   {
     path: "/user/profile",
-    name: "UserProfile",
-    component: () => import("../containers/User/UserList/UserSettings.vue"),
+    component: () => import("../layouts/MainLayout.vue"),
     meta: { requiresAuth: true },
+    children: [
+      {
+        path: "",
+        name: "UserProfile",
+        component: () => import("../containers/User/UserList/UserSettings.vue"),
+        meta: { showSidebar: false },
+      },
+    ],
   },
   {
     path: "/follows",
-    name: "Follows",
-    component: () => import("../containers/Follows/Follows.vue"),
+    component: () => import("../layouts/MainLayout.vue"),
     meta: { requiresAuth: true },
+    children: [
+      {
+        path: "",
+        name: "Follows",
+        component: () => import("../containers/Follows/Follows.vue"),
+        meta: { showSidebar: true },
+      },
+    ],
   },
   {
     path: "/my-projects",
-    name: "MyProjects",
-    component: () => import("../containers/Project/ProjectList/ProjectList.vue"),
+    component: () => import("../layouts/MainLayout.vue"),
     meta: { requiresAuth: true },
+    children: [
+      {
+        path: "",
+        name: "MyProjects",
+        component: () => import("../containers/Project/ProjectList/ProjectList.vue"),
+        meta: { showSidebar: true },
+      },
+    ],
   },
   {
     path: "/system-settings",
-    name: "SystemSettings",
-    component: () => import("../containers/SystemSettings/SystemSettings.vue"),
+    component: () => import("../layouts/MainLayout.vue"),
     meta: { requiresAdmin: true },
+    children: [
+      {
+        path: "",
+        name: "SystemSettings",
+        component: () => import("../containers/SystemSettings/SystemSettings.vue"),
+        meta: { showSidebar: false },
+      },
+    ],
   },
   {
     path: "/ai-agent",
-    name: "AiAgent",
-    component: () => import("../containers/AiAgent/AiAgent.vue"),
+    component: () => import("../layouts/MainLayout.vue"),
     meta: { requiresAdmin: true },
+    children: [
+      {
+        path: "",
+        name: "AiAgent",
+        component: () => import("../containers/AiAgent/AiAgent.vue"),
+        meta: { showSidebar: false },
+      },
+    ],
   },
   {
     path: "/ai-chat",
-    name: "AiChat",
-    component: () => import("../containers/AiAgent/AiChat.vue"),
+    component: () => import("../layouts/MainLayout.vue"),
     meta: { requiresAuth: true },
+    children: [
+      {
+        path: "",
+        name: "AiChat",
+        component: () => import("../containers/AiAgent/AiChat.vue"),
+        meta: { showSidebar: false },
+      },
+    ],
   },
   {
     path: "/search",
-    name: "Search",
-    component: () => import("../containers/Search/Search.vue"),
+    component: () => import("../layouts/MainLayout.vue"),
     meta: { requiresAuth: true },
+    children: [
+      {
+        path: "",
+        name: "Search",
+        component: () => import("../containers/Search/Search.vue"),
+        meta: { showSidebar: false },
+      },
+    ],
   },
   {
     path: "/news",
-    name: "News",
-    component: () => import("../containers/News/NewsTimeline/NewsTimeline.vue"),
+    component: () => import("../layouts/MainLayout.vue"),
     meta: { requiresAuth: true },
+    children: [
+      {
+        path: "",
+        name: "News",
+        component: () => import("../containers/News/NewsTimeline/NewsTimeline.vue"),
+        meta: { showSidebar: true },
+      },
+    ],
   },
   {
     path: "/news/list",
-    name: "NewsList",
-    component: () => import("../containers/News/NewsList/NewsList.vue"),
+    component: () => import("../layouts/MainLayout.vue"),
     meta: { requiresAuth: true },
+    children: [
+      {
+        path: "",
+        name: "NewsList",
+        component: () => import("../containers/News/NewsList/NewsList.vue"),
+        meta: { showSidebar: true },
+      },
+    ],
   },
   {
     path: "/project/:projectId/interface/col/:colId",
