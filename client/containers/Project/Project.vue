@@ -63,6 +63,7 @@ const activeMenu = computed(() => {
   const path = route.path;
   if (path.endsWith("/activity")) return "activity";
   if (path.endsWith("/data")) return "data";
+  if (path.endsWith("/wiki")) return "wiki";
   if (path.includes("/setting")) return "setting";
   return "interface";
 });
@@ -91,6 +92,11 @@ const menuOptions = computed(() => [
     label: "数据管理",
     key: "data",
     icon: renderIcon(ServerOutline),
+  },
+  {
+    label: "Wiki",
+    key: "wiki",
+    icon: renderIcon(DocumentTextOutline),
   },
   {
     label: "设置",
@@ -145,6 +151,8 @@ const handleMenuSelect = (key) => {
     router.push(`/project/${projectId.value}/activity`);
   } else if (key === "data") {
     router.push(`/project/${projectId.value}/data`);
+  } else if (key === "wiki") {
+    router.push(`/project/${projectId.value}/wiki`);
   } else if (key.startsWith("setting")) {
     router.push(`/project/${projectId.value}/${key}`);
   }

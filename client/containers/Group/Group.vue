@@ -15,24 +15,34 @@
 
     <!-- 标签页 -->
     <div class="group-tabs">
-      <n-tabs type="line" :value="activeTab" @update:value="handleTabChange">
-        <n-tab-pane name="project" tab="项目列表" />
-        <n-tab-pane
-          v-if="groupInfo?.type === 'public'"
-          name="member"
-          tab="成员列表"
-        />
-        <n-tab-pane
-          v-if="canViewLog"
-          name="log"
-          tab="分组动态"
-        />
-        <n-tab-pane
-          v-if="canViewSetting"
-          name="setting"
-          tab="分组设置"
-        />
-      </n-tabs>
+      <div class="tabs-header">
+        <n-tabs type="line" :value="activeTab" @update:value="handleTabChange">
+          <n-tab-pane name="project" tab="项目列表" />
+          <n-tab-pane
+            v-if="groupInfo?.type === 'public'"
+            name="member"
+            tab="成员列表"
+          />
+          <n-tab-pane
+            v-if="canViewLog"
+            name="log"
+            tab="分组动态"
+          />
+          <n-tab-pane
+            v-if="canViewSetting"
+            name="setting"
+            tab="分组设置"
+          />
+        </n-tabs>
+        <div class="tabs-action" v-if="activeTab === 'project'">
+          <n-button type="primary" @click="handleAddProject">
+            添加项目
+          </n-button>
+        </div>
+      </div>
+      <div class="project-statistics" v-if="activeTab === 'project'">
+        {{ groupInfo?.group_name || '分组' }} 共 ({{ projectCount }}) 个项目
+      </div>
     </div>
 
     <!-- 标签页内容 -->
@@ -40,6 +50,13 @@
       <router-view v-if="!showProjectTab" />
       <ProjectList v-else :group-id="groupId" />
     </div>
+
+    <!-- 添加项目弹窗 -->
+    <AddProjectModal
+      v-model:show="showAddProjectModal"
+      :default-group-id="groupId"
+      @success="handleAddProjectSuccess"
+    />
   </div>
 </template>
 
@@ -50,6 +67,7 @@ import { useGroupStore } from "@/store/group";
 import { useUserStore } from "@/store/user";
 import ProjectList from "../Project/ProjectList/ProjectList.vue";
 import GroupSidebar from "./GroupList/GroupSidebar.vue";
+import AddProjectModal from "../AddProject/AddProjectModal.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -60,6 +78,7 @@ const collapsed = ref(false);
 const groupId = computed(() => route.params.id);
 const groupInfo = ref(null);
 const activeTab = ref("project");
+const showAddProjectModal = ref(false);
 
 const showProjectTab = computed(() => activeTab.value === "project");
 
@@ -120,6 +139,15 @@ watch(
 const handleTabChange = (tab) => {
   activeTab.value = tab;
   router.push(`/group/${groupId.value}/${tab}`);
+};
+
+const handleAddProject = () => {
+  showAddProjectModal.value = true;
+};
+
+const handleAddProjectSuccess = (projectData) => {
+  // 项目创建成功后的处理
+  showAddProjectModal.value = false;
 };
 
 const handleGroupSelect = (group) => {

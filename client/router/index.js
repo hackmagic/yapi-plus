@@ -126,6 +126,19 @@ const routes = [
         ],
       },
       {
+        path: "wiki",
+        name: "ProjectWiki",
+        component: () => import("../containers/Project/Project.vue"),
+        meta: { showSidebar: false },
+        children: [
+          {
+            path: "",
+            // TODO: 替换为实际的 Wiki 组件
+            component: () => import("../containers/Project/Activity/Activity.vue"),
+          },
+        ],
+      },
+      {
         path: "members",
         name: "ProjectMember",
         component: () => import("../containers/Project/Project.vue"),
@@ -140,18 +153,10 @@ const routes = [
     ],
   },
   // 使用全局布局的独立页面
+  // AddProject 已改为弹窗形式，路由保留用于兼容旧链接，会自动重定向到首页
   {
     path: "/add-project",
-    component: () => import("../layouts/MainLayout.vue"),
-    meta: { requiresAuth: true },
-    children: [
-      {
-        path: "",
-        name: "AddProject",
-        component: () => import("../containers/AddProject/AddProject.vue"),
-        meta: { showSidebar: false },
-      },
-    ],
+    redirect: "/",
   },
   {
     path: "/add-group",
