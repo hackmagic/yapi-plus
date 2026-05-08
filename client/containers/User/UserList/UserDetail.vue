@@ -1,6 +1,7 @@
 <template>
   <div class="user-detail">
-    <n-card>
+    <n-spin :show="loading">
+      <n-card>
       <template #header>
         <n-space justify="space-between" align="center">
           <span>用户详情</span>
@@ -31,6 +32,7 @@
         </n-descriptions-item>
       </n-descriptions>
     </n-card>
+    </n-spin>
   </div>
 </template>
 
@@ -43,6 +45,7 @@ import axios from "axios";
 const route = useRoute();
 const message = useMessage();
 const userInfo = ref({});
+const loading = ref(false);
 
 const formatDate = (timestamp) => {
   if (!timestamp) return "-";
@@ -50,6 +53,7 @@ const formatDate = (timestamp) => {
 };
 
 const fetchUserInfo = async () => {
+  loading.value = true;
   try {
     const res = await axios.get(`/api/user/find?id=${route.params.id}`);
     if (res.data.errcode === 0) {
@@ -59,6 +63,8 @@ const fetchUserInfo = async () => {
     }
   } catch (error) {
     message.error("获取用户信息失败");
+  } finally {
+    loading.value = false;
   }
 };
 

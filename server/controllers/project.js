@@ -135,18 +135,11 @@ class projectController extends baseController {
     return basepath;
   }
 
-  verifyDomain(domain) {
-    if (!domain) {
-      return false;
-    }
-    if (/^[a-zA-Z0-9\-_\.]+?\.[a-zA-Z0-9\-_\.]*?[a-zA-Z]{2,6}$/.test(domain)) {
-      return true;
-    }
-    return false;
-  }
-
   /**
    * 判断分组名称是否重复
+   * 修改原因：删除未使用的 verifyDomain 方法 2026-05-08
+   */
+  /**
    * @interface /project/check_project_name
    * @method get
    */

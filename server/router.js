@@ -45,10 +45,6 @@ let INTERFACE_CONFIG = {
     prefix: "/col/",
     controller: interfaceColController,
   },
-  test: {
-    prefix: "/test/",
-    controller: testController,
-  },
   open: {
     prefix: "/open/",
     controller: openController,

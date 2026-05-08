@@ -106,59 +106,37 @@ class configController extends baseController {
       // 保存配置到数据库
       const time = yapi.commons.time();
 
-      // 创建 SystemConfig mongoose model
-      const systemConfigSchema = new mongoose.Schema({
-        configKey: { type: String, required: true, unique: true },
-        configValue: { type: Object, required: true },
-        isConfigured: { type: Boolean, default: false },
-        createTime: Number,
-        updateTime: Number,
-      });
-      const SystemConfigModel = mongoose.model(
-        "system_config",
-        systemConfigSchema,
-        "system_config",
-      );
+      // 修改原因：使用统一的 systemConfig 模型，保持一致性
+      // 修改时间：2026-05-08
+      const systemConfigModel = yapi.getModel("system_config");
 
       // 保存数据库配置
-      await SystemConfigModel.findOneAndUpdate(
-        { configKey: "database" },
-        {
-          configKey: "database",
-          configValue: config.db,
-          isConfigured: true,
-          createTime: time,
-          updateTime: time,
-        },
-        { upsert: true, new: true },
-      );
+      await systemConfigModel.saveConfig({
+        configKey: "database",
+        configValue: config.db,
+        isConfigured: true,
+        createTime: time,
+        updateTime: time,
+      });
 
       // 保存管理员配置
-      await SystemConfigModel.findOneAndUpdate(
-        { configKey: "admin" },
-        {
-          configKey: "admin",
-          configValue: { adminAccount: config.adminAccount },
-          isConfigured: true,
-          createTime: time,
-          updateTime: time,
-        },
-        { upsert: true, new: true },
-      );
+      await systemConfigModel.saveConfig({
+        configKey: "admin",
+        configValue: { adminAccount: config.adminAccount },
+        isConfigured: true,
+        createTime: time,
+        updateTime: time,
+      });
 
       // 保存邮件配置（如果有）
       if (config.mail) {
-        await SystemConfigModel.findOneAndUpdate(
-          { configKey: "mail" },
-          {
-            configKey: "mail",
-            configValue: config.mail,
-            isConfigured: true,
-            createTime: time,
-            updateTime: time,
-          },
-          { upsert: true, new: true },
-        );
+        await systemConfigModel.saveConfig({
+          configKey: "mail",
+          configValue: config.mail,
+          isConfigured: true,
+          createTime: time,
+          updateTime: time,
+        });
       }
 
       // 创建管理员账号

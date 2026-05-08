@@ -35,7 +35,7 @@ class aiController extends baseController {
       if (!params.baseURL) {
         params.baseURL = "https://api.deepseek.com";
       }
-      const agent = await this.model.save(params);
+      const agent = await this.model.saveAgent(params);
       ctx.body = yapi.commons.resSuccess(agent);
     } catch (err) {
       ctx.body = yapi.commons.resError(err.message);
@@ -51,7 +51,7 @@ class aiController extends baseController {
     }
     try {
       const params = ctx.request.body;
-      const agent = await this.model.update(params);
+      const agent = await this.model.updateAgent(params);
       ctx.body = yapi.commons.resSuccess(agent);
     } catch (err) {
       ctx.body = yapi.commons.resError(err.message);
@@ -67,7 +67,7 @@ class aiController extends baseController {
     }
     try {
       const id = ctx.request.body.id;
-      await this.model.remove(id);
+      await this.model.removeAgent(id);
       ctx.body = yapi.commons.resSuccess({});
     } catch (err) {
       ctx.body = yapi.commons.resError(err.message);

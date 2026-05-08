@@ -734,16 +734,14 @@ class interfaceColController extends baseController {
         ctx.body = yapi.commons.resReturn(null, 400, "请求参数必须是数组");
         return;
       }
-      params.forEach((item) => {
-        if (item.id) {
-          this.caseModel.upCaseIndex(item.id, item.index).then(
-            (res) => {},
-            (err) => {
-              yapi.commons.log(err.message, "error");
-            },
-          );
-        }
-      });
+
+      // 修改原因：使用 Promise.all 等待所有更新完成，确保数据一致性
+      // 修改时间：2026-05-08
+      const promises = params
+        .filter(item => item.id)
+        .map(item => this.caseModel.upCaseIndex(item.id, item.index));
+
+      await Promise.all(promises);
 
       ctx.body = yapi.commons.resReturn("成功！");
     } catch (e) {
@@ -768,18 +766,15 @@ class interfaceColController extends baseController {
       if (!params || !Array.isArray(params)) {
         ctx.body = yapi.commons.resReturn(null, 400, "请求参数必须是数组");
         return;
-        return;
       }
-      params.forEach((item) => {
-        if (item.id) {
-          this.colModel.upColIndex(item.id, item.index).then(
-            (res) => {},
-            (err) => {
-              yapi.commons.log(err.message, "error");
-            },
-          );
-        }
-      });
+
+      // 修改原因：使用 Promise.all 等待所有更新完成，确保数据一致性
+      // 修改时间：2026-05-08
+      const promises = params
+        .filter(item => item.id)
+        .map(item => this.colModel.upColIndex(item.id, item.index));
+
+      await Promise.all(promises);
 
       ctx.body = yapi.commons.resReturn("成功！");
     } catch (e) {

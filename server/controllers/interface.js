@@ -1157,14 +1157,10 @@ class interfaceController extends baseController {
     }
   }
 
-  requiredSort(params) {
-    return params.sort((item1, item2) => {
-      return item2.required - item1.required;
-    });
-  }
-
   /**
    * 更新多个接口case index
+   * 修改原因：删除未使用的 requiredSort 方法 2026-05-08
+   */
    * @interface /interface/up_index
    * @method POST
    * @category col
@@ -1175,12 +1171,7 @@ class interfaceController extends baseController {
    */
   async upIndex(ctx) {
     try {
-      // 添加登录校验
-      if (this.getUid() === 0) {
-        return (ctx.body = yapi.commons.resReturn(null, 40011, "请登录"));
-      }
-
-      // 添加登录校验
+      // 登录校验（修改原因：删除重复校验 2026-05-08）
       if (this.getUid() === 0) {
         return (ctx.body = yapi.commons.resReturn(null, 40011, "请登录"));
       }
@@ -1233,12 +1224,7 @@ class interfaceController extends baseController {
    */
   async upCatIndex(ctx) {
     try {
-      // 添加登录校验
-      if (this.getUid() === 0) {
-        return (ctx.body = yapi.commons.resReturn(null, 40011, "请登录"));
-      }
-
-      // 添加登录校验
+      // 登录校验（修改原因：删除重复校验 2026-05-08）
       if (this.getUid() === 0) {
         return (ctx.body = yapi.commons.resReturn(null, 40011, "请登录"));
       }

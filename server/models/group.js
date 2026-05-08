@@ -27,16 +27,14 @@ class groupModel extends baseModel {
         name: String,
         enable: { type: Boolean, default: false },
       },
-      // custom_field2: {
-      //   name: String,
-      //   enable: { type: Boolean, default: false }
-      // },
-      // custom_field3: {
-      //   name: String,
-      //   enable: { type: Boolean, default: false }
-      // }
     };
   }
+
+  /**
+   * 修改原因：清理注释掉的 custom_field2/custom_field3
+   * 修改时间：2026-05-08
+   */
+
 
   save(data) {
     let m = new this.model(data);

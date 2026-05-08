@@ -1,79 +1,94 @@
+const baseModel = require("./base.js");
 const mongoose = require("mongoose");
 const autoIncrement = require("../utils/mongoose-auto-increment");
 
-const aiSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  description: {
-    type: String,
-  },
-  type: {
-    type: String,
-    enum: ["deepseek", "openai", "claude", "gemini", "custom"],
-    default: "deepseek",
-  },
-  apiKey: {
-    type: String,
-  },
-  model: {
-    type: String,
-    default: "deepseek-v4-flash",
-  },
-  temperature: {
-    type: Number,
-    default: 0.7,
-  },
-  maxTokens: {
-    type: Number,
-    default: 1000,
-  },
-  baseURL: {
-    type: String,
-    default: "https://api.deepseek.com",
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+/**
+ * AI模型类，继承baseModel
+ * 修改原因：统一模型继承，与其他模型保持一致
+ * 修改时间：2026-05-08
+ */
+class aiModel extends baseModel {
+  constructor() {
+    super();
+  }
 
-aiSchema.plugin(autoIncrement.plugin, {
-  model: "ai",
-  field: "id",
-  startAt: 1,
-  incrementBy: 1,
-});
+  getName() {
+    return "ai";
+  }
 
-aiSchema.pre("save", function (next) {
-  this.updatedAt = new Date();
-  next();
-});
+  getSchema() {
+    return {
+      name: {
+        type: String,
+        required: true,
+      },
+      description: {
+        type: String,
+      },
+      type: {
+        type: String,
+        enum: ["deepseek", "openai", "claude", "gemini", "custom"],
+        default: "deepseek",
+      },
+      apiKey: {
+        type: String,
+      },
+      model: {
+        type: String,
+        default: "deepseek-v4-flash",
+      },
+      temperature: {
+        type: Number,
+        default: 0.7,
+      },
+      maxTokens: {
+        type: Number,
+        default: 1000,
+      },
+      baseURL: {
+        type: String,
+        default: "https://api.deepseek.com",
+      },
+      createdAt: {
+        type: Date,
+        default: Date.now,
+      },
+      updatedAt: {
+        type: Date,
+        default: Date.now,
+      },
+    };
+  }
 
-// 添加模型方法
-aiSchema.statics.getList = function () {
-  return this.find({}).exec();
-};
+  /**
+   * 获取AI助手列表
+   */
+  getList() {
+    return this.model.find({}).exec();
+  }
 
-aiSchema.statics.save = function (params) {
-  const ai = new this(params);
-  return ai.save();
-};
+  /**
+   * 保存AI助手
+   */
+  saveAgent(params) {
+    const agent = new this.model(params);
+    return agent.save();
+  }
 
-aiSchema.statics.update = function (params) {
-  const { id, ...updateData } = params;
-  return this.findByIdAndUpdate(id, updateData, { new: true }).exec();
-};
+  /**
+   * 更新AI助手
+   */
+  updateAgent(params) {
+    const { id, ...updateData } = params;
+    return this.model.findByIdAndUpdate(id, updateData, { new: true }).exec();
+  }
 
-aiSchema.statics.remove = function (id) {
-  return this.findByIdAndRemove(id).exec();
-};
-
-const aiModel = mongoose.model("ai", aiSchema);
+  /**
+   * 删除AI助手
+   */
+  removeAgent(id) {
+    return this.model.findByIdAndRemove(id).exec();
+  }
+}
 
 module.exports = aiModel;

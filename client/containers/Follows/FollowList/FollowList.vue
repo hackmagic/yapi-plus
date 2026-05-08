@@ -1,7 +1,8 @@
 <template>
   <div class="follows-page">
-    <n-card title="我的关注">
-      <n-list v-if="follows.length > 0">
+    <n-spin :show="loading">
+      <n-card title="我的关注">
+        <n-list v-if="follows.length > 0">
         <n-list-item v-for="item in follows" :key="item._id">
           <template #prefix>
             <n-avatar :style="{ backgroundColor: '#2080f0' }">
@@ -24,6 +25,7 @@
       </n-list>
       <n-empty v-else description="暂无关注内容" />
     </n-card>
+    </n-spin>
   </div>
 </template>
 
@@ -34,6 +36,7 @@ import axios from "axios";
 
 const message = useMessage();
 const follows = ref([]);
+const loading = ref(false);
 
 const formatDate = (timestamp) => {
   if (!timestamp) return "-";
@@ -41,6 +44,7 @@ const formatDate = (timestamp) => {
 };
 
 const fetchFollows = async () => {
+  loading.value = true;
   try {
     const res = await axios.get("/api/follow/list");
     if (res.data.errcode === 0) {
@@ -48,6 +52,8 @@ const fetchFollows = async () => {
     }
   } catch (error) {
     message.error("获取关注列表失败");
+  } finally {
+    loading.value = false;
   }
 };
 
