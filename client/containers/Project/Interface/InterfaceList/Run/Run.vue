@@ -146,7 +146,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch, h } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useMessage, NTag, NButton, NIcon, NEmpty } from "naive-ui";
 import axios from "axios";

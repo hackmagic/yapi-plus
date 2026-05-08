@@ -120,7 +120,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, h } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useMessage, NTag, NButton, NIcon } from "naive-ui";
 import axios from "axios";

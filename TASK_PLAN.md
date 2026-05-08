@@ -1373,6 +1373,110 @@
 
 ---
 
-> **版本**: v1.6  
-> **最后更新**: 2026-05-08  
-> **更新说明**: 根据实际代码验证，修正任务状态，补充验证结果和日期，添加待处理任务清单
+---
+
+## 📝 2026-05-08 循环任务执行记录（每小时检查 #1）
+
+### ✅ 代码验证结果（实际读取源码确认）
+
+| 任务ID | 描述 | 验证结果 | 验证方式 |
+|--------|------|----------|----------|
+| NT46 | News.scss 孤立样式 | ✅ 误报（文件不存在） | 代码检查 |
+| NT47 | 清理组件未使用 import | ✅ InterfaceCaseContent.vue 的 `h` 未使用 | 代码检查 |
+| NT49 | MemberSetting.vue API 路径 | ✅ 已有 loading/message/正确API路径 | 代码检查 |
+| NT50 | UserDetail/FollowList loading | ✅ 都有 n-spin 和错误处理 | 代码检查 |
+| NT51 | ProjectToken loading/empty | ✅ 目录不存在，无需处理 | 代码检查 |
+| NT52 | ProjectRequest.vue loading | ✅ 占位符组件（显示"开发中"） | 代码检查 |
+| NT54 | base.js oldTokenUid 魔法数字 | ✅ 已用常量 `LEGACY_TOKEN_UID` | 代码检查第70行 |
+| NT55 | group.js schema 注释 | ✅ 注释已清理，schema无custom_field2/3 | 代码检查 |
+
+### 📊 更新后的完成度统计
+
+| 类别 | 已完成 | 待处理 | 完成率 |
+|------|--------|--------|--------|
+| P0 核心 BUG | 10 | 0 | 100% |
+| P1 重要缺陷 | 28 | 0 | 100% |
+| NT 系列 | 27 | 0 | 100% |
+| P2 工程化 | 12 | 4 | 75% ↑ |
+
+### 🎯 剩余 P2 任务（4 项）
+
+| 任务ID | 描述 | 文件 | 优先级 |
+|--------|------|------|--------|
+| NT21 | 清理 26 个未使用 npm 依赖 | package.json | 🟡 中 |
+| NT22 | 为页面添加用户交互反馈 | 多个 Vue 组件 | 🟢 低 |
+| NT23 | 为列表页面添加分页 | 多个 Vue 组件 | 🟢 低 |
+| NT47 | 清理组件未使用 import | 多个 Vue 组件 | 🟢 低 |
+
+### 🔧 已完成任务（本轮验证确认）
+
+1. **NT50**: UserDetail.vue 和 FollowList.vue 已有 `<n-spin :show="loading">` 和完整的错误处理 ✅
+2. **NT49**: MemberSetting.vue 已有 loading/message/正确 API 路径 ✅
+3. **NT54**: base.js 已使用 `const LEGACY_TOKEN_UID = "999999"` 常量 ✅
+4. **NT55**: group.js 注释已清理，custom_field2/3 已从 schema 移除 ✅
+5. **NT46**: News.scss 文件不存在，已确认为误报 ✅
+6. **NT51**: Setting/ProjectToken/ 目录不存在 ✅
+7. **NT52**: ProjectRequest.vue 是占位符组件，无需修改 ✅
+
+### 📋 下一步计划
+
+1. 逐步处理 P2 剩余任务（NT21/22/23/47）
+2. 等待下一小时循环任务触发
+
+> **版本**: v1.9  
+> **最后更新**: 2026-05-08 循环任务第1次  
+> **更新说明**: 完整代码验证，确认多个误报/已完成任务，P2 完成度提升至 75%
+
+---
+
+## 📝 2026-05-08 循环任务执行记录（每小时检查 #2）
+
+### ✅ 本次已完成任务
+
+| 任务ID | 描述 | 完成状态 | 文件 |
+|--------|------|----------|------|
+| NT47 | 清理组件未使用 import | ✅ 已完成 | InterfaceCaseContent.vue, Run.vue, InterfaceMenu.vue |
+| NT21 | 清理未使用 npm 依赖 | ✅ 已完成 | package.json |
+
+### 📦 依赖清理详情
+
+**已移除 dependencies（15 个）**：
+- `deep-extend`, `deref`, `immer`, `json-schema-ref-parser`
+- `koa-bodyparser`, `koa-multer`, `koa-mysql-session`, `koa-send`, `koa-session-minimal`
+- `moment`, `mongodb`, `moox`, `request`, `tslib`, `vm2`
+
+**已移除 devDependencies（7 个）**：
+- `babel-plugin-transform-runtime`, `babel-preset-es2015`, `babel-preset-es2017`, `babel-preset-stage-0`
+- `less`, `rewind`, `vue-eslint-parser`
+
+**保留的依赖**（仍在使用）：
+- `copy-to-clipboard`: TokenSetting.vue 中使用
+- `validate-commit-msg`: config.ghooks 中使用
+- `sass`: 用于 Scss 样式
+
+### 📊 更新后的完成度统计
+
+| 类别 | 已完成 | 待处理 | 完成率 |
+|------|--------|--------|--------|
+| P0 核心 BUG | 10 | 0 | 100% |
+| P1 重要缺陷 | 28 | 0 | 100% |
+| NT 系列 | 27 | 0 | 100% |
+| P2 工程化 | 14 | 2 | 88% ↑ |
+
+### 🎯 剩余 P2 任务（2 项）
+
+| 任务ID | 描述 | 文件 | 优先级 |
+|--------|------|------|--------|
+| NT22 | 为页面添加用户交互反馈 | 多个 Vue 组件 | 🟢 低 |
+| NT23 | 为列表页面添加分页 | 多个 Vue 组件 | 🟢 低 |
+
+### 📋 下一步计划
+
+1. 继续处理 P2 剩余任务（NT22/NT23）
+2. 等待下一小时循环任务自动触发
+3. 定期检查 README.md 功能实现情况
+
+> **版本**: v2.0  
+> **最后更新**: 2026-05-08 循环任务第2次执行  
+> **更新说明**: 完成 NT47/NT21，移除 22 个未使用依赖，P2 完成度提升至 88%
+

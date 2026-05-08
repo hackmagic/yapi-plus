@@ -98,7 +98,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, watch, h } from "vue";
+import { ref, reactive, onMounted, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useMessage } from "naive-ui";
 import { AddCircleOutline, AddOutline, CreateOutline, TrashOutline } from "@vicons/ionicons5";
