@@ -36,6 +36,15 @@
 
           <n-tooltip trigger="hover">
             <template #trigger>
+              <router-link to="/ai-chat" class="toolbar-btn">
+                <n-icon :size="18"><ChatbubbleEllipsesOutline /></n-icon>
+              </router-link>
+            </template>
+            AI 对话
+          </n-tooltip>
+
+          <n-tooltip trigger="hover">
+            <template #trigger>
               <router-link to="/add-project" class="toolbar-btn">
                 <n-icon :size="18"><AddOutline /></n-icon>
               </router-link>
@@ -96,6 +105,7 @@ import {
   ChevronDownOutline,
   HelpCircleOutline,
   SettingsOutline,
+  ChatbubbleEllipsesOutline,
 } from "@vicons/ionicons5";
 
 const router = useRouter();

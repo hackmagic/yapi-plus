@@ -59,6 +59,7 @@ import { ref, reactive, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useMessage, useDialog } from "naive-ui";
 import { useUserStore } from "../../store/user";
+import { useGroupStore } from "../../store/group";
 import axios from "axios";
 import { PersonOutline, KeyOutline } from "@vicons/ionicons5";
 
@@ -127,8 +128,18 @@ const handleLogin = async () => {
     if (res.data.errcode === 0) {
       message.success("登录成功!");
       userStore.setUser(res.data.data);
-      // 登录成功后跳转到首页
-      router.push("/");
+      // 获取个人空间并跳转
+      try {
+        const groupStore = useGroupStore();
+        const myGroup = await groupStore.fetchMyGroup();
+        if (myGroup && myGroup._id) {
+          router.push(`/group/${myGroup._id}/home`);
+        } else {
+          router.push("/");
+        }
+      } catch (e) {
+        router.push("/");
+      }
     } else {
       message.error(res.data.errmsg || "登录失败");
     }

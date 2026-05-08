@@ -343,6 +343,56 @@ class aiController extends baseController {
       ctx.body = yapi.commons.resError(err.message);
     }
   }
+
+  /**
+   * AI 对话聊天
+   */
+  async chatWithAiAgent(ctx) {
+    if (this.$auth !== true) {
+      return (ctx.body = yapi.commons.resReturn(null, 40011, "请登录..."));
+    }
+    try {
+      const params = ctx.request.body;
+      const { agentId, messages } = params;
+
+      if (!agentId) {
+        ctx.body = yapi.commons.resError("请选择 AI 助手");
+        return;
+      }
+
+      if (!messages || !Array.isArray(messages) || messages.length === 0) {
+        ctx.body = yapi.commons.resError("消息内容不能为空");
+        return;
+      }
+
+      const agents = await this.model.getList();
+      const agent = agents.find((a) => a._id.toString() === agentId);
+
+      if (!agent) {
+        ctx.body = yapi.commons.resError("AI 助手不存在");
+        return;
+      }
+
+      // 验证消息格式
+      const validMessages = messages.map((msg) => ({
+        role: msg.role === "user" ? "user" : "assistant",
+        content: msg.content || "",
+      }));
+
+      const result = await this.callAiApi(agent, validMessages);
+
+      let content = "";
+      if (result.choices && result.choices[0]) {
+        content = result.choices[0].message.content;
+      } else if (result.content) {
+        content = result.content;
+      }
+
+      ctx.body = yapi.commons.resSuccess({ content });
+    } catch (err) {
+      ctx.body = yapi.commons.resError(err.message);
+    }
+  }
 }
 
 module.exports = aiController;

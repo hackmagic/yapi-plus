@@ -227,6 +227,7 @@
 import { onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/store/user";
+import { useGroupStore } from "@/store/group";
 import LogoSVG from "@/components/LogoSVG/LogoSVG.vue";
 import { NIcon } from "naive-ui";
 import {
@@ -242,14 +243,24 @@ import {
 
 const router = useRouter();
 const userStore = useUserStore();
+const groupStore = useGroupStore();
 
 const docUrl = "https://hellosean1025.github.io/yapi";
 const currentYear = computed(() => new Date().getFullYear());
 
-onMounted(() => {
-  // 如果已登录，跳转到我的项目页面
+onMounted(async () => {
+  // 如果已登录，跳转到个人空间
   if (userStore.isLogin) {
-    router.replace("/my-projects");
+    try {
+      const myGroup = await groupStore.fetchMyGroup();
+      if (myGroup && myGroup._id) {
+        router.replace(`/group/${myGroup._id}/home`);
+      } else {
+        router.replace("/my-projects");
+      }
+    } catch (e) {
+      router.replace("/my-projects");
+    }
   }
 });
 </script>

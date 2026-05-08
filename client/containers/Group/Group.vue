@@ -15,7 +15,7 @@
         <div class="group-logo" v-if="!collapsed">
           <span>项目分组</span>
         </div>
-        <GroupList :collapsed="collapsed" @select="handleGroupSelect" />
+        <GroupSidebar :collapsed="collapsed" @select="handleGroupSelect" />
       </n-layout-sider>
 
       <!-- 右侧内容区 -->
@@ -73,7 +73,7 @@ import { useRoute, useRouter } from "vue-router";
 import { useGroupStore } from "@/store/group";
 import { useUserStore } from "@/store/user";
 import ProjectList from "../Project/ProjectList/ProjectList.vue";
-import GroupList from "./GroupList/GroupList.vue";
+import GroupSidebar from "./GroupList/GroupSidebar.vue";
 
 const route = useRoute();
 const router = useRouter();

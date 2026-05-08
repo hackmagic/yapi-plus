@@ -92,5 +92,17 @@ export const useGroupStore = defineStore("group", {
       }
       return [];
     },
+
+    async fetchMyGroup() {
+      try {
+        const res = await http.get("/api/group/get_mygroup");
+        const data = unwrapResponse(res, "获取个人空间失败");
+        this.currentGroup = data;
+        return data;
+      } catch (e) {
+        console.error("获取个人空间失败", e);
+      }
+      return null;
+    },
   },
 });

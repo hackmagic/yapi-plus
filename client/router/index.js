@@ -140,6 +140,12 @@ const routes = [
     meta: { requiresAdmin: true },
   },
   {
+    path: "/ai-chat",
+    name: "AiChat",
+    component: () => import("../containers/AiAgent/AiChat.vue"),
+    meta: { requiresAuth: true },
+  },
+  {
     path: "/search",
     name: "Search",
     component: () => import("../containers/Search/Search.vue"),
