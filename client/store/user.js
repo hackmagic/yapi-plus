@@ -15,6 +15,8 @@ export const useUserStore = defineStore("user", {
     email: (state) => state.userInfo?.email || "",
     role: (state) => state.userInfo?.role || "",
     isLogin: (state) => state.loginState === 1,
+    createdAt: (state) => state.userInfo?.created_at ? new Date(state.userInfo.created_at) : null,
+    updatedAt: (state) => state.userInfo?.updated_at ? new Date(state.userInfo.updated_at) : null,
   },
 
   actions: {

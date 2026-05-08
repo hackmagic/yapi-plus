@@ -56,10 +56,10 @@
                 <span>私有</span>
                 <span class="radio-desc">只有组长和项目开发者可以索引并查看项目信息</span>
               </n-radio>
-              <!-- <n-radio value="public">
+              <n-radio value="public">
                 <span>公开</span>
                 <span class="radio-desc">任何人都可以索引并查看项目信息</span>
-              </n-radio> -->
+              </n-radio>
             </n-space>
           </n-radio-group>
         </n-form-item>

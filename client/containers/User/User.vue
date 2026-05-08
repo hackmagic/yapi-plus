@@ -6,6 +6,14 @@
           <n-avatar :size="80" :style="{ backgroundColor: '#2080f0' }">
             {{ userStore.username?.charAt(0)?.toUpperCase() || "U" }}
           </n-avatar>
+          <n-upload
+            accept="image/*"
+            :max="1"
+            :custom-request="handleAvatarUpload"
+            :show-file-list="false"
+          >
+            <n-button size="small" type="primary">上传头像</n-button>
+          </n-upload>
           <div class="user-name">{{ userStore.username }}</div>
           <div class="user-email">{{ userStore.email }}</div>
         </div>
@@ -22,16 +30,25 @@
             label-placement="left"
             label-width="80px"
           >
+            <n-form-item label="User ID">
+              <n-input :value="userStore.uid" disabled />
+            </n-form-item>
             <n-form-item label="用户名" path="username">
               <n-input v-model:value="userForm.username" />
             </n-form-item>
-            <n-form-item label="邮箱" path="email">
-              <n-input v-model:value="userForm.email" disabled />
+            <n-form-item label="邮箱">
+              <n-input :value="userStore.email" disabled />
             </n-form-item>
             <n-form-item label="角色">
               <n-tag :type="userStore.role === 'admin' ? 'error' : 'default'">
                 {{ userStore.role === "admin" ? "管理员" : "普通用户" }}
               </n-tag>
+            </n-form-item>
+            <n-form-item label="创建时间">
+              <n-input :value="formatTime(userStore.createdAt)" disabled />
+            </n-form-item>
+            <n-form-item label="更新时间">
+              <n-input :value="formatTime(userStore.updatedAt)" disabled />
             </n-form-item>
             <n-form-item>
               <n-button type="primary" @click="handleSave" :loading="saving"> 保存修改 </n-button>
@@ -84,6 +101,7 @@
 import { ref, computed, onMounted, h } from "vue";
 import { useRouter } from "vue-router";
 import { useMessage } from "naive-ui";
+import { NUpload } from "naive-ui";
 import { useUserStore } from "@/store/user";
 import axios from "axios";
 import { PersonOutline, KeyOutline, SettingsOutline, BookmarksOutline } from "@vicons/ionicons5";
@@ -136,6 +154,39 @@ const menuOptions = [
   { label: "个人设置", key: "settings", icon: renderIcon(SettingsOutline) },
   { label: "我的收藏", key: "favorites", icon: renderIcon(BookmarksOutline) },
 ];
+
+// 头像上传处理
+const handleAvatarUpload = async ({ file }) => {
+  const formData = new FormData();
+  formData.append("avatar", file.file);
+  try {
+    const res = await axios.post("/api/user/upload_avatar", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    if (res.data.errcode === 0) {
+      message.success("头像上传成功");
+      await userStore.fetchUserInfo({ force: true });
+    } else {
+      message.error(res.data.errmsg || "上传失败");
+    }
+  } catch (e) {
+    message.error("上传失败，请稍后重试");
+  }
+};
+
+// 时间格式化
+const formatTime = (date) => {
+  if (!date) return "暂无数据";
+  const d = new Date(date);
+  return d.toLocaleString("zh-CN", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  }).replace(/\//g, "-");
+};
 
 onMounted(() => {
   userForm.value.username = userStore.username;

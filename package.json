@@ -69,6 +69,7 @@
     "markdown-it": "8.4.0",
     "markdown-it-anchor": "4.0.0",
     "markdown-it-table-of-contents": "0.3.2",
+    "marked": "^18.0.3",
     "md5": "2.2.1",
     "mockjs": "1.0.1-beta3",
     "mongoose": "5.7.5",

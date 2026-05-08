@@ -6,7 +6,6 @@ import naive from "naive-ui";
 
 // 导入全局样式
 import "./styles/common.scss";
-import "./styles/theme.less";
 
 const app = createApp(App);
 

@@ -94,6 +94,13 @@ const loadGroup = async () => {
   }
 };
 
+// 项目数量统计
+const projectCount = computed(() => {
+  // 这里可以从ProjectList组件获取，或者从groupInfo里获取
+  // 暂时先返回0，待ProjectList组件完善后对接
+  return 0;
+});
+
 onMounted(() => {
   loadGroup();
   // 从路由中获取当前 tab
